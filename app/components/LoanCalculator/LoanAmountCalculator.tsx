@@ -8,17 +8,17 @@ import {
   InterestRateInput,
   RepaymentInput,
 } from './LoanCalculator'
-import { useLoanCalculator } from './useLoanCalculator'
+import { SolveFor, useLoanCalculator } from './useLoanCalculator'
 
 export default function LoanAmountCalculator() {
   const { values, setValues } = useLoanCalculator({
     loanAmount: 0,
     repaymentAmount: 0,
     loanTermYears: 5,
-    interestRatePerAnnum: 7.0,
+    interestRatePerAnnum: 0.07,
     repaymentPeriod: RepaymentPeriod.MONTHLY
   }, {
-    solveFor: 'loanAmount'
+    solveFor: SolveFor.LoanAmount
   })
 
   return (

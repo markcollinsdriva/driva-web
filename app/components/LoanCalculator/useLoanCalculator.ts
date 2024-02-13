@@ -9,13 +9,18 @@ import {
 import { useEffect, useState } from 'react'
 import { useDebounce } from 'use-debounce'
 
+export enum SolveFor {
+  LoanAmount,
+  RepaymentAmount
+}
+
 export const useLoanCalculator = (
   defaultValues: LoanInputsBase,
   {
     solveFor, 
     debounce = 200
   }: {
-    solveFor: 'loanAmount' | 'repaymentAmount',
+    solveFor: SolveFor,
     debounce?: number
   }
 ) => {
@@ -27,22 +32,22 @@ export const useLoanCalculator = (
   }
 
   useEffect(() => {
-    if (solveFor === 'repaymentAmount') {
+    if (solveFor === SolveFor.RepaymentAmount) {
       const repaymentAmount = calculateLoanRepayment({
         loanAmount: values.loanAmount, 
         loanTermYears: values.loanTermYears, 
-        interestRatePerAnnum: values.interestRatePerAnnum / 100, 
+        interestRatePerAnnum: values.interestRatePerAnnum, 
         repaymentPeriod: values.repaymentPeriod
       })
       setState({ ...values, repaymentAmount })
       return 
     } 
 
-    if (solveFor === 'loanAmount') {
+    if (solveFor === SolveFor.LoanAmount) {
       const loanAmount = calculateLoanAmount({
         repaymentAmount: values.repaymentAmount, 
         loanTermYears: values.loanTermYears, 
-        interestRatePerAnnum: values.interestRatePerAnnum / 100, 
+        interestRatePerAnnum: values.interestRatePerAnnum, 
         repaymentPeriod: values.repaymentPeriod
       })
       setState({ ...values, loanAmount })

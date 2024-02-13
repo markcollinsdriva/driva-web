@@ -1,20 +1,13 @@
 'use client'
 
-import { 
-  calculateLoanRepayment,
-  calculateLoanAmount, 
-  RepaymentPeriod, 
-  LoanInputsOptional,
-  LoanInputsBase 
-} from '@/app/lib/calculators'
-import { Button, ButtonProps, FormControl, FormLabel, Input, } from '@chakra-ui/react'
+import { RepaymentPeriod } from '@/app/lib/calculators'
+import { Button, FormControl, FormLabel, Input, } from '@chakra-ui/react'
 import { Stack } from '@chakra-ui/react'
-import { Radio, RadioGroup } from '@chakra-ui/react'
-import React, { Children, useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { NumericFormat } from 'react-number-format'
 
 interface Input {
-  value?: number,
+  value: number,
   onValueChange: (value?: number) => unknown
 }
 
@@ -104,19 +97,46 @@ const CustomRadio = <T,>(props: CustomRadio<T>) => {
   )
 }
 
+import {
+  Slider,
+  SliderTrack,
+  SliderFilledTrack,
+  SliderThumb,
+} from '@chakra-ui/react'
+
 export const InterestRateInput = ({ value, onValueChange }: Input) => {
+  const [ valueAsPercentage, setValueAsPercentage ] = useState<number|undefined>(100 * value)
+
+  const handleValueChange = (newValue?: number) => {
+    setValueAsPercentage(newValue)
+    onValueChange(newValue ? newValue / 100 : newValue)
+  }
+
   return (
+    <>
     <FormControl>
       <FormLabel>Interest Rate</FormLabel>
       <NumericFormat 
-        value={value} 
-        onValueChange={(values) => onValueChange(values.floatValue)}
+        value={valueAsPercentage} 
+        onValueChange={(values) => handleValueChange(values.floatValue)}
         suffix={'%'}
         allowNegative={false}
         decimalScale={2}
         fixedDecimalScale
         customInput={Input} />
     </FormControl>
+    <Slider 
+      value={valueAsPercentage}
+      onChange={(val) => handleValueChange(val)}
+      min={6} 
+      max={16} 
+      step={0.2}>
+      <SliderTrack>
+        <SliderFilledTrack />
+      </SliderTrack>
+      <SliderThumb boxSize={6} />
+    </Slider>
+  </>
   )
 }
 
