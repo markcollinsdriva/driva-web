@@ -131,7 +131,7 @@ const SliderOption = ({
           variant='ghost' 
           fontSize={12} 
           textDecoration='underline'>
-           {!isDeposit$ ? 'Enter exact amount' : 'Enter percentage'}
+           {!isDeposit$ ? 'Enter exact amount instead' : 'Enter percentage instead'}
         </Button>: null}
       </HStack>
       <Slider 
