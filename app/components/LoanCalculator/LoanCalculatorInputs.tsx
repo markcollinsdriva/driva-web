@@ -1,10 +1,20 @@
 'use client'
 
-import { RepaymentPeriod } from '@/app/lib/calculators'
-import { Button, FormControl, FormLabel, Input, } from '@chakra-ui/react'
-import { Stack } from '@chakra-ui/react'
 import React, { useState } from 'react'
+import { 
+  Stack, 
+  Button, 
+  FormControl, 
+  FormLabel, 
+  Input,
+  Slider,
+  SliderTrack,
+  SliderFilledTrack,
+  SliderThumb
+ } from '@chakra-ui/react'
 import { NumericFormat } from 'react-number-format'
+import { RepaymentPeriod } from '@/app/lib/calculators'
+
 
 interface Input {
   value: number,
@@ -52,22 +62,22 @@ export const LoanRepaymentFrequencyInput = ({ value, onValueChange }: {
         {/* > */}
         <Stack direction='row'>
           <CustomRadio<RepaymentPeriod> 
-            isChecked={value === RepaymentPeriod.WEEKLY}
+            isChecked={value === RepaymentPeriod.Weekly}
             onChange={value => onValueChange(value)}
-            value={RepaymentPeriod.WEEKLY}>
+            value={RepaymentPeriod.Weekly}>
             Weekly
           </CustomRadio>
           {/* <CustomRadio<RepaymentPeriod> 
-            isChecked={value === RepaymentPeriod.FORTNIGHTLY}
+            isChecked={value === RepaymentPeriod.Fortnightly}
             onChange={value => onValueChange(value)}
-            value={RepaymentPeriod.FORTNIGHTLY}>
+            value={RepaymentPeriod.Fortnightly}>
             Fortnightly
           </CustomRadio> */}
           <CustomRadio<RepaymentPeriod> 
-            isChecked={value === RepaymentPeriod.MONTHLY}
+            isChecked={value === RepaymentPeriod.Montly}
             onChange={value => onValueChange(value)}
-            value={RepaymentPeriod.MONTHLY}>
-            Monthly
+            value={RepaymentPeriod.Montly}>
+            Montly
           </CustomRadio>
         </Stack>
       {/* </RadioGroup> */}
@@ -97,12 +107,6 @@ const CustomRadio = <T,>(props: CustomRadio<T>) => {
   )
 }
 
-import {
-  Slider,
-  SliderTrack,
-  SliderFilledTrack,
-  SliderThumb,
-} from '@chakra-ui/react'
 
 export const InterestRateInput = ({ value, onValueChange }: Input) => {
   const [ valueAsPercentage, setValueAsPercentage ] = useState<number|undefined>(100 * value)

@@ -1,7 +1,12 @@
 export enum RepaymentPeriod {
-  WEEKLY = 'weekly',
-  FORTNIGHTLY = 'fortnightly',
-  MONTHLY = 'monthly'
+  Weekly,
+  Fortnightly,
+  Montly
+}
+
+export enum SolveFor {
+  LoanAmount,
+  RepaymentAmount
 }
 
 export interface LoanInputsBase {
@@ -17,10 +22,18 @@ export type LoanScenarioAmount = Omit<LoanInputsBase, 'repaymentAmount'>
 export type LoanScenarioRepayment = Omit<LoanInputsBase, 'loanAmount'>
 
 export const NumberOfRepaymentPeriodsPerYear = {
-  [RepaymentPeriod.WEEKLY]: 52,
-  [RepaymentPeriod.FORTNIGHTLY]: 26,
-  [RepaymentPeriod.MONTHLY]: 12,
+  [RepaymentPeriod.Weekly]: 52,
+  [RepaymentPeriod.Fortnightly]: 26,
+  [RepaymentPeriod.Montly]: 12,
 } as const
+
+export const CalculatorDefaults: LoanInputsBase = {
+  loanAmount: 0,
+  repaymentAmount: 0,
+  loanTermYears: 5,
+  interestRatePerAnnum: 0.07,
+  repaymentPeriod: RepaymentPeriod.Montly
+}
 
 export const calculateInterestRatePerPeriod = ({ 
   interestRatePerAnnum, 
@@ -33,6 +46,7 @@ export const calculateInterestRatePerPeriod = ({
   //return (Math.pow(1 + interestRatePerAnnum, 1 / periodsPerYear) - 1) 
   // this seems more mathematically correct but isn't how calculators do it
 }
+
 
 export const calculateLoanRepayment = (inputs: LoanScenarioAmount): number => {
   const { loanTermYears, loanAmount, interestRatePerAnnum, repaymentPeriod } = inputs

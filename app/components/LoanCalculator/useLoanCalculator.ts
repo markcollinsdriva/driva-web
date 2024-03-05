@@ -4,22 +4,21 @@ import {
   calculateLoanRepayment,
   calculateLoanAmount, 
   LoanInputsOptional,
-  LoanInputsBase 
+  LoanInputsBase, 
+  CalculatorDefaults,
+  SolveFor
 } from '@/app/lib/calculators'
 import { useEffect, useState } from 'react'
 import { useDebounce } from 'use-debounce'
 
-export enum SolveFor {
-  LoanAmount,
-  RepaymentAmount
-}
+export { SolveFor }
 
-export const useLoanCalculator = (
-  defaultValues: LoanInputsBase,
-  {
+export const useLoanCalculator = ({
+    defaultValues = CalculatorDefaults,
     solveFor, 
     debounce = 200
   }: {
+    defaultValues?: LoanInputsBase,
     solveFor: SolveFor,
     debounce?: number
   }
