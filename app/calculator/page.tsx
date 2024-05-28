@@ -1,7 +1,7 @@
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
 
-import LoanAmountCalculator from '@/app/components/LoanCalculator/LoanAmountCalculator'
-import RepaymentCalculator from '@/app/components/LoanCalculator/RepaymentCalculator'
+import LoanAmountCalculator from '@/app/calculator/components/LoanAmountCalculator'
+import RepaymentCalculator from '@/app/calculator/components/RepaymentCalculator'
 
 export default function Page() {
 

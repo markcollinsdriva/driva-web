@@ -13,7 +13,7 @@ import {
   SliderThumb
  } from '@chakra-ui/react'
 import { NumericFormat } from 'react-number-format'
-import { RepaymentPeriod } from '@/app/lib/calculators'
+import { RepaymentPeriod } from '@/app/calculator/components/calculators'
 
 
 interface Input {
