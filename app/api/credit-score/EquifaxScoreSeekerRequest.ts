@@ -43,17 +43,27 @@ export class EquifaxScoreSeekerRequest {
     equifaxConfig: EquifaxConfig
   }) {
     const { addressLine1, ...rest } = requestBody
-    const addressComponents = addressLine1.split(' ')
+    const { streetName, streetNumber, streetType} = EquifaxScoreSeekerRequest.splitAddressLine(addressLine1)
+
 
     return new EquifaxScoreSeekerRequest({
       inputs: {
         ...rest,
-        streetNumber: addressComponents[0],
-        streetName: addressComponents.slice(1, -1).join(' '),
-        streetType: addressComponents[addressComponents.length - 1]
+        streetNumber,
+        streetName,
+        streetType
       },
       equifaxConfig
     })
+  }
+
+  static splitAddressLine = (addressLine1: string) => {
+    const addressComponents = addressLine1.split(' ')
+    return {
+      streetNumber: addressComponents[0],
+      streetName: addressComponents.slice(1, -1).join(' '),
+      streetType: addressComponents[addressComponents.length - 1]
+    }
   }
 
   async getScore() {
@@ -69,7 +79,8 @@ export class EquifaxScoreSeekerRequest {
     let text: string = ''
     let error: Error|null = null
     try {
-      const response = await fetch(this.equifaxConfig.url, {
+      console.log(this.requestBody)
+      const response = await fetch( this.equifaxConfig.url, {
         method: 'POST',
         headers: {
           'Content-Type': 'text/xml'

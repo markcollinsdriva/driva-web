@@ -5,6 +5,11 @@ import { creditScoreRequestBody } from './RequestBody'
 import { EquifaxScoreSeekerRequest } from './EquifaxScoreSeekerRequest'
 import { ReadonlyHeaders } from 'next/dist/server/web/spec-extension/adapters/headers'
 
+enum ENV {
+  PROD = 'prod',
+  DEV = 'dev'
+}
+
 export async function POST(request: NextRequest) {
   let status = 200
   let score: string|null = null
@@ -19,7 +24,8 @@ export async function POST(request: NextRequest) {
     if (!parseResult.success) {
       throw new Error('Invalid request body')
     } 
-    const isProd = headersList.get('env') ==' prod'
+    const isProd = headersList.get('env') === ENV.PROD
+
     const equifaxConfig = new EquifaxConfig({ isProd })
     const equifaxScoreSeekerRequest = EquifaxScoreSeekerRequest.createFromRequestBody({
       requestBody: parseResult.data,

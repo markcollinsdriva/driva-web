@@ -12,7 +12,7 @@ export class EquifaxConfig {
   public username: string
   public password: string
 
-  constructor({ isProd }: { isProd: boolean}) {
+  constructor({ isProd }: { isProd: boolean }) {
     this.url = isProd ? EQUIFAX_API_PROD : EQUIFAX_API_DEV,
     this.username = isProd ? EQUIFAX_USERNAME_PROD : EQUIFAX_USERNAME_DEV,
     this.password = isProd ? EQUIFAX_PASSWORD_PROD : EQUIFAX_PASSWORD_DEV
