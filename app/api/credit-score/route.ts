@@ -24,7 +24,8 @@ export async function POST(request: NextRequest) {
     if (!parseResult.success) {
       throw new Error('Invalid request body')
     } 
-    const isProd = headersList.get('env') === ENV.PROD
+    const searchParams = request.nextUrl.searchParams
+    const isProd = searchParams.get('env') === ENV.PROD
 
     const equifaxConfig = new EquifaxConfig({ isProd })
     const equifaxScoreSeekerRequest = EquifaxScoreSeekerRequest.createFromRequestBody({

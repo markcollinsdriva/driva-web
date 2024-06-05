@@ -79,7 +79,6 @@ export class EquifaxScoreSeekerRequest {
     let text: string = ''
     let error: Error|null = null
     try {
-      console.log(this.requestBody)
       const response = await fetch( this.equifaxConfig.url, {
         method: 'POST',
         headers: {
@@ -89,7 +88,6 @@ export class EquifaxScoreSeekerRequest {
       })
   
       if(!response.ok) {
-        console.log(response.json())
         throw new Error('Request failed')
       }
       text = await response.text() ?? ''
