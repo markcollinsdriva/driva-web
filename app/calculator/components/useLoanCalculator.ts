@@ -52,7 +52,7 @@ export const useLoanCalculator = ({
       setState({ ...values, loanAmount })
       return
     }       
-  }, [ values ])
+  }, [ values, solveFor ])
 
   return { values, setValues }
 }

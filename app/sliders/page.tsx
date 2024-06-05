@@ -83,7 +83,7 @@ const SliderOption = ({
       default:
         break;
     }
-  }, [ deposit, depositPerc, loanAmount ])
+  }, [ deposit, depositPerc, loanAmount, depositType, option])
 
 
   return (<>

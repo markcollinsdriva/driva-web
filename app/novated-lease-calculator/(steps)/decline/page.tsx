@@ -9,7 +9,7 @@ const pageName = PageName.Decline
 export default function Page() {
   return (<>
     <FormPage pageName={pageName}>
-      <Box>We're really sorry, but based on the details provided you're not eligible for a novated lease estimate at this time. </Box>
+      <Box>We are sorry, but based on the details provided you are not eligible for a novated lease estimate at this time. </Box>
     </FormPage>
   </>)
 }
