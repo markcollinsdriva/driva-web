@@ -79,14 +79,14 @@ export class EquifaxScoreSeekerRequest {
     let text: string = ''
     let error: Error|null = null
     try {
-      const response = await fetch( this.equifaxConfig.url, {
+      const response = await fetch(this.equifaxConfig.url, {
         method: 'POST',
         headers: {
           'Content-Type': 'text/xml'
         },
         body: this.requestBody
       })
-  
+      
       if(!response.ok) {
         throw new Error('Request failed')
       }
@@ -103,13 +103,21 @@ export class EquifaxScoreSeekerRequest {
   }
 
   static formatResponseText = (text: string) => {
-    const re = new RegExp('(?<=<vs:score-masterscale>).*?(?=<\/vs:score-masterscale>)')
-    const results = text.match(re)
+    let error = null
+
+    const scoreRegex = new RegExp('(?<=<vs:score-masterscale>).*?(?=<\/vs:score-masterscale>)')
+    const results = text.match(scoreRegex)
     const score = results?.[0] ?? null
-    return  {
-      score,
-      error: !score ? new Error('No score found') : null
+    if (score) {
+      return { score, error }
     }
+
+    const messageRegex = new RegExp('(?<=<vs:message code="000003">).*?(?=<\/vs:message>)')
+    const messageResults = text.match(messageRegex)
+    const message = messageResults?.[0] ?? null
+    error = message ? new Error(capitalizeFirstLetter(message)) : new Error('No score found')
+
+    return { score, error }
   }
 
   get dateOfBirthDate() {
@@ -177,4 +185,14 @@ export class EquifaxScoreSeekerRequest {
       </soapenv:Envelope>`
     )
   }
+}
+
+function capitalizeFirstLetter(str: string) {
+  // Convert the entire string to lowercase first
+  let lowerCaseStr = str.toLowerCase();
+  
+  // Capitalize the first letter and concatenate with the rest of the string
+  let result = lowerCaseStr.charAt(0).toUpperCase() + lowerCaseStr.slice(1);
+  
+  return result;
 }
