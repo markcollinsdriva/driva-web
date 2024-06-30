@@ -104,7 +104,7 @@ export class EquifaxScoreSeekerRequest {
 
   static formatResponseText = (text: string) => {
     let error = null
-
+    console.log(text)
     const scoreRegex = new RegExp('(?<=<vs:score-masterscale>).*?(?=<\/vs:score-masterscale>)')
     const results = text.match(scoreRegex)
     const score = results?.[0] ?? null
@@ -115,7 +115,7 @@ export class EquifaxScoreSeekerRequest {
     const messageRegex = new RegExp('(?<=<vs:message code="000003">).*?(?=<\/vs:message>)')
     const messageResults = text.match(messageRegex)
     const message = messageResults?.[0] ?? null
-    error = message ? new Error(capitalizeFirstLetter(message)) : new Error('No score found')
+    error = message ? new Error('No credit score file available.') : new Error('No score found. Please check your address and try again.')
 
     return { score, error }
   }
