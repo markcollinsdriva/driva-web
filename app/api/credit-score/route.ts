@@ -4,6 +4,8 @@ import { EquifaxConfig } from './EquifaxConfig'
 import { creditScoreRequestBody } from './RequestBody'
 import { EquifaxScoreSeekerRequest } from './EquifaxScoreSeekerRequest'
 import { ReadonlyHeaders } from 'next/dist/server/web/spec-extension/adapters/headers'
+import {createAddressFromAddressLine1 } from '@/lib/Address'
+import { GeoapifySearch } from '@/lib/Geoapify'
 
 enum ENV {
   PROD = 'prod',
@@ -13,7 +15,8 @@ enum ENV {
 export async function POST(request: NextRequest) {
   let status = 200
   let score: string|null = null
-  let error: string|null = null
+  let error: Error|null = null
+  let errorMessage: string|null = null
 
   try {
     const headersList = headers()
@@ -26,33 +29,38 @@ export async function POST(request: NextRequest) {
     } 
     const searchParams = request.nextUrl.searchParams
     const isProd = searchParams.get('env') === ENV.PROD
+    const requestData = parseResult.data
 
     const equifaxConfig = new EquifaxConfig({ isProd })
-    const equifaxScoreSeekerRequest = EquifaxScoreSeekerRequest.createFromRequestBody({
-      requestBody: parseResult.data,
-      equifaxConfig
-    })
+    const { addressLine1, suburb, state, postCode } = requestData
+    const address = createAddressFromAddressLine1({ addressLine1, suburb, state, postCode });
+    
+    // ({ score, error } = await EquifaxScoreSeekerRequest.getScore({ inputs: { ...requestData, ...address }, equifaxConfig }))
+    // if (score) return
+      
+    // try again with address from search
+    const addressFromSearch = await GeoapifySearch.search(`${requestData.addressLine1} ${requestData.postCode}`)
+    console.log('addressFromSearch', addressFromSearch)
+    if (!addressFromSearch) throw new Error('No score found');
 
-    const { score: equifaxScore, error } = await equifaxScoreSeekerRequest.getScore()
-    score = equifaxScore
+    ({ score, error } = await EquifaxScoreSeekerRequest.getScore({ inputs: { ...requestData, ...addressFromSearch }, equifaxConfig }))
     if(error) throw error
-    if (!score) throw new Error('No score found')
   } catch (e) {
     status = 500
-    error = e instanceof Error ? e.message : 'An error occurred'
-    console.log(e)
+    errorMessage = e instanceof Error ? e.message : 'An error occurred'
+    console.error(e)
+  } finally {
+    return NextResponse.json(
+      { score, error: errorMessage }, 
+      { 
+        status,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        }
+      })
   }
-
-  return NextResponse.json(
-    { score, error }, 
-    { 
-      status,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-      }
-    })
 }
 
 const validateApiKey = (headersList: ReadonlyHeaders) => {

@@ -1,6 +1,5 @@
 import { z } from 'zod'
 import { EquifaxConfig } from './EquifaxConfig'
-import { CreditScoreRequestBody } from './RequestBody'
  
 const equifaxCreditScoreInputs = z.object({
   firstName: z.string(),
@@ -35,40 +34,21 @@ export class EquifaxScoreSeekerRequest {
     this.equifaxConfig = equifaxConfig
   }
 
-  static createFromRequestBody({
-    requestBody,
+  static async getScore({ 
+    inputs,
     equifaxConfig
-  }: {
-    requestBody: CreditScoreRequestBody, 
+  }: { 
+    inputs: EquifaxCreditScoreInputs,
     equifaxConfig: EquifaxConfig
   }) {
-    const { addressLine1, ...rest } = requestBody
-    const { streetName, streetNumber, streetType} = EquifaxScoreSeekerRequest.splitAddressLine(addressLine1)
-
-
-    return new EquifaxScoreSeekerRequest({
-      inputs: {
-        ...rest,
-        streetNumber,
-        streetName,
-        streetType
-      },
-      equifaxConfig
-    })
-  }
-
-  static splitAddressLine = (addressLine1: string) => {
-    const addressComponents = addressLine1.split(' ')
-    return {
-      streetNumber: addressComponents[0],
-      streetName: addressComponents.slice(1, -1).join(' '),
-      streetType: addressComponents[addressComponents.length - 1]
-    }
+    const request = new EquifaxScoreSeekerRequest({ inputs, equifaxConfig })
+    return await request.getScore()
   }
 
   async getScore() {
     const { text, error: requestError } = await this.sendRequest()
     const { score, error: formatError } = EquifaxScoreSeekerRequest.formatResponseText(text)
+
     return {
       score, 
       error: requestError ?? formatError ?? null
@@ -104,7 +84,6 @@ export class EquifaxScoreSeekerRequest {
 
   static formatResponseText = (text: string) => {
     let error = null
-    console.log(text)
     const scoreRegex = new RegExp('(?<=<vs:score-masterscale>).*?(?=<\/vs:score-masterscale>)')
     const results = text.match(scoreRegex)
     const score = results?.[0] ?? null

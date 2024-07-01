@@ -15,3 +15,5 @@ export const creditScoreRequestBody = z.object({
 })
 
 export type CreditScoreRequestBody = z.infer<typeof creditScoreRequestBody>
+
+
