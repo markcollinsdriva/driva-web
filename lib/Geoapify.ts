@@ -13,7 +13,7 @@ export class GeoapifySearch {
   }
 
   static getURL(addressSearchText: string) {
-    return `${this.baseUrl}?text=${addressSearchText}&format=json&bias=countrycode:au&apiKey=${this.apiKey}`
+    return `${this.baseUrl}?text=${addressSearchText}&type=amenity&format=json&bias=countrycode:au&apiKey=${this.apiKey}`
   }
 
   static async get(url: string) {
