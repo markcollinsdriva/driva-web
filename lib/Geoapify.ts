@@ -40,7 +40,7 @@ export class GeoapifySearch {
     const { results } = data
     const result = results?.[0]
     if (!result) return null
-    const { housenumber, street, suburb, district, state_code, postcode } = result
+    const { housenumber, street, suburb, district, city, county, state_code, postcode } = result
 
     let streetComponents = street.split(" ")
     const streetType = streetComponents.pop() ?? ''
@@ -50,7 +50,7 @@ export class GeoapifySearch {
       streetNumber: housenumber,
       streetName,
       streetType,
-      suburb: suburb || district,
+      suburb: suburb || district || city || county,
       state: state_code,
       postCode: postcode
     }

@@ -34,13 +34,12 @@ export async function POST(request: NextRequest) {
     const equifaxConfig = new EquifaxConfig({ isProd })
     const { addressLine1, suburb, state, postCode } = requestData
     const address = createAddressFromAddressLine1({ addressLine1, suburb, state, postCode });
-    
-    // ({ score, error } = await EquifaxScoreSeekerRequest.getScore({ inputs: { ...requestData, ...address }, equifaxConfig }))
-    // if (score) return
+
+    ({ score, error } = await EquifaxScoreSeekerRequest.getScore({ inputs: { ...requestData, ...address }, equifaxConfig }))
+    if (score) return
       
     // try again with address from search
     const addressFromSearch = await GeoapifySearch.search(`${requestData.addressLine1} ${requestData.postCode}`)
-    console.log('addressFromSearch', addressFromSearch)
     if (!addressFromSearch) throw new Error('No score found');
 
     ({ score, error } = await EquifaxScoreSeekerRequest.getScore({ inputs: { ...requestData, ...addressFromSearch }, equifaxConfig }))
