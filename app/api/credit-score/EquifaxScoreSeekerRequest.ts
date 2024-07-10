@@ -23,6 +23,7 @@ type EquifaxCreditScoreInputs = z.infer<typeof equifaxCreditScoreInputs>
 export class EquifaxScoreSeekerRequest {
   private inputs: EquifaxCreditScoreInputs
   private equifaxConfig: EquifaxConfig
+  private _requestBody?: string = undefined
 
   constructor({ 
     inputs,
@@ -59,6 +60,7 @@ export class EquifaxScoreSeekerRequest {
         },
         extra: {
           inputs: this.inputs,
+          requestBody: this.requestBody,
           text,
         }
       })
@@ -118,13 +120,16 @@ export class EquifaxScoreSeekerRequest {
 
   get dateOfBirthDate() {
     const { day, month, year } = this.inputs.dateOfBirth
-    const date = new Date(year, month, day)
-    return date.toISOString().split('T')[0]
+    const date = `${year}-${month.toString().padStart(2,'0')}-${day.toString().padStart(2,'0')}`
+    return date
   }
 
   get requestBody() {
+    if (this._requestBody) {
+      return this._requestBody
+    }
     const { firstName, lastName, streetNumber, streetName, streetType, suburb, state, postCode } = this.inputs
-    return (
+    this._requestBody = (
       `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:vh="http://vedaxml.com/soap/header/v-header-v1-10.xsd" xmlns:scor="http://vedaxml.com/vxml2/score-seeker-v1-0.xsd">
         <soapenv:Header xmlns:wsa="http://www.w3.org/2005/08/addressing">
             <wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
@@ -180,6 +185,7 @@ export class EquifaxScoreSeekerRequest {
         </soapenv:Body>
       </soapenv:Envelope>`
     )
+    return this._requestBody
   }
 }
 
