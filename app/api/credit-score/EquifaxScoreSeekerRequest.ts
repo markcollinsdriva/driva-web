@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { EquifaxConfig } from './EquifaxConfig'
+import * as Sentry from "@sentry/nextjs";
  
 const equifaxCreditScoreInputs = z.object({
   firstName: z.string(),
@@ -48,10 +49,24 @@ export class EquifaxScoreSeekerRequest {
   async getScore() {
     const { text, error: requestError } = await this.sendRequest()
     const { score, error: formatError } = EquifaxScoreSeekerRequest.formatResponseText(text)
+    
+    const errorResponse = requestError ?? formatError ?? null
+    if (errorResponse) {
+      Sentry.captureException(errorResponse, {
+        level: 'info',
+        tags: {
+          type: 'EquifaxScoreSeeker'
+        },
+        extra: {
+          inputs: this.inputs,
+          text,
+        }
+      })
+    }
 
     return {
       score, 
-      error: requestError ?? formatError ?? null
+      error: errorResponse
     }
   }
 
@@ -70,7 +85,9 @@ export class EquifaxScoreSeekerRequest {
       if(!response.ok) {
         throw new Error('Request failed')
       }
+     
       text = await response.text() ?? ''
+  
     } catch (e) {
       error = e instanceof Error ? e : new Error('An error occurred')
       console.log(e)
