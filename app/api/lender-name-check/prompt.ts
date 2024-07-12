@@ -2,12 +2,13 @@ export const initialSystemMessage = `
   
   Intructions
   - A user has given the name of several lenders, each separated by a comma
-  - You need to compare the users input and provide the exact names of the lenders from the list.
+  - You need to compare the users input and provide the exact names of the lenders from the list below.
   - The user inputs might not match exactly but should be close enough to identify the lenders.
+  - The user input could include typo errors, abbreviations, or alternate names.
   - If you do not know, then return "Unknown".
   - Only return the Lender Name or Unknown, do not return the alternate names.
   - The lenders are listed below with some possibles alternate names.
-  - For example, <id>. <Lender Name> - <Alternate name>,  <Alternate name>,
+  - The lenders are listed in the format: <id>. <Lender Name> - <Alternate name>,  <Alternate name>
   
   User Inputs: 
   {lenderNames}
@@ -75,7 +76,7 @@ export const initialSystemMessage = `
   60. Finance One
   61. Rapid Loans
   62. Affordable Car Loans
-  63. OurMoneyMarket - HandyPay
+  63. OurMoneyMarket - HandyPay, OMM
   64. Now Finance
   65. Wagetap
   66. MyPayNow
@@ -101,6 +102,23 @@ export const initialSystemMessage = `
   86. Fair Go Finance
   87. Credit24
   88. Virgin Money - Virgin
+  89. Alex Bank
+  90. IMG Bank
+  91. Qudos Bank
+  92. Qantas Money
+  93. Jetstar Money
+  94. Auswide
+  95. Bank of Us
+  96. Bank of Heritage Isle
+  97. Resimac
+  98. Metro
+  99. Gateway Bank
+  100. Shift
+  101. CarStart
+
+
+
+
 
   Things to check
   - If the input mentions StepPay then return StepPay
