@@ -19,12 +19,13 @@ const chain = RunnableSequence.from([
   parser 
 ])
 
+
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams
-  const lenderNames = searchParams.get('lenderNames') 
-  if (!lenderNames) return NextResponse.json({ data: null, error: 'No lender names' })
-  const res = await chain.invoke({ lenderNames })
-  const data = res
-  return NextResponse.json({ data })
+  const lenderNamesAsString = searchParams.get('names') 
+  if (!lenderNamesAsString) return NextResponse.json({ data: null, error: 'No lender names' })
+  const names = lenderNamesAsString.split(',')
+  const suggestedLenders = await chain.invoke({ lenderNames: lenderNamesAsString })
+  if (!Array.isArray(suggestedLenders)) return NextResponse.json({ data: null, error: 'No response' })
+  return NextResponse.json({ names, suggestedLenders })
 }
-

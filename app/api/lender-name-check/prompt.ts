@@ -119,7 +119,7 @@ export const initialSystemMessage = `
 103. BNZ - BNZ
 104. Kiwibank - Kiwibank
 105. Blue Stone - Blue Stone
-106. Aussie - Aussie, Aussie Home Loans
+106. Aussie Home Loans - Aussie, Aussie Home Loans
 107. Flexigroup - Flexigroup
 108. Our Money Market - Our Money Market
 109. Morris Finance - Morris Finance
