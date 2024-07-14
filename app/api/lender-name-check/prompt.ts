@@ -1,19 +1,18 @@
 export const initialSystemMessage = `
-  
-  Intructions
-  - A user has given the name of several lenders, each separated by a comma
-  - You need to compare the users input and provide the exact names of the lenders from the list below.
-  - The user inputs might not match exactly but should be close enough to identify the lenders.
-  - The user input could include typo errors, abbreviations, or alternate names.
-  - If you do not know, then return "Unknown".
-  - Only return the Lender Name or Unknown, do not return the alternate names.
-  - The lenders are listed below with some possibles alternate names.
-  - The lenders are listed in the format: <id>. <Lender Name> - <Alternate name>,  <Alternate name>
-  
-  User Inputs: 
-  {lenderNames}
+# Intructions
+- A user has given the name of several lenders, each separated by a comma
+- You need to compare the users input and provide the exact names of the lenders from the list below.
+- The user inputs might not match exactly but should be close enough to identify the lenders.
+- The user input could include typo errors, abbreviations, or alternate names.
+- If you do not know, then return "Unknown".
+- Only return the Lender Name or Unknown, do not return the alternate names.
+- The lenders are listed below with some possibles alternate names.
+- The lenders are listed in the format: <id>. <Lender Name> - <Alternate name>,  <Alternate name>
 
-  # Lenders and possible alternative names
+# User Input: 
+{lenderNames}
+
+# Lenders and possible alternative names
 1. Commonwealth Bank of Australia (CBA) - CommBank, CBA, Commonwealth Bank
 2. Westpac Banking Corporation - Westpac, WESTPAC, Westpac Bank
 3. Australia and New Zealand Banking Group (ANZ) - ANZ, anz, ANZ Bank
@@ -134,13 +133,153 @@ export const initialSystemMessage = `
 118. Society One - Society One
 119. La Trobe - La Trobe
 120. Advantage - Advantage
+121. Azora - Azora
+122. Resimac - Resimac
+123. Qantas Money - Qantas Money
+124. Mazda Finance - Mazda Finance
+125. Sunshine Finance - Sunshine Finance
+126. Angle Finance - Angle Finance
+127. Metro Finance - Metro Finance
+128. Just Finance - Just Finance
+129. Green Light Finance - Green Light Finance
 
-  Example response
-  - ["ING", "Unknown", "Commonwealth Bank of Australia"]
+# Example response
+- ["ING", "Unknown", "Commonwealth Bank of Australia"]
 
-  Things to check
-  - If the input mentions StepPay then return StepPay
-  - Provide the exact names of the lenders from the list and return as an array of string.
-  - Do not provide any other response other than an array of strings.
-  - Provide valid json as the output
+# Things to check
+- If the input mentions StepPay then return StepPay
+- Provide the exact names of the lenders from the list and return as an array of string.
+- Do not provide any other response other than an array of strings.
+- Provide valid json as the output
 `
+
+export const lenderNames = [
+  "Commonwealth Bank of Australia (CBA)",
+  "Westpac Banking Corporation",
+  "Australia and New Zealand Banking Group (ANZ)",
+  "National Australia Bank (NAB)",
+  "Bank of Queensland (BOQ)",
+  "Bendigo and Adelaide Bank",
+  "Suncorp Bank",
+  "Heritage Bank",
+  "People's Choice Credit Union",
+  "CUA (Credit Union Australia)",
+  "Pepper Money",
+  "Liberty Financial",
+  "Latitude Financial Services",
+  "Afterpay",
+  "Zip",
+  "Humm",
+  "Klarna",
+  "SocietyOne",
+  "Harmoney",
+  "MoneyMe",
+  "Wisr",
+  "Stratton Finance",
+  "Plenti",
+  "Bank Australia",
+  "ING",
+  "ME Bank (Members Equity Bank)",
+  "MyState Bank",
+  "UBank",
+  "RACQ Bank",
+  "Bankwest",
+  "St.George Bank",
+  "Macquarie Bank",
+  "HSBC Australia",
+  "AMP Bank",
+  "Greater Bank",
+  "Newcastle Permanent Building Society",
+  "Queensland Country Bank",
+  "Teachers Mutual Bank",
+  "Firefighters Mutual Bank",
+  "Health Professionals Bank",
+  "UniBank",
+  "BankVic",
+  "P&N Bank",
+  "Beyond Bank Australia",
+  "Bank of Sydney",
+  "G&C Mutual Bank",
+  "Mutual Bank",
+  "Unity Bank",
+  "Police Bank",
+  "Defence Bank",
+  "Holiday Coast Credit Union",
+  "American Express",
+  "Citibank",
+  "Bank of Melbourne",
+  "BankSA",
+  "MoneyPlace",
+  "Toyota Finance",
+  "Firstmac",
+  "Money3",
+  "Finance One",
+  "Rapid Loans",
+  "Affordable Car Loans",
+  "OurMoneyMarket",
+  "Now Finance",
+  "Wagetap",
+  "MyPayNow",
+  "Wagepay",
+  "EveryPay",
+  "Beforepay",
+  "PressPay",
+  "Wagestream",
+  "Instapay",
+  "PayActiv",
+  "Circlepay",
+  "Openpay",
+  "Brighte",
+  "Bundll",
+  "CBA StepPay",
+  "Spot BNPL",
+  "Deferit",
+  "Laybuy",
+  "Paypal Pay in 4",
+  "Payright",
+  "Wallet Wizard",
+  "Jacaranda Finance",
+  "Fair Go Finance",
+  "Credit24",
+  "Rams",
+  "Kogan",
+  "Moneyspot",
+  "Cash Converters",
+  "Nissan Finance",
+  "Volkswagen Finance",
+  "Coles Mastercard",
+  "Virgin Money",
+  "Latitude Gem Visa",
+  "RACV",
+  "Swoosh",
+  "Wizit",
+  "Power Torque Finance",
+  "Kwik Finance",
+  "BNZ",
+  "Kiwibank",
+  "Blue Stone",
+  "Aussie Home Loans",
+  "Flexigroup",
+  "Our Money Market",
+  "Morris Finance",
+  "Private",
+  "IMB",
+  "Driva",
+  "IBA",
+  "GSB",
+  "Cigno",
+  "Paynow",
+  "CitiBank",
+  "Society One",
+  "La Trobe",
+  "Advantage",
+  "Azora",
+  "Resimac",
+  "Qantas Money",
+  "Mazda Finance",
+  "Sunshine Finance",
+  "Angle Finance",
+  "Metro Finance",
+  "Just Finance",
+  "Green Light Finance",
+]
