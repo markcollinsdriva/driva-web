@@ -13,30 +13,18 @@ const model = new ChatOpenAI({
 	model: 'gpt-4o',
 })
 
-const chain = RunnableSequence.from([ prompt, model, parser ])
+const chain = RunnableSequence.from([ 
+  prompt, 
+  model, 
+  parser 
+])
 
 export async function GET(request: NextRequest) {
-  let data = null
-  let errorMessage: string|null = null
-  let status = 200
-
-  try {
-    const searchParams = request.nextUrl.searchParams
-    const lenderNamesAsString = searchParams.get('names') 
-    if (!lenderNamesAsString) {
-      status = 400
-      throw new Error('No lender names')
-    }
-    const names = lenderNamesAsString.split(',')
-    const suggestedLenders = await chain.invoke({ lenderNames: lenderNamesAsString })
-    if (!Array.isArray(suggestedLenders)) {
-      status = 500
-      throw new Error('Reponse invalid')
-    }
-    data = { names, suggestedLenders }
-  } catch (error) {
-    errorMessage = (error instanceof Error ? error.message : 'unknown error')
-  } finally {
-    return NextResponse.json({ data, error: errorMessage }, { status })
-  }
+  const searchParams = request.nextUrl.searchParams
+  const lenderNamesAsString = searchParams.get('names') 
+  if (!lenderNamesAsString) return NextResponse.json({ data: null, error: 'No lender names' })
+  const names = lenderNamesAsString.split(',')
+  const suggestedLenders = await chain.invoke({ lenderNames: lenderNamesAsString })
+  if (!Array.isArray(suggestedLenders)) return NextResponse.json({ data: null, error: 'No response' })
+  return NextResponse.json({ names, suggestedLenders })
 }

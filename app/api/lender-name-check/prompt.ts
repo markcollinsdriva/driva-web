@@ -108,7 +108,7 @@ export const initialSystemMessage = `
 93. Volkswagen Finance - Volkswagen Finance, VW Finance
 94. Coles Mastercard - Coles Mastercard, Coles
 95. Virgin Money - Virgin Money
-96. Latitude Gem Visa - Gem Visa, Gem
+96. Latitude Gem Visa -  Gem, Gem Visa,
 97. ING - ING, ING Direct
 98. RACV - RACV
 99. Swoosh - Swoosh
