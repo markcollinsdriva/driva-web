@@ -6,7 +6,7 @@ export const initialSystemMessage = `
 - The user input could include typo errors, abbreviations, or alternate names.
 - If you do not know, then return "Unknown".
 - Only return the Lender Name or Unknown, do not return the alternate names.
-- The lenders are listed below with some possibles alternate names.
+- The lenders are listed below with some possible alternate names.
 - The lenders are listed in the format: <id>. <Lender Name> - <Alternate name>,  <Alternate name>
 
 # User Input: 
