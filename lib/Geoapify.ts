@@ -27,8 +27,7 @@ export class GeoapifySearch {
       
       data = await response.json() as GeoapifyResponse
     } catch(e) {
-      console.log(e)
-      error = e instanceof Error ?  e : new Error('An error occurred')
+      error = e instanceof Error ?  e : new Error('An unknown error occured')
     }
     return {
       data,

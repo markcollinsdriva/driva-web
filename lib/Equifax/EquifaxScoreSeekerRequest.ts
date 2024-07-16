@@ -91,8 +91,7 @@ export class EquifaxScoreSeekerRequest {
       text = await response.text() ?? ''
   
     } catch (e) {
-      error = e instanceof Error ? e : new Error('An error occurred')
-      console.log(e)
+      error = e instanceof Error ? e : new Error('An unknown error occured')
     }
 
     return {
