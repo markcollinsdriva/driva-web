@@ -50,6 +50,7 @@ export const useAuth = create<AuthStore>((set, get) => ({
       return
     }
     if(!otp || otp.length !== otpLength) return
+    set({ status: 'validating-otp'})
     const isValid = await validateOTP({ mobileNumber, otp })
     set({ status: isValid ? 'auth-ok' : 'invalid-otp' })
   }

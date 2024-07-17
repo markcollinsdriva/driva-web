@@ -10,7 +10,7 @@ export interface CreditScoreState {
 const IS_PROD = false
 
 interface CreditScoreStore extends CreditScoreState {
-  getScore: ({ mobileNumber, otp }: { mobileNumber: string, otp: string }) => Promise<void>
+  getScore: ({ mobileNumber, otp }: { mobileNumber?: string|null, otp?: string|null }) => Promise<void>
 }
 
 const defaultState: CreditScoreState = {
@@ -20,7 +20,8 @@ const defaultState: CreditScoreState = {
 
 export const useCreditScore= create<CreditScoreStore>((set, get) => ({
   ...defaultState,
-  getScore: async ({ mobileNumber, otp }: { mobileNumber: string, otp: string }) => {
+  getScore: async ({ mobileNumber, otp }) => {
+    if (!mobileNumber || !otp) return
     set({ status: 'loading' })
     const { score, error } = await getCreditScoreWithAuth({ mobileNumber, otp },{ isProd: IS_PROD })
     set({ score, status: error ? 'error' : 'success' })

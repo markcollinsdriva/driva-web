@@ -22,7 +22,7 @@ export default function Page() {
     if (status === 'sending-otp') {
       router.push('enter-otp')
     }
-  }, [status])
+  }, [ status, router ])
 
   const isInvalid = status === 'invalid-phone'
   
@@ -38,7 +38,7 @@ export default function Page() {
               placeholder='Your mobile number'
             />
             <FormErrorMessage>Invalid mobile number</FormErrorMessage>
-            <Button mt='1' onClick={sendOTP}>Send code</Button>
+            <Button mt='1' onClick={sendOTP} isLoading={status === 'sending-otp'}>Send code</Button>
         </VStack>
       </FormControl>
     </Container>

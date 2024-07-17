@@ -29,7 +29,7 @@ export default function Page() {
   useEffect(() => {
     if (authStatus !== 'auth-ok') return
     router.push('result')
-  }, [ authStatus] )
+  }, [ authStatus, router ] )
 
   const isInvalid = authStatus === 'invalid-otp'
 
@@ -51,7 +51,7 @@ export default function Page() {
             <ValidatingOTP /> : null}
           <FormErrorMessage>Incorrect code</FormErrorMessage>
           <FormHelperText>
-            Didn't receive the code? <span onClick={sendOTP}>Try again</span>
+            Didn&apos;t receive the code? <span onClick={sendOTP}>Try again</span>
           </FormHelperText>
           <Link href='enter-phone'><FormHelperText>Change mobile number</FormHelperText></Link>
         </VStack>

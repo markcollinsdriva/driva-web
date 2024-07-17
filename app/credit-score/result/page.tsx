@@ -30,9 +30,8 @@ export default function Page() {
   const isAuthenticated = authStatus === 'auth-ok'
 
   useEffect(() => {
-    if (!mobileNumber || !otp) return
     getScore({ mobileNumber, otp })
-  }, [ mobileNumber, otp ])
+  }, [ mobileNumber, otp, getScore ])
 
   if (!isAuthenticated) {
     redirect('/enter-otp')
