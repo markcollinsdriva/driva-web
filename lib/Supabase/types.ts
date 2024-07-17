@@ -44,6 +44,30 @@ export type Database = {
           },
         ]
       }
+      Events: {
+        Row: {
+          env: string
+          id: string
+          insertedAt: string
+          meta: Json | null
+          name: string
+        }
+        Insert: {
+          env: string
+          id?: string
+          insertedAt?: string
+          meta?: Json | null
+          name: string
+        }
+        Update: {
+          env?: string
+          id?: string
+          insertedAt?: string
+          meta?: Json | null
+          name?: string
+        }
+        Relationships: []
+      }
       Profiles: {
         Row: {
           addressLine1: string | null

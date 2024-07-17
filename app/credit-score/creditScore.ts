@@ -4,6 +4,8 @@ import { creditScoreRequest } from '@/lib/Equifax/CreditScoreRequest'
 import { getCreditScore } from '@/lib/Equifax/GetCreditScore'
 import { validateOTP } from './auth'
 import { supabaseServerClient } from '@/lib/Supabase/init'
+import { Event, logServerEvent } from '@/lib/Supabase/events'
+import { PostgrestError } from '@supabase/supabase-js'
 
 interface CreditScoreRequestOptions {
   isProd: boolean
@@ -17,7 +19,7 @@ interface CreditScoreResponse {
 
 export const getCreditScoreWithAuth = async ({ mobileNumber, otp }: { mobileNumber: string, otp: string }, options: CreditScoreRequestOptions): Promise<CreditScoreResponse> => {
   let score: string|null = null
-  let error: Error|null = null
+  let error: Error|PostgrestError|null = null
   let errorType: CreditScoreResponse['errorType'] = null
   let profileId: string|null = null
 
@@ -28,10 +30,10 @@ export const getCreditScoreWithAuth = async ({ mobileNumber, otp }: { mobileNumb
       throw new Error('Invalid OTP')
     }
     
-    const { data, error } = await supabaseServerClient.from('Profiles').select('*').eq('mobilePhone', mobileNumber).single()
-    if (error) {
+    const { data, error: supabaseError } = await supabaseServerClient.from('Profiles').select('*').eq('mobilePhone', mobileNumber).single()
+    if (supabaseError) {
       errorType = 'supabase'
-      throw error
+      throw supabaseError
     }
     
     profileId = data?.id
@@ -63,16 +65,16 @@ export const getCreditScoreWithAuth = async ({ mobileNumber, otp }: { mobileNumb
       throw creditScoreError
     }
   } catch (e) {
-    error = e instanceof Error ? e: new Error('An unknown error occured')
+    error = e as Error
   } finally {
-    if (profileId) {
-      insertCreditScore({ profileId, score, error })
-    }
+    insertCreditScore({ profileId, score, error })
+    logServerEvent(Event.CREDIT_SCORE_REQUESTED, { profileId, score, error, errorType })
     return { score, error, errorType }
   }
 }
 
-const insertCreditScore = async ({ profileId, score, error }: { profileId: string, score: string|null, error: Error|null }) => {
+const insertCreditScore = async ({ profileId, score, error }: { profileId: string|null, score: string|null, error: Error|null }) => {
+  if (!profileId) return
   return await supabaseServerClient.from('CreditScores').insert({ 
     profileId, 
     score: score ? parseInt(score) : null, 

@@ -6,8 +6,6 @@ import { Box } from '@chakra-ui/react'
 import { useAuth } from '@/app/credit-score/useAuth'
 import { useCreditScore} from '@/app/credit-score/useCreditScore'
 
-const IS_PROD = false
-
 export default function Page() {
   const [ 
     authStatus,
@@ -32,7 +30,7 @@ export default function Page() {
   const isAuthenticated = authStatus === 'auth-ok'
 
   useEffect(() => {
-    if (!isAuthenticated || !mobileNumber || !otp) return
+    if (!mobileNumber || !otp) return
     getScore({ mobileNumber, otp })
   }, [ mobileNumber, otp ])
 

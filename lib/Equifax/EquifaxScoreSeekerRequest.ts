@@ -85,7 +85,7 @@ export class EquifaxScoreSeekerRequest {
       })
       
       if(!response.ok) {
-        throw new Error('Request failed')
+        throw new Error('Request to equifax failed')
       }
      
       text = await response.text() ?? ''

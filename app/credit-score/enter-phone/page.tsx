@@ -1,27 +1,46 @@
 'use client'
-
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Box, Button, Input, Heading} from '@chakra-ui/react'
+import { Container, FormControl, FormErrorMessage, Text, Box, Button, Input, Heading, VStack} from '@chakra-ui/react'
 import { useAuth } from '@/app/credit-score/useAuth'
 
 export default function Page() {
   const router = useRouter()
-  const [ mobileNumber, setMobileNumber ] = useAuth(store => [ store.mobileNumber, store.setMobileNumber ])
+  const [ 
+    mobileNumber, 
+    setMobileNumber, 
+    sendOTP, 
+    status 
+  ] = useAuth(store => [ 
+    store.mobileNumber, 
+    store.setMobileNumber, 
+    store.sendOTP,
+    store.status 
+  ])
   
-  const handleSendCode = () => {
-    router.push('enter-otp')
-  }
+  useEffect(() => {
+    if (status === 'sending-otp') {
+      router.push('enter-otp')
+    }
+  }, [status])
+
+  const isInvalid = status === 'invalid-phone'
   
   return (
-    <Box>
-      <Heading>Enter your phone number</Heading>
-      <Input 
-        type='tel'
-        value={mobileNumber ?? ''}
-        onChange={(e) => setMobileNumber(e.target.value)}
-        placeholder='Enter your mobile number'
-      />
-      <Button onClick={handleSendCode}>Send code</Button>
-    </Box>
+    <Container maxW='sm' mt='4'>
+      <FormControl isInvalid={isInvalid}>
+        <VStack spacing={1} alignItems="start">
+          <Heading fontSize='24'>Enter your mobile number</Heading>
+            <Input 
+              type='tel'
+              value={mobileNumber ?? ''}
+              onChange={(e) => setMobileNumber(e.target.value)}
+              placeholder='Your mobile number'
+            />
+            <FormErrorMessage>Invalid mobile number</FormErrorMessage>
+            <Button mt='1' onClick={sendOTP}>Send code</Button>
+        </VStack>
+      </FormControl>
+    </Container>
   )
 }
