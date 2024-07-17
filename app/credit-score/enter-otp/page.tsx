@@ -32,6 +32,7 @@ export default function Page() {
   }, [ authStatus, router ] )
 
   const isInvalid = authStatus === 'invalid-otp'
+  const showValidatingOTP = authStatus === 'validating-otp' || authStatus === 'auth-ok'
 
   return (
     <Container maxW='sm' mt='4'>
@@ -46,9 +47,9 @@ export default function Page() {
             renderInput={(props) => <input {...props} />}
             inputStyle="otp-input"
             containerStyle="otp-container"
+            shouldAutoFocus
           />
-          {authStatus === 'validating-otp' ? 
-            <ValidatingOTP /> : null}
+          {showValidatingOTP ? <ValidatingOTP /> : null}
           <FormErrorMessage>Incorrect code</FormErrorMessage>
           <FormHelperText>
             Didn&apos;t receive the code? <span onClick={sendOTP}>Try again</span>
