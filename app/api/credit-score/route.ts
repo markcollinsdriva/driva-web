@@ -1,11 +1,8 @@
 import { headers } from 'next/headers'
-import { NextRequest,  NextResponse } from "next/server"
-import { EquifaxConfig } from './EquifaxConfig'
-import { creditScoreRequestBody } from './RequestBody'
-import { EquifaxScoreSeekerRequest } from './EquifaxScoreSeekerRequest'
 import { ReadonlyHeaders } from 'next/dist/server/web/spec-extension/adapters/headers'
-import {createAddressFromAddressLine1 } from '@/lib/Address'
-import { GeoapifySearch } from '@/lib/Geoapify'
+import { NextRequest,  NextResponse } from "next/server"
+import { creditScoreRequest } from '@/lib/Equifax/CreditScoreRequest'
+import { getCreditScore } from '@/lib/Equifax/GetCreditScore'
 
 enum ENV {
   PROD = 'prod',
@@ -23,31 +20,18 @@ export async function POST(request: NextRequest) {
     validateApiKey(headersList)
 
     const body = await request.json()
-    const parseResult = creditScoreRequestBody.safeParse(body)
+    const parseResult = creditScoreRequest.safeParse(body)
     if (!parseResult.success) {
       throw new Error('Invalid request body')
     } 
     const searchParams = request.nextUrl.searchParams
     const isProd = searchParams.get('env') === ENV.PROD
-    const requestData = parseResult.data
-
-    const equifaxConfig = new EquifaxConfig({ isProd })
-    const { addressLine1, suburb, state, postCode } = requestData
-    const address = createAddressFromAddressLine1({ addressLine1, suburb, state, postCode });
-
-    ({ score, error } = await EquifaxScoreSeekerRequest.getScore({ inputs: { ...requestData, ...address }, equifaxConfig }))
-    if (score) return
-      
-    // try again with address from search
-    const addressFromSearch = await GeoapifySearch.search(`${requestData.addressLine1} ${requestData.postCode}`)
-    if (!addressFromSearch) throw new Error('No score found');
-
-    ({ score, error } = await EquifaxScoreSeekerRequest.getScore({ inputs: { ...requestData, ...addressFromSearch }, equifaxConfig }))
+    const requestData = parseResult.data;
+    ({ score, error } = await getCreditScore(requestData, { isProd }))
     if(error) throw error
   } catch (e) {
     status = 500
-    errorMessage = e instanceof Error ? e.message : 'An error occurred'
-    console.error(e)
+    errorMessage = e instanceof Error ? e.message : 'An unknown error occured'
   } finally {
     return NextResponse.json(
       { score, error: errorMessage }, 

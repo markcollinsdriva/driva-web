@@ -22,13 +22,12 @@ export class GeoapifySearch {
     try {
       const response = await fetch(url)
       if(!response.ok) {
-        throw new Error('Request failed')
+        throw new Error('Request to geoapify failed')
       }
       
       data = await response.json() as GeoapifyResponse
     } catch(e) {
-      console.log(e)
-      error = e instanceof Error ?  e : new Error('An error occurred')
+      error = e instanceof Error ?  e : new Error('An unknown error occured')
     }
     return {
       data,

@@ -28,6 +28,8 @@ const BUTTON_COLOR = '#FFDD00'
 
 const customTheme = extendTheme(
   {
+    initialColorMode: 'light',
+    useSystemColorMode: false,
     styles: {
       global: {
         // styles for the `body`
@@ -91,7 +93,7 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body>
-        <ColorModeScript initialColorMode="dark" />
+        <ColorModeScript initialColorMode="light" />
         <ChakraProvider 
           theme={customTheme}>
           {children}

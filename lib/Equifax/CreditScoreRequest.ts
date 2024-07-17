@@ -1,6 +1,6 @@
 import { z } from 'zod'
  
-export const creditScoreRequestBody = z.object({
+export const creditScoreRequest = z.object({
   firstName: z.string(),
   lastName: z.string(),
   addressLine1: z.string(),
@@ -14,6 +14,6 @@ export const creditScoreRequestBody = z.object({
   })
 })
 
-export type CreditScoreRequestBody = z.infer<typeof creditScoreRequestBody>
+export type CreditScoreRequest = z.infer<typeof creditScoreRequest>
 
 
