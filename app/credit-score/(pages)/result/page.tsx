@@ -43,8 +43,6 @@ export default function Page() {
     store.updateValues
   ])
 
-  const isAuthenticated = authStatus === 'auth-ok'
-
   const handleProductSelection = (product: Product) => {
     updateValues({ product })
     router.push('apply')
@@ -53,10 +51,6 @@ export default function Page() {
   useEffect(() => {
     getScore({ mobileNumber, otp })
   }, [ mobileNumber, otp, getScore ])
-
-  if (!isAuthenticated) {
-    router.push('enter-phone')
-  }
 
   if (isChecking) return null
 
