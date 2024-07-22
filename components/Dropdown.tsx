@@ -3,7 +3,7 @@
 import { Select } from "@chakra-ui/react"
 
 interface DropdownOption {
-  value: string
+  value: string|number
   label: string
 }
 

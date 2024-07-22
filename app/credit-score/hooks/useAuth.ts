@@ -15,7 +15,6 @@ interface AuthStore extends AuthState {
   setMobileNumber: (mobileNumber: string) => void
   sendOTP: () => Promise<void>
   setOTP: (otp: string) => Promise<void>
-  
 }
 
 const defaultState: AuthState = {

@@ -11,6 +11,23 @@ const inter = Inter({ subsets: ["latin"] });
 // };
 0
 
+import localFont from 'next/font/local'
+ 
+// Font files can be colocated inside of `app`
+const PPNeue = localFont({
+  src: [
+    {
+      path: '../public/fonts/PPNeueMontreal/web/PPNeueMontreal-Regular.woff2',
+      weight: '400',
+      style: 'normal',
+    },
+    {
+      path: '../public/fonts/PPNeueMontreal/web/PPNeueMontreal-SemiBold.woff2',
+      weight: '700',
+      style: 'normal',
+    }
+  ],
+})
 
 import { CacheProvider } from "@chakra-ui/next-js";
 // import { ChakraProvider,  } from "@chakra-ui/react";
@@ -43,9 +60,9 @@ const customTheme = extendTheme(
       },
     },
     fonts: {
-      body: "system-ui, sans-serif",
-      heading: "system-ui, sans-serif",
-      mono: "Menlo, monospace",
+      body: PPNeue.style.fontFamily,
+      heading: PPNeue.style.fontFamily,
+      mono: PPNeue.style.fontFamily,
     },
     colors: {
       brand: {

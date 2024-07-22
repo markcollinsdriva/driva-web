@@ -71,51 +71,61 @@ export type Database = {
       Profiles: {
         Row: {
           addressLine1: string | null
-          addressLine2: string | null
           dateOfBirthDay: number | null
           dateOfBirthMonth: number | null
           dateOfBirthYear: number | null
           email: string
+          employmentType: Database["public"]["Enums"]["employmentType"] | null
           firstName: string | null
           id: string
           insertedAt: string
           lastName: string | null
-          mobilePhone: string | null
+          livingSituation: Database["public"]["Enums"]["livingSituation"] | null
+          mobilePhone: string
           postCode: string | null
+          residency: Database["public"]["Enums"]["residency"] | null
           state: string | null
           suburb: string | null
           updatedAt: string
         }
         Insert: {
           addressLine1?: string | null
-          addressLine2?: string | null
           dateOfBirthDay?: number | null
           dateOfBirthMonth?: number | null
           dateOfBirthYear?: number | null
           email: string
+          employmentType?: Database["public"]["Enums"]["employmentType"] | null
           firstName?: string | null
           id?: string
           insertedAt?: string
           lastName?: string | null
-          mobilePhone?: string | null
+          livingSituation?:
+            | Database["public"]["Enums"]["livingSituation"]
+            | null
+          mobilePhone: string
           postCode?: string | null
+          residency?: Database["public"]["Enums"]["residency"] | null
           state?: string | null
           suburb?: string | null
           updatedAt?: string
         }
         Update: {
           addressLine1?: string | null
-          addressLine2?: string | null
           dateOfBirthDay?: number | null
           dateOfBirthMonth?: number | null
           dateOfBirthYear?: number | null
           email?: string
+          employmentType?: Database["public"]["Enums"]["employmentType"] | null
           firstName?: string | null
           id?: string
           insertedAt?: string
           lastName?: string | null
-          mobilePhone?: string | null
+          livingSituation?:
+            | Database["public"]["Enums"]["livingSituation"]
+            | null
+          mobilePhone?: string
           postCode?: string | null
+          residency?: Database["public"]["Enums"]["residency"] | null
           state?: string | null
           suburb?: string | null
           updatedAt?: string
@@ -133,7 +143,21 @@ export type Database = {
       }
     }
     Enums: {
-      [_ in never]: never
+      employmentType:
+        | "fullTime"
+        | "partTime"
+        | "selfEmployed"
+        | "casual"
+        | "unemployed"
+        | "pension"
+        | "contractor"
+      livingSituation:
+        | "renting"
+        | "ownerWithMortgage"
+        | "ownerWithoutMortgage"
+        | "livingWithParents"
+        | "board"
+      residency: "citizen" | "pr" | "visa"
     }
     CompositeTypes: {
       [_ in never]: never

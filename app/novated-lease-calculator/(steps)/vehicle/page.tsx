@@ -3,9 +3,8 @@
 import {  FormControl, FormLabel } from '@chakra-ui/react'
 import { LeaseTerm, PageName, leaseTermOptions } from '@/app/novated-lease-calculator/types'
 import { FormPage } from '@/app/novated-lease-calculator/components/FormWrappers'
-import { ToggleButtons } from '@/app/novated-lease-calculator/components/ToggleButtons'
+import { ToggleButtons } from '@/components/ToggleButtons'
 import { useStore } from '@/app/novated-lease-calculator/store'
-
 
 const pageName = PageName.Vehicle
 const _leaseTermOptions = [...leaseTermOptions]

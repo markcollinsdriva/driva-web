@@ -1,9 +1,9 @@
 'use server'
 
 import { EquifaxConfig } from './EquifaxConfig'
-import { CreditScoreRequest } from './CreditScoreRequest'
+import { creditScoreRequest, CreditScoreRequest } from './CreditScoreRequest'
 import { EquifaxScoreSeekerRequest } from './EquifaxScoreSeekerRequest'
-import {createAddressFromAddressLine1 } from '@/lib/Address'
+import { createAddressFromAddressLine1 } from '@/lib/Address'
 import { GeoapifySearch } from '@/lib/Geoapify'
 
 export async function getCreditScore(data: CreditScoreRequest, options : { isProd: boolean }) {
@@ -12,21 +12,27 @@ export async function getCreditScore(data: CreditScoreRequest, options : { isPro
   let error: Error|null = null
   
   try {
+    const parseResult = creditScoreRequest.safeParse(data)
+    if (parseResult.error) {
+      throw parseResult.error
+    }
+    const creditScoreRequestData = parseResult.data
+
     const equifaxConfig = new EquifaxConfig({ isProd })
-    const { addressLine1, suburb, state, postCode } = data
+    const { addressLine1, suburb, state, postCode } = creditScoreRequestData
     const address = createAddressFromAddressLine1({ addressLine1, suburb, state, postCode });
 
-    ({ score, error } = await EquifaxScoreSeekerRequest.getScore({ inputs: { ...data, ...address }, equifaxConfig }))
+    ({ score, error } = await EquifaxScoreSeekerRequest.getScore({ inputs: { ...creditScoreRequestData, ...address }, equifaxConfig }))
     if (error) throw error
       
     // try again with address from search
-    const addressFromSearch = await GeoapifySearch.search(`${data.addressLine1} ${data.postCode}`)
+    const addressFromSearch = await GeoapifySearch.search(`${creditScoreRequestData.addressLine1} ${creditScoreRequestData.postCode}`)
     if (!addressFromSearch) throw new Error('No score found');
 
-    ({ score, error } = await EquifaxScoreSeekerRequest.getScore({ inputs: { ...data, ...addressFromSearch }, equifaxConfig }))
+    ({ score, error } = await EquifaxScoreSeekerRequest.getScore({ inputs: { ...creditScoreRequestData, ...addressFromSearch }, equifaxConfig }))
     if(error) throw error
   } catch (e) {
-    error = e instanceof Error ? e : new Error('An unknown error occured')
+    error = e as Error
   } finally {
     return {
       score,

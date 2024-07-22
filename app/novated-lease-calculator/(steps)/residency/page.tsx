@@ -3,7 +3,7 @@
 import { FormControl, FormLabel } from '@chakra-ui/react'
 import { PageName, residencyStatusOptions, livingSituationOptions, LivingSiutation } from '@/app/novated-lease-calculator/types'
 import { FormPage } from '@/app/novated-lease-calculator/components/FormWrappers'
-import { ToggleButtons } from '@/app/novated-lease-calculator/components/ToggleButtons'
+import { ToggleButtons } from '@/components/ToggleButtons'
 import { Dropdown } from '@/app/novated-lease-calculator/components/Dropdown'
 import { useStore } from '@/app/novated-lease-calculator/store'
 

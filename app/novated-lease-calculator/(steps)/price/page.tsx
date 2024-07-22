@@ -4,7 +4,7 @@ import { FormControl, FormLabel } from '@chakra-ui/react'
 import { useStore } from '@/app/novated-lease-calculator/store'
 import { PageName } from '@/app/novated-lease-calculator/types'
 import { FormPage } from '@/app/novated-lease-calculator/components/FormWrappers'
-import { CurrencyInput } from '@/app/novated-lease-calculator/components/CurrencyInput'
+import { CurrencyInput } from '@/components/CurrencyInput'
 
 const pageName = PageName.Price
 

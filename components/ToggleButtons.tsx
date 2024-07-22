@@ -16,7 +16,7 @@ export const ToggleButtons = <T,>({
   getIsSelected: (option: T) => boolean,
   numPerRow?: number
 }) => {
-  const optionsChunks = chunkMaxLength(options, numPerRow)
+  // const optionsChunks = chunkMaxLength(options, numPerRow)
 
   return (
     <VStack alignItems='start'>
@@ -34,8 +34,8 @@ export const ToggleButtons = <T,>({
   )
 }
 
-const chunkMaxLength = <T,>(arr: T[], chunkSize: number, maxLength?: number) => {
-  const _arr = [...arr]
-  const length = maxLength ? maxLength : Math.ceil(arr.length / chunkSize)
-  return Array.from({ length }, () => _arr.splice(0, chunkSize))
-}
+// const chunkMaxLength = <T,>(arr: T[], chunkSize: number, maxLength?: number) => {
+//   const _arr = [...arr]
+//   const length = maxLength ? maxLength : Math.ceil(arr.length / chunkSize)
+//   return Array.from({ length }, () => _arr.splice(0, chunkSize))
+// }
