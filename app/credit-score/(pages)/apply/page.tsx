@@ -13,7 +13,7 @@ import { HeaderLogo } from '@/app/credit-score/components/HeaderLogo'
 import { CurrencyInput } from '@/components/CurrencyInput'
 import { ToggleButtons } from '@/components/ToggleButtons'
 
-export const loanApplicationFormZod = z.object({
+const loanApplicationFormZod = z.object({
   productName: productNameZodEnum,
   loanAmount: loanAmountZod,
   loanTerm: loanTermZodEnum,
