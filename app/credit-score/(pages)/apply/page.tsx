@@ -4,7 +4,7 @@ import { useForm, Controller, UseFormReturn, SubmitHandler } from 'react-hook-fo
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Container, FormLabel, FormControl, FormErrorMessage, Button, Heading, VStack, Input, Select} from '@chakra-ui/react'
 import * as z from 'zod'
-import { LOAN_AMOUNT_DEFAULT, LOAN_TERM_DEFAULT, loanAmountZod, LoanTermEnum, loanTermZodEnum, LoanType, ProductNameEnum, productNameZodEnum, Products, VehicleConditionEnum, vehicleConditionZodEnum, vehicleYearZod } from '@/app/credit-score/config'
+import { LOAN_AMOUNT_DEFAULT, LOAN_TERM_DEFAULT, loanAmountZod, LoanTermEnum, loanTermZodEnum, LoanType, ProductNameEnum, productNameZodEnum, VehicleConditionEnum, vehicleConditionZodEnum, vehicleYearZod } from '@/app/credit-score/config'
 import { useLoanApplication } from '@/app/credit-score/hooks/useLoanApplication'
 import { useCreditScore } from '@/app/credit-score/hooks/useCreditScore'
 import { useRedirectIfNoAuth } from '@/app/credit-score/hooks/useRedirectIfNoAuth'
@@ -59,8 +59,6 @@ export default function Page() {
     store.utmSource
   ])
 
-  console.log('product', product)
-
   const formReturn: FormReturn = useForm<FormValues>({
     resolver: zodResolver(loanApplicationFormZod),
     defaultValues: {
@@ -79,10 +77,7 @@ export default function Page() {
     formState: { isSubmitting, errors }
   } = formReturn
 
-  console.log('errors', errors)
-
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    console.log(data)
     try {
       if (!product) {
         throw new Error('Product not found') 

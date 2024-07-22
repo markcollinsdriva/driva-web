@@ -68,7 +68,7 @@ export default function Page() {
           {profile?.firstName ? <Heading>Welcome back {profile.firstName}</Heading> : null}
           <Center w='full' rounded='md' boxShadow='base' bg='white' p='8' borderWidth='1px' borderColor='gray.100' h='64'>
             <Box>
-              <ScoreComponent score={score} scoreStatus={'loading'} />
+              <ScoreComponent score={score} scoreStatus={scoreStatus} />
             </Box>
           </Center>
           {scoreStatus === 'success' ? <ProductsComponent onProductSelected={handleProductSelection} /> : null }
