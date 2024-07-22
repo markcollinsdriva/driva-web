@@ -1,8 +1,8 @@
 import { headers } from 'next/headers'
-import { ReadonlyHeaders } from 'next/dist/server/web/spec-extension/adapters/headers'
 import { NextRequest,  NextResponse } from "next/server"
 import { creditScoreRequest } from '@/lib/Equifax/CreditScoreRequest'
 import { getCreditScore } from '@/lib/Equifax/GetCreditScore'
+import { validateApiKey } from '@/app/api/validateApiKey'
 
 enum ENV {
   PROD = 'prod',
@@ -44,9 +44,4 @@ export async function POST(request: NextRequest) {
         }
       })
   }
-}
-
-const validateApiKey = (headersList: ReadonlyHeaders) => {
-  const apiKey = headersList.get('x-api-key')
-  if (apiKey !== process.env.X_API_KEY) throw new Error('Invalid API key')
 }

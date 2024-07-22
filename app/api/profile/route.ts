@@ -1,24 +1,40 @@
-import { headers } from 'next/headers'
-import { ReadonlyHeaders } from 'next/dist/server/web/spec-extension/adapters/headers'
 import { NextRequest,  NextResponse } from "next/server"
-import { creditScoreRequest } from '@/lib/Equifax/CreditScoreRequest'
-import { getCreditScore } from '@/lib/Equifax/GetCreditScore'
 import { supabaseServerClient } from '@/lib/Supabase/init'
+import { PostgrestError } from '@supabase/postgrest-js'
+import { validateApiKey } from '@/app/api/validateApiKey'
 
 export async function POST(request: NextRequest) {
   let status = 200
-  let data: unknown|null = null
-  let error: Error|null = null
+  let score: string|null = null
   let errorMessage: string|null = null
 
   try {
-    if(error) throw error
+    const body = await request.json()
+    const { error } =await supabaseServerClient.from('Profiles').insert({
+      firstName: body.firstName,
+      lastName: body.lastName,
+      email: body.email,
+      mobilePhone: body.mobilePhone,
+      dateOfBirthDay: body.dateOfBirthDay,
+      dateOfBirthMonth: body.dateOfBirthMonth,
+      dateOfBirthYear: body.dateOfBirthYear,
+      employmentType: body.employmentType,
+      livingSituation: body.livingSituation,
+      residency: body.residency,
+      addressLine1: body.addressLine1,
+      state: body.state,
+      suburb: body.suburb,
+      postCode: body.postCode,
+    })
+    if (error) {
+      throw new Error((error as PostgrestError).message)
+    }
   } catch (e) {
-    status = 500
-    errorMessage = e instanceof Error ? e.message : 'An unknown error occured'
+    status = 400
+    errorMessage = e instanceof Error ? e.message : 'An error occurred'
   } finally {
     return NextResponse.json(
-      { data, error: errorMessage }, 
+      { score, error: errorMessage }, 
       { 
         status,
         headers: {

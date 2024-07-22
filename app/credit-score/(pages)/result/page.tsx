@@ -11,10 +11,8 @@ import { useCreditScore} from '@/app/credit-score/hooks/useCreditScore'
 import { useLoanApplication } from '@/app/credit-score/hooks/useLoanApplication'
 import { HeaderLogo } from '@/app/credit-score/components/HeaderLogo'
 
-
 export default function Page() {
   const { isChecking } =  useRedirectIfNoAuth()
-
   const router = useRouter()
 
   const [ 
@@ -63,14 +61,14 @@ export default function Page() {
   if (isChecking) return null
 
   return (
-    <Box bg='gray.100'>
+    <Box bg='gray.100' minH='100vh'>
       <Container pb='32'>
         <HeaderLogo />
         <VStack spacing='4' alignItems='start'> 
-          <Heading>Welcome back {profile?.firstName}</Heading>
-          <Center w='full' rounded='md' boxShadow='base' bg='white' p='8' borderWidth='1px' borderColor='gray.100'>
+          {profile?.firstName ? <Heading>Welcome back {profile.firstName}</Heading> : null}
+          <Center w='full' rounded='md' boxShadow='base' bg='white' p='8' borderWidth='1px' borderColor='gray.100' h='64'>
             <Box>
-              <ScoreComponent score={score} scoreStatus={scoreStatus} />
+              <ScoreComponent score={score} scoreStatus={'loading'} />
             </Box>
           </Center>
           {scoreStatus === 'success' ? <ProductsComponent onProductSelected={handleProductSelection} /> : null }
@@ -83,11 +81,18 @@ export default function Page() {
 
 const ScoreComponent = ({ score, scoreStatus }: { score: string|null, scoreStatus: 'success'|'error'|'loading'  }) => {
   if (scoreStatus === 'error') {
-    <Text>Error</Text>
+    return <Text>Error</Text>
   }
 
   if (scoreStatus === 'loading') {
-    <Spinner />
+    return (
+      <Center>
+        <VStack spacing={2}>
+          <Spinner size='lg'/>
+          <Text fontSize='16'>Getting your score</Text>
+        </VStack>
+      </Center>
+    )
   }
 
   return (
@@ -116,11 +121,11 @@ const ProductsComponent = ({ onProductSelected }: { onProductSelected: (product:
             textAlign='center'
             key={product.name}>
             <VStack spacing={0}>
-              <Text fontWeight='bold'>{product.name}</Text>
+              <Text fontWeight='bold'>{product.label}</Text>
               <Image
                 src={product.imgSrc}
-                width={150}
-                height={120}
+                width={100}
+                height={100}
                 alt='Product'
               />
             </VStack>

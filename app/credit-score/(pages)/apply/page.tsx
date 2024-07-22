@@ -20,10 +20,10 @@ export const loanApplicationFormZod = z.object({
   vehicleYear: vehicleYearZod.optional(),
   vehicleCondition: vehicleConditionZodEnum.optional()
 }).refine(data => {
-  if (data.productName !== 'CarPurchase') return
+  if (data.productName !== 'CarPurchase') return true
   return data.vehicleYear !== null && data.vehicleCondition !== null
 }, {
-  message:'Vehicle Year and Vehicle Condition are required for Car Purchase',
+  message: 'Vehicle Year and Vehicle Condition are required for Car Purchase',
 })
 
 type FormValues = {
@@ -48,7 +48,7 @@ export default function Page() {
   ])
 
   const [ 
-    _product,
+    product,
     utmCampaign,
     utmMedium,
     utmSource
@@ -59,7 +59,7 @@ export default function Page() {
     store.utmSource
   ])
 
-  const product = _product ?? Products.CarPurchase
+  console.log('product', product)
 
   const formReturn: FormReturn = useForm<FormValues>({
     resolver: zodResolver(loanApplicationFormZod),
@@ -79,7 +79,10 @@ export default function Page() {
     formState: { isSubmitting, errors }
   } = formReturn
 
+  console.log('errors', errors)
+
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
+    console.log(data)
     try {
       if (!product) {
         throw new Error('Product not found') 
@@ -123,7 +126,7 @@ export default function Page() {
           <LoanTermForm formReturn={formReturn}/>
           
           <Button w='full' isLoading={isSubmitting} type='submit'>
-            Submit
+            Get Quote
           </Button>
           {errors?.root && <div>{errors.root.message}</div>}
         </VStack>
@@ -193,7 +196,9 @@ const LoanAmountForm = ({ formReturn}: { formReturn: FormReturn }) => {
       <Controller 
         control={control}
         name='loanAmount'
-        render={({ field }) => <CurrencyInput value={field.value} onChange={field.onChange} />}
+        render={({ field }) => (
+        <CurrencyInput value={field.value} onValueChange={field.onChange} />
+      )}
       />
       <FormErrorMessage>
         {errors.loanAmount?.message?.toString()}
