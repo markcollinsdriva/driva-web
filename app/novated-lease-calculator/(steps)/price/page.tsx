@@ -18,7 +18,7 @@ export default function Page() {
         <FormLabel>An estimate is fine</FormLabel>
         <CurrencyInput 
           value={estimatedVehiclePrice} 
-          onChange={(value) => updateValue('estimatedVehiclePrice', value ?? null)}/>
+          onValueChange={(value) => updateValue('estimatedVehiclePrice', value ?? null)}/>
       </FormControl>
     </FormPage>
   </>)

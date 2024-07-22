@@ -61,20 +61,22 @@ export default function Page() {
   if (isChecking) return null
 
   return (
-    <Box bg='gray.100' minH='100vh'>
-      <Container pb='32'>
-        <HeaderLogo />
-        <VStack spacing='4' alignItems='start'> 
-          {profile?.firstName ? <Heading>Welcome back {profile.firstName}</Heading> : null}
-          <Center w='full' rounded='md' boxShadow='base' bg='white' p='8' borderWidth='1px' borderColor='gray.100' h='64'>
-            <Box>
-              <ScoreComponent score={score} scoreStatus={scoreStatus} />
-            </Box>
-          </Center>
-          {scoreStatus === 'success' ? <ProductsComponent onProductSelected={handleProductSelection} /> : null }
-        </VStack>
-      </Container>
-    </Box>
+    // <Suspense>
+      <Box bg='gray.100' minH='100vh'>
+        <Container pb='32'>
+          <HeaderLogo />
+          <VStack spacing='4' alignItems='start'> 
+            {profile?.firstName ? <Heading>Welcome back {profile.firstName}</Heading> : null}
+            <Center w='full' rounded='md' boxShadow='base' bg='white' p='8' borderWidth='1px' borderColor='gray.100' h='64'>
+              <Box>
+                <ScoreComponent score={score} scoreStatus={scoreStatus} />
+              </Box>
+            </Center>
+            {scoreStatus === 'success' ? <ProductsComponent onProductSelected={handleProductSelection} /> : null }
+          </VStack>
+        </Container>
+      </Box>
+    // </Suspense>
   )
 }
 

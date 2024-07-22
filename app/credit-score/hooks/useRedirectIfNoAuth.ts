@@ -15,7 +15,7 @@ export const useRedirectIfNoAuth = () => {
       return
     }
     router.push('enter-phone')
-  }, [status])
+  }, [ status, router ])
 
   return {
     isChecking,
