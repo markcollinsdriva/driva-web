@@ -9,7 +9,6 @@ export interface CreditScoreState {
   profile: Profile|null // adding profile to the state is a hack, we need to verify the OTP to ensure we don't just get any data, and currently this only happens with the credit score require
   status: 'loading'|'error'|'success'
 }
-const IS_PROD = false
 
 interface CreditScoreStore extends CreditScoreState {
   getScore: ({ mobileNumber, otp }: { mobileNumber?: string|null, otp?: string|null }) => Promise<void>
@@ -26,7 +25,15 @@ export const useCreditScore= create<CreditScoreStore>((set, get) => ({
   getScore: async ({ mobileNumber, otp }) => {
     if (!mobileNumber || !otp) return
     set({ status: 'loading' })
-    const { score, error, profile } = await getCreditScoreWithAuth({ mobileNumber, otp },{ isProd: IS_PROD })
+    let score: string|null = null
+    let profile: Profile|null = null
+    let error: Error|null = null
+
+    try {
+      ({ score, error, profile } = await getCreditScoreWithAuth({ mobileNumber, otp }))
+    } catch (e) {
+      console.error(e)
+    }
     set({ 
       score, 
       status: error ? 'error' : 'success',

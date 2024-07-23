@@ -7,9 +7,6 @@ import { supabaseServerClient, Profile } from '@/lib/Supabase/init'
 import { Event, logServerEvent } from '@/lib/Supabase/events'
 import { PostgrestError } from '@supabase/supabase-js'
 
-interface CreditScoreRequestOptions {
-  isProd: boolean
-}
 
 interface CreditScoreResponse {
   score: string|null
@@ -18,7 +15,7 @@ interface CreditScoreResponse {
   errorType: 'invalid-otp'|'supabase'|'parsing'|'equifax'|null
 }
 
-export const getCreditScoreWithAuth = async ({ mobileNumber, otp }: { mobileNumber: string, otp: string }, options: CreditScoreRequestOptions): Promise<CreditScoreResponse> => {
+export const getCreditScoreWithAuth = async ({ mobileNumber, otp }: { mobileNumber: string, otp: string }): Promise<CreditScoreResponse> => {
   let score: string|null = null
   let error: Error|PostgrestError|null = null
   let errorType: CreditScoreResponse['errorType'] = null
@@ -57,7 +54,7 @@ export const getCreditScoreWithAuth = async ({ mobileNumber, otp }: { mobileNumb
       throw parseResult.error
     }
 
-    const { score: creditScore, error: creditScoreError } = await getCreditScore(parseResult.data, { isProd: options.isProd })
+    const { score: creditScore, error: creditScoreError } = await getCreditScore(parseResult.data, { isProd: profile?.isTest ?? true })
     score = creditScore
 
     if (creditScoreError) {

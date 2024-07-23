@@ -79,6 +79,7 @@ export type Database = {
           firstName: string | null
           id: string
           insertedAt: string
+          isTest: boolean | null
           lastName: string | null
           livingSituation: Database["public"]["Enums"]["livingSituation"] | null
           mobilePhone: string
@@ -98,6 +99,7 @@ export type Database = {
           firstName?: string | null
           id?: string
           insertedAt?: string
+          isTest?: boolean | null
           lastName?: string | null
           livingSituation?:
             | Database["public"]["Enums"]["livingSituation"]
@@ -119,6 +121,7 @@ export type Database = {
           firstName?: string | null
           id?: string
           insertedAt?: string
+          isTest?: boolean | null
           lastName?: string | null
           livingSituation?:
             | Database["public"]["Enums"]["livingSituation"]

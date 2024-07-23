@@ -93,7 +93,7 @@ export default function Page() {
         utmSource: utmSource ?? 'newsletter',
         utmMedium: utmMedium ?? 'organic',
         utmCampaign: utmCampaign ?? 'credit-re-engagement-au',
-        creditScore: creditScore ? Number(creditScore) : null,
+        creditScore: creditScore ? Number(creditScore) : null
       })
     } catch (e) {
       let error = e instanceof Error ? e : new Error('Unknown error')
