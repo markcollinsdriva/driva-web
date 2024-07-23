@@ -2,13 +2,35 @@
 
 import { useForm, Controller, UseFormReturn, SubmitHandler } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Container, FormLabel, FormControl, FormErrorMessage, Button, Heading, VStack, Input, Select} from '@chakra-ui/react'
+import { 
+  Container, 
+  FormLabel, 
+  FormControl, 
+  FormErrorMessage, 
+  Button, 
+  Heading, 
+  VStack, 
+  Input, 
+  Select 
+} from '@chakra-ui/react'
 import * as z from 'zod'
-import { LOAN_AMOUNT_DEFAULT, LOAN_TERM_DEFAULT, loanAmountZod, LoanTermEnum, loanTermZodEnum, LoanType, ProductNameEnum, productNameZodEnum, VehicleConditionEnum, vehicleConditionZodEnum, vehicleYearZod } from '@/app/credit-score/config'
+import { 
+  LOAN_AMOUNT_DEFAULT, 
+  LOAN_TERM_DEFAULT, 
+  loanAmountZod, 
+  LoanTermEnum, 
+  loanTermZodEnum, 
+  LoanType, 
+  ProductNameEnum,
+  productNameZodEnum,
+  VehicleConditionEnum, 
+  vehicleConditionZodEnum, 
+  vehicleYearZod 
+} from '@/app/credit-score/config'
 import { useLoanApplication } from '@/app/credit-score/hooks/useLoanApplication'
 import { useCreditScore } from '@/app/credit-score/hooks/useCreditScore'
 import { useRedirectIfNoAuth } from '@/app/credit-score/hooks/useRedirectIfNoAuth'
-import { getQuoteAndRedirect } from '@/app/credit-score/getQuoteAndRedirect'
+import { getQuote } from '@/app/credit-score/getQuote'
 import { HeaderLogo } from '@/app/credit-score/components/HeaderLogo'
 import { CurrencyInput } from '@/components/CurrencyInput'
 import { ToggleButtons } from '@/components/ToggleButtons'
@@ -78,12 +100,13 @@ export default function Page() {
   } = formReturn
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
+    console.log(data)
     try {
       if (!product) {
         throw new Error('Product not found') 
       }
 
-      const { status } =await getQuoteAndRedirect({
+      const { productURL } = await getQuote({
         productName: product.name as ProductNameEnum,
         profile,
         loanAmount: data.loanAmount,
@@ -95,8 +118,12 @@ export default function Page() {
         utmCampaign: utmCampaign ?? 'credit-re-engagement-au',
         creditScore: creditScore ? Number(creditScore) : null
       })
+
+      if (productURL) {
+        window.location.href = productURL
+      }
     } catch (e) {
-      let error = e instanceof Error ? e : new Error('Unknown error')
+      const error = e instanceof Error ? e : new Error('Unknown error')
       setError('root', {
         message: error.message,
       })
@@ -220,7 +247,8 @@ const LoanTermForm = ({ formReturn}: { formReturn: FormReturn }) => {
       name='loanTerm'
       render={({ field }) => (
         <Select 
-          {...field}>
+          {...field } 
+          onChange={e => field.onChange(Number(e.target.value))}>
           {loanTermOptions.map(option => (
             <option key={option.value} value={option.value}>{option.label}</option>
           ))}
