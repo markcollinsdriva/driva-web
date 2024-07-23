@@ -83,7 +83,7 @@ export default function Page() {
         throw new Error('Product not found') 
       }
 
-      await getQuoteAndRedirect({
+      const { status } =await getQuoteAndRedirect({
         productName: product.name as ProductNameEnum,
         profile,
         loanAmount: data.loanAmount,
