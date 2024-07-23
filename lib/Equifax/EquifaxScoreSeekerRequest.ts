@@ -53,7 +53,7 @@ export class EquifaxScoreSeekerRequest {
     
     const errorResponse = requestError ?? formatError ?? null
     if (errorResponse) {
-      Sentry.captureException(errorResponse, {
+      Sentry?.captureException(errorResponse, {
         level: 'info',
         tags: {
           type: 'EquifaxScoreSeeker'

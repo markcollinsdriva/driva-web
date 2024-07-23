@@ -9,6 +9,5 @@ export enum Event {
 }
 
 export const logServerEvent = async (name: string, data: any) => {
-  console.log('Logging event', name, data)
   return await supabaseServerClient.from('Events').insert({ name, meta: data, env: CURRENT_ENV })
 }

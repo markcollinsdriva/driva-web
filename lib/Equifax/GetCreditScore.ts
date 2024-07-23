@@ -6,7 +6,7 @@ import { EquifaxScoreSeekerRequest } from './EquifaxScoreSeekerRequest'
 import { createAddressFromAddressLine1 } from '@/lib/Address'
 import { GeoapifySearch } from '@/lib/Geoapify'
 
-export async function getCreditScore(data: CreditScoreRequest, options : { isProd: boolean }) {
+export async function getCreditScore(data: CreditScoreRequest, options : { isProd: boolean }): Promise<{ score: string|null, error: Error|null }> {
   const { isProd } = options
   let score: string|null = null
   let error: Error|null = null
@@ -24,9 +24,10 @@ export async function getCreditScore(data: CreditScoreRequest, options : { isPro
 
     ({ score, error } = await EquifaxScoreSeekerRequest.getScore({ inputs: { ...creditScoreRequestData, ...address }, equifaxConfig }))
     if (error) throw error
+    if (score) return { score, error }
       
     // try again with address from search
-    const addressFromSearch = await GeoapifySearch.search(`${creditScoreRequestData.addressLine1} ${creditScoreRequestData.postCode}`)
+    const addressFromSearch = await GeoapifySearch.search(`${creditScoreRequestData.addressLine1} ${creditScoreRequestData.state} ${creditScoreRequestData.postCode}`)
     if (!addressFromSearch) throw new Error('No score found');
 
     ({ score, error } = await EquifaxScoreSeekerRequest.getScore({ inputs: { ...creditScoreRequestData, ...addressFromSearch }, equifaxConfig }))

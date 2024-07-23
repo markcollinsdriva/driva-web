@@ -31,6 +31,7 @@ export async function POST(request: NextRequest) {
     if(error) throw error
   } catch (e) {
     status = 500
+    console.log(e)
     errorMessage = e instanceof Error ? e.message : 'An unknown error occured'
   } finally {
     return NextResponse.json(
