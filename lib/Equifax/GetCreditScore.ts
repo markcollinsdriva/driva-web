@@ -21,19 +21,15 @@ export async function getCreditScore(data: CreditScoreRequest, options : { isPro
     const equifaxConfig = new EquifaxConfig({ isProd })
     const { addressLine1, suburb, state, postCode } = creditScoreRequestData
     const address = createAddressFromAddressLine1({ addressLine1, suburb, state, postCode });
-
     ({ score, error } = await EquifaxScoreSeekerRequest.getScore({ inputs: { ...creditScoreRequestData, ...address }, equifaxConfig }))
-    if (error) throw error
-    if (score) return { score, error }
-      
-    // try again with address from search
+    if (score) throw null 
+    // if score is found, we can just move to finally so the return statement is executed
+    // is no score, then try again with address from search
     const addressFromSearch = await GeoapifySearch.search(`${creditScoreRequestData.addressLine1} ${creditScoreRequestData.state} ${creditScoreRequestData.postCode}`)
     if (!addressFromSearch) throw new Error('No score found');
-
     ({ score, error } = await EquifaxScoreSeekerRequest.getScore({ inputs: { ...creditScoreRequestData, ...addressFromSearch }, equifaxConfig }))
-    if(error) throw error
   } catch (e) {
-    error = e as Error
+    error = e as Error|null
   } finally {
     return {
       score,
