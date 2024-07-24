@@ -1,0 +1,52 @@
+'use client'
+
+import { create } from 'zustand'
+import { Profile } from '@/lib/Supabase/init'
+import { getProfile } from '../auth'
+import { useAuth } from './useAuth'
+import { useEffect } from 'react'
+
+export interface ProfileState {
+  status: 'fetching'|'error'|'success'
+  profile: Profile|null,
+}
+
+interface ProfileStore extends ProfileState {
+  get: ({ mobileNumber, otp }: { mobileNumber: string, otp: string}) => void
+}
+
+const defaultState: ProfileState = {
+  status: 'fetching',
+  profile: null
+}
+
+const useProfileStore = create<ProfileStore>((set, get) => ({
+  ...defaultState,
+  get: async ({ mobileNumber, otp }) => {
+    set({ status: 'fetching' })
+    // const { mobileNumber, otp } = useAuth.getState()
+    if (!mobileNumber || !otp) return
+    const { data, error } = await getProfile({ mobileNumber, otp })
+    set({ 
+      profile: data, 
+      status: error ? 'error' : 'success' 
+    })
+  }
+}))
+
+
+export const useProfile = () => {
+  const [ mobileNumber, otp ] = useAuth(store => [ store.mobileNumber, store.otp ])
+  const { get, profile } = useProfileStore()
+
+  useEffect(() => {
+    if (!mobileNumber || !otp) return
+    get({ mobileNumber, otp })
+  }, [ mobileNumber, otp ])
+
+  return {
+    profile
+  }
+}
+
+

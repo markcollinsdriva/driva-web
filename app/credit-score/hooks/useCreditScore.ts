@@ -1,7 +1,7 @@
 'use client'
 
 import { create } from 'zustand'
-import { getCreditScoreWithAuth } from '@/app/credit-score/getCreditScoreWithAuth'
+import { getCreditScore } from '@/app/credit-score/getCreditScore'
 import { Profile } from '@/lib/Supabase/init'
 
 export interface CreditScoreState {
@@ -30,7 +30,7 @@ export const useCreditScore= create<CreditScoreStore>((set, get) => ({
     let error: Error|null = null
 
     try {
-      ({ score, error, profile } = await getCreditScoreWithAuth({ mobileNumber, otp }))
+      ({ score, error, profile } = await getCreditScore({ mobileNumber, otp }))
     } catch (e) {
       console.error(e)
     }

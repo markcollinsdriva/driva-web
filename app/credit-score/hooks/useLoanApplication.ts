@@ -20,7 +20,6 @@ const defaultState: LoanApplicationState = {
   utmSource: null,
   utmMedium: null,
   utmCampaign: null,
-  
 }
 
 export const useLoanApplication = create<LoanApplicationStore>((set, get) => ({

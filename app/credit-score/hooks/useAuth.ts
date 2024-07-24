@@ -1,10 +1,12 @@
 'use client'
 
 import { create } from 'zustand'
-import { sendOTP, validateOTP } from '@/app/credit-score/auth'
+import { persist, createJSONStorage } from 'zustand/middleware'
+import { getProfile, sendOTP, validateOTP } from '@/app/credit-score/auth'
 
 export interface AuthState {
   readonly otpLength: number
+  profileId: string|null
   mobileNumber: string|null
   countryOfMobileNumber: keyof typeof MobilePhoneNumberRegexPerCountry
   otp: string|null
@@ -19,41 +21,55 @@ interface AuthStore extends AuthState {
 
 const defaultState: AuthState = {
   otpLength: 4,
+  profileId: null,
   mobileNumber: null,
   countryOfMobileNumber: 'Australia',
   otp: null,
   status: 'enter-phone',
 }
 
-export const useAuth = create<AuthStore>((set, get) => ({
-  ...defaultState,
-  setMobileNumber: (mobileNumber) => {
-    set({ 
-      mobileNumber,
-      status: 'enter-phone'
-    })
-  },
-  sendOTP: async () => {
-    const { mobileNumber, countryOfMobileNumber } = get()
-    const isValid = checkIfValidMobileNumber(mobileNumber, countryOfMobileNumber)
-    set({ status: isValid ? 'sending-otp' : 'invalid-phone' })
-    if (!mobileNumber || !isValid) return
-    await sendOTP({  mobileNumber })
-    set({ status: 'enter-otp' })
-  },
-  setOTP: async (_otp) => {
-    set({ otp: _otp, status: 'enter-otp' })
-    const { mobileNumber, otp, otpLength } = get()
-    if (!mobileNumber) {
-      set({ status: 'enter-phone' })
-      return
+export const useAuth = create(
+  persist<AuthStore>(
+    (set, get) => ({
+      ...defaultState,
+      setMobileNumber: (mobileNumber) => {
+        set({ 
+          mobileNumber,
+          status: 'enter-phone'
+        })
+      },
+      sendOTP: async () => {
+        const { mobileNumber, countryOfMobileNumber } = get()
+        const isValid = checkIfValidMobileNumber(mobileNumber, countryOfMobileNumber)
+        set({ status: isValid ? 'sending-otp' : 'invalid-phone' })
+        if (!mobileNumber || !isValid) return
+        await sendOTP({  mobileNumber })
+        set({ status: 'enter-otp' })
+      },
+      setOTP: async (_otp) => {
+        set({ otp: _otp, status: 'enter-otp' })
+        const { mobileNumber, otp, otpLength } = get()
+        if (!mobileNumber) {
+          set({ status: 'enter-phone' })
+          return
+        }
+        if(!otp || otp.length !== otpLength) return
+        set({ status: 'validating-otp'})
+        // const isValid = await validateOTP({ mobileNumber, otp })
+        const { data } = await getProfile({ mobileNumber, otp })
+        const profileId = data?.id ?? null
+        set({ 
+          status: profileId ? 'auth-ok' : 'invalid-otp', 
+          profileId
+        })
+      }
+    }),
+    {
+      name: 'auth',
+      storage: createJSONStorage(() => localStorage)
     }
-    if(!otp || otp.length !== otpLength) return
-    set({ status: 'validating-otp'})
-    const isValid = await validateOTP({ mobileNumber, otp })
-    set({ status: isValid ? 'auth-ok' : 'invalid-otp' })
-  }
-}))
+  )
+)
 
 
 const MobilePhoneNumberRegexPerCountry = {
