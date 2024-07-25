@@ -13,7 +13,7 @@ import {
   SliderThumb
  } from '@chakra-ui/react'
 import { NumericFormat } from 'react-number-format'
-import { RepaymentPeriod } from '@/app/calculator/components/calculators'
+import { RepaymentPeriod } from '@/lib/Calculator/loan'
 
 
 interface Input {
@@ -74,9 +74,9 @@ export const LoanRepaymentFrequencyInput = ({ value, onValueChange }: {
             Fortnightly
           </CustomRadio> */}
           <CustomRadio<RepaymentPeriod> 
-            isChecked={value === RepaymentPeriod.Montly}
+            isChecked={value === RepaymentPeriod.Monthly}
             onChange={value => onValueChange(value)}
-            value={RepaymentPeriod.Montly}>
+            value={RepaymentPeriod.Monthly}>
             Montly
           </CustomRadio>
         </Stack>
