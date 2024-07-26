@@ -2,6 +2,7 @@
 import { Container,  Box } from '@chakra-ui/react'
 import { HeaderLogo } from '@/app/credit-score/components/HeaderLogo'
 import { TrustBox } from './TrustPilot'
+import { Suspense } from 'react'
 
 export default function Layout({
   children,
@@ -25,8 +26,9 @@ export default function Layout({
           border="1px solid #e5e7eb"
           borderRadius='10'
           mt='-24' p='6' mb='16' >
-          
-          {children}
+          <Suspense fallback={<div>Loading...</div>}>
+            {children}
+          </Suspense>
         </Container>
       </Box>
     <TrustBox />
