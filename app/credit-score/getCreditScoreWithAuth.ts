@@ -7,7 +7,6 @@ import { supabaseServerClient, Profile } from '@/lib/Supabase/init'
 import { Event, logServerEvent } from '@/lib/Supabase/events'
 import { PostgrestError } from '@supabase/supabase-js'
 
-
 interface CreditScoreResponse {
   score: string|null
   error: Error|null

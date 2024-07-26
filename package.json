@@ -14,6 +14,7 @@
     "@chakra-ui/react": "^2.8.2",
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
+    "@fullstory/browser": "^2.0.5",
     "@hookform/resolvers": "^3.9.0",
     "@sentry/nextjs": "^8",
     "@supabase/supabase-js": "^2.44.3",

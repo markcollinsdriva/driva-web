@@ -3,7 +3,18 @@
 import { useEffect } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { Box, Container, Heading, SimpleGrid, Circle, Center, Text, VStack, Spinner } from '@chakra-ui/react'
+import { 
+  Box, 
+  Container, 
+  Heading, 
+  SimpleGrid, 
+  Circle, 
+  Center, 
+  Text, 
+  VStack, 
+  Button,
+  Spinner
+} from '@chakra-ui/react'
 import { Product, ProductsList } from '@/app/credit-score/config'
 import { useAuth } from '@/app/auth/hooks/useAuth'
 import { useRedirectIfNoAuth } from '@/app/auth/hooks/useRedirectIfNoAuth'
@@ -16,11 +27,9 @@ export default function Page() {
   const router = useRouter()
 
   const [ 
-    authStatus,
     mobileNumber,
     otp
   ] = useAuth(store => [ 
-    store.status,
     store.mobileNumber,
     store.otp,
   ])
@@ -52,28 +61,40 @@ export default function Page() {
     getScore({ mobileNumber, otp })
   }, [ mobileNumber, otp, getScore ])
 
+  console.log('isChecking', isChecking)
+
   if (isChecking) return null
 
   return (
-    // <Suspense>
-      <Box bg='gray.100' minH='100vh'>
-        <Container pb='32'>
-          <HeaderLogo />
-          <VStack spacing='4' alignItems='start'> 
-            {profile?.firstName ? <Heading>Welcome back {profile.firstName}</Heading> : null}
-            <Center w='full' rounded='md' boxShadow='base' bg='white' p='8' borderWidth='1px' borderColor='gray.100' h='64'>
-              <Box>
-                <ScoreComponent score={score} scoreStatus={scoreStatus} />
-              </Box>
-            </Center>
-            {scoreStatus === 'success' ? <ProductsComponent onProductSelected={handleProductSelection} /> : null }
-          </VStack>
-        </Container>
+    <Box minH='100vh' bg='gray.100'>
+      <Box 
+        height='64'
+        pt='5'
+        px={['4', '10']}
+        borderBottom="1px solid #e5e7eb"
+        backgroundColor='#97edcc'>
+        <HeaderLogo />
       </Box>
-    // </Suspense>
+      <Container pb='32'>
+        <VStack spacing='4' alignItems='start' mt='-44'> 
+          {profile?.firstName ? <Heading>Welcome back {profile.firstName}</Heading> : null}
+          <Center w='full' rounded='md' boxShadow='base' bg='white' p='8' borderWidth='1px' borderColor='gray.100' h='64'>
+            <Box>
+              <ScoreComponent score={score} scoreStatus={scoreStatus} />
+            </Box>
+          </Center>
+          {scoreStatus !== 'success' 
+            ? null
+            : showCreditRepair(score)
+            ? <CreditRepairRefer />
+            : <ProductsComponent onProductSelected={handleProductSelection} /> }
+        </VStack>
+      </Container>
+    </Box>
   )
 }
 
+const showCreditRepair = (score: string|null) => score && Number(score) < 300
 
 const ScoreComponent = ({ score, scoreStatus }: { score: string|null, scoreStatus: 'success'|'error'|'loading'  }) => {
   if (scoreStatus === 'error') {
@@ -103,11 +124,10 @@ const ScoreComponent = ({ score, scoreStatus }: { score: string|null, scoreStatu
   )
 }
 
-
 const ProductsComponent = ({ onProductSelected }: { onProductSelected: (product: Product) => void }) => {
   return (
     <Box w='full' mt='6'>
-      <Heading>We can help with</Heading>
+      <Heading>Your offers</Heading>
       <SimpleGrid columns={2} spacing={4} w='full' mt='4'>
         {ProductsList.map((product) => (
           <Center 
@@ -131,3 +151,23 @@ const ProductsComponent = ({ onProductSelected }: { onProductSelected: (product:
     </Box>
   )
 }
+
+
+const CreditRepairRefer = () => {
+  return (
+    <Box w='full' mt='6'>
+      <Box rounded='md' boxShadow='base' bg='white' p='6' border='1px' borderColor='gray.100'>
+        <VStack spacing={4} alignItems='start'>
+          <Image src='/images/credit-repair-logo.png' width={200} height={200} alt='Credit Repair Australia' />
+          <Heading fontSize='22'>You might need Credit Repair</Heading>
+          <Text >Your credit score is a bit low to apply for any products</Text>
+          <Text>Credit Repair Australia has been helping Aussies fix their credit reports for 20 years. They will assess your credit report and provide options that help improve your credit rating, get you out of debt, or get your loan approved.</Text>
+          <Text>To get started, click "Refer me" and we will send them your details, and Credit Repair Australia will reach out for a FREE consultation.</Text>
+          <Button w='full'>Refer me</Button>
+          <Text fontSize='12'>By clicking the continue button, I give Driva persmission to share my information with the above partner. </Text>
+        </VStack>
+      </Box>
+    </Box>
+  )
+}
+
