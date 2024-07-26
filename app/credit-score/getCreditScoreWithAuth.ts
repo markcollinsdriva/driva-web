@@ -2,7 +2,7 @@
  
 import { creditScoreRequest } from '@/lib/Equifax/CreditScoreRequest'
 import { getCreditScore } from '@/lib/Equifax/GetCreditScore'
-import { validateOTP } from './auth'
+import { validateOTP } from '../auth/actions'
 import { supabaseServerClient, Profile } from '@/lib/Supabase/init'
 import { Event, logServerEvent } from '@/lib/Supabase/events'
 import { PostgrestError } from '@supabase/supabase-js'

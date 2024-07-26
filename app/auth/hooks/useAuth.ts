@@ -1,7 +1,7 @@
 'use client'
 
 import { create } from 'zustand'
-import { sendOTP, validateOTP } from '@/app/credit-score/auth'
+import { sendOTP, validateOTP } from '@/app/auth/actions'
 
 export interface AuthState {
   readonly otpLength: number

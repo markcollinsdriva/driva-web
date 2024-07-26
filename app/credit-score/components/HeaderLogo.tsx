@@ -5,10 +5,10 @@ import { Box } from '@chakra-ui/react'
 
 export const HeaderLogo = () => {
   return (
-    <Box py='4'>
+    <Box pb='6'>
       <Image 
         priority
-        src='/images/driva-logo.svg' 
+        src='/images/driva-logo-black.svg' 
         width={0} height={0} 
         style={{ width: '100px', height: 'auto' }}
         alt='Driva logo' />

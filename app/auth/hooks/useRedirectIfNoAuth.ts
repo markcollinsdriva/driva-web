@@ -14,7 +14,7 @@ export const useRedirectIfNoAuth = () => {
       setIsChecking(false)
       return
     }
-    router.push('/credit-score/enter-phone')
+    router.push('/auth/enter-phone')
   }, [ status, router ])
 
   return {
