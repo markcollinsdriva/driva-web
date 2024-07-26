@@ -3,7 +3,7 @@
 import { kv } from '@vercel/kv'
 import { creditScoreRequest } from '@/lib/Equifax/CreditScoreRequest'
 import { getCreditScore as getCreditScoreEquifax } from '@/lib/Equifax/GetCreditScore'
-import { validateOTP } from './auth'
+import { validateOTP } from '@/app/auth/actions'
 import { supabaseServerClient, Profile } from '@/lib/Supabase/init'
 import { Event, logServerEvent } from '@/lib/Supabase/events'
 import { PostgrestError } from '@supabase/supabase-js'

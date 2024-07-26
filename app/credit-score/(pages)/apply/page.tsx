@@ -29,7 +29,7 @@ import {
 } from '@/app/credit-score/config'
 import { useLoanApplication } from '@/app/credit-score/hooks/useLoanApplication'
 import { useCreditScore } from '@/app/credit-score/hooks/useCreditScore'
-import { useRedirectIfNoAuth } from '@/app/credit-score/hooks/useRedirectIfNoAuth'
+import { useRedirectIfNoAuth } from '@/app/auth/hooks/useRedirectIfNoAuth'
 import { getQuote } from '@/app/credit-score/getQuote'
 import { HeaderLogo } from '@/app/credit-score/components/HeaderLogo'
 import { CurrencyInput } from '@/components/CurrencyInput'
@@ -100,7 +100,6 @@ export default function Page() {
   } = formReturn
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    console.log(data)
     try {
       if (!product) {
         throw new Error('Product not found') 

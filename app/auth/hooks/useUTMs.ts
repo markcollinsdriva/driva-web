@@ -1,7 +1,7 @@
 'use client'
 
 import { useSearchParams } from "next/navigation"
-import { useLoanApplication } from "./useLoanApplication"
+import { useLoanApplication } from "@/app/credit-score/hooks/useLoanApplication"
 import { useEffect } from "react"
 
 export const useUTMs = () => {
