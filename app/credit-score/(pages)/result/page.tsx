@@ -55,22 +55,27 @@ export default function Page() {
   if (isChecking) return null
 
   return (
-    // <Suspense>
-      <Box bg='gray.100' minH='100vh'>
-        <Container pb='32'>
-          <HeaderLogo />
-          <VStack spacing='4' alignItems='start'> 
-            {profile?.firstName ? <Heading>Welcome back {profile.firstName}</Heading> : null}
-            <Center w='full' rounded='md' boxShadow='base' bg='white' p='8' borderWidth='1px' borderColor='gray.100' h='64'>
-              <Box>
-                <ScoreComponent score={score} scoreStatus={scoreStatus} />
-              </Box>
-            </Center>
-            {scoreStatus === 'success' ? <ProductsComponent onProductSelected={handleProductSelection} /> : null }
-          </VStack>
-        </Container>
+    <Box minH='100vh' bg='gray.100'>
+      <Box 
+        height='64'
+        pt='5'
+        px={['4', '10']}
+        borderBottom="1px solid #e5e7eb"
+        backgroundColor='#97edcc'>
+        <HeaderLogo />
       </Box>
-    // </Suspense>
+      <Container pb='32'>
+        <VStack spacing='4' alignItems='start' mt='-44'> 
+          {profile?.firstName ? <Heading>Welcome back {profile.firstName}</Heading> : null}
+          <Center w='full' rounded='md' boxShadow='base' bg='white' p='8' borderWidth='1px' borderColor='gray.100' h='64'>
+            <Box>
+              <ScoreComponent score={score} scoreStatus={scoreStatus} />
+            </Box>
+          </Center>
+          {scoreStatus === 'success' ? <ProductsComponent onProductSelected={handleProductSelection} /> : null }
+        </VStack>
+      </Container>
+    </Box>
   )
 }
 
@@ -131,3 +136,42 @@ const ProductsComponent = ({ onProductSelected }: { onProductSelected: (product:
     </Box>
   )
 }
+
+
+const CreditRepairRefer = () => {
+
+  return (
+    <Box w='full' mt='6'>
+      <Heading>Credit Repair Australia</Heading>
+      <Text>Your credit score is a bit low to apply for any products</Text>
+      <Text>Credit Repair Australia has been helping Aussies fix their credit reports for 20 years.s</Text>
+      <Text>CRA will assess your credit report and provide options that help improve your credit rating, get you out of debt, or get your loan approved.</Text>
+      <Text>To get started, click "Refer me" and we will send them your details, and Credit Repair Australia will reach out for a FREE consultation.</Text>
+      <Button>Refer me</Button>
+      <Text>By clicking the continue button, I give Driva persmission to share my information with the above partner. </Text>
+    </Box>
+  )
+}
+
+// Thank you for submitting a loan application with us
+// Unfortunately we are unable to match you with a loan option at this time. However, we partner with Credit Repair Australia, who can help you develop a personalised plan to rebuild your credit and increase your chances of future loan approvals.
+
+// Credit Repair Australia
+// Credit Repair Australia has been helping Aussies fix their credit reports for 20 years. Learn more.
+
+// To get started, click "Refer me" and we will send them your details, and Credit Repair Australia will reach out for a FREE consultation.
+
+
+// Refer me
+// By clicking the continue button, I agree with Driva to share my information with the partner.
+
+// 1300 755 494
+// contact@driva.com.au
+
+
+// How Credit Repair Australia can help
+// Credit Repair Australia (CRA) is one of Australia's foremost consumer credit restoration experts, assisting thousands of Australians to take control of their finances.
+
+// CRA will assess your credit report and provide options that help improve your credit rating, get you out of debt, or get your loan approved.
+
+// They will assess your credit report and provide a consultation to work with you to provide the solutions to improve your credit score.

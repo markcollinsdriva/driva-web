@@ -8,7 +8,6 @@ import { supabaseServerClient, Profile } from '@/lib/Supabase/init'
 import { Event, logServerEvent } from '@/lib/Supabase/events'
 import { PostgrestError } from '@supabase/supabase-js'
 
-
 interface CreditScoreResponse {
   score: string|null
   error: Error|null
@@ -33,8 +32,6 @@ export const getCreditScore = async ({ mobileNumber, otp }: { mobileNumber: stri
     }
 
     score = await kv.get(getCreditScoreKey(mobileNumber))
-    // @ts-ignore if there is a score we can use the return in finally
-    if (score) return
     
     const { data, error: supabaseError } = await supabaseServerClient.from('Profiles').select('*').eq('mobilePhone', mobileNumber).single()
     profile = data
@@ -42,6 +39,9 @@ export const getCreditScore = async ({ mobileNumber, otp }: { mobileNumber: stri
       errorType = 'supabase'
       throw supabaseError
     }
+
+    // @ts-ignore if there is a score we can use the return in finally
+    if (score) return
         
     const parseResult = creditScoreRequest.safeParse({
       firstName: data?.firstName,
