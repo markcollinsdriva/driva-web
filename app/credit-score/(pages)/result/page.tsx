@@ -71,7 +71,7 @@ export default function Page() {
         height='64'
         pt='5'
         px={['4', '10']}
-        borderBottom="1px solid #e5e7eb"
+        borderBottom='1px solid #e5e7eb'
         backgroundColor='#97edcc'>
         <HeaderLogo />
       </Box>
@@ -162,7 +162,7 @@ const CreditRepairRefer = () => {
           <Heading fontSize='22'>You might need Credit Repair</Heading>
           <Text >Your credit score is a bit low to apply for any products</Text>
           <Text>Credit Repair Australia has been helping Aussies fix their credit reports for 20 years. They will assess your credit report and provide options that help improve your credit rating, get you out of debt, or get your loan approved.</Text>
-          <Text>To get started, click "Refer me" and we will send them your details, and Credit Repair Australia will reach out for a FREE consultation.</Text>
+          <Text>To get started, click &quot;Refer me&quot; and we will send them your details, and Credit Repair Australia will reach out for a FREE consultation.</Text>
           <Button w='full'>Refer me</Button>
           <Text fontSize='12'>By clicking the continue button, I give Driva persmission to share my information with the above partner. </Text>
         </VStack>
