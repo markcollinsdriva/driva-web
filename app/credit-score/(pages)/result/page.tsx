@@ -152,7 +152,6 @@ const ProductsComponent = ({ onProductSelected }: { onProductSelected: (product:
   )
 }
 
-
 const CreditRepairRefer = () => {
   return (
     <Box w='full' mt='6'>
