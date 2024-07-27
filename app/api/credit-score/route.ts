@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
     } 
     const searchParams = request.nextUrl.searchParams
     const isProd = searchParams.get('env') === ENV.PROD
-    const requestData = parseResult.data;
+    const requestData = parseResult.data;    
     ({ score, error } = await getCreditScore(requestData, { isProd }))
     if(error) throw error
   } catch (e) {

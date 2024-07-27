@@ -1,5 +1,5 @@
 import { NextRequest,  NextResponse } from "next/server"
-import { Profile, supabaseServerClient } from '@/lib/Supabase/init'
+import { Profile, ProfileInsert, supabaseServerClient } from '@/lib/Supabase/init'
 import { PostgrestError } from '@supabase/postgrest-js'
 import { validateApiKey } from '@/app/api/validateApiKey'
 
@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
   let data: Profile|null = null
   try {
     validateApiKey(request.headers)
-    const body = await request.json()
+    const body = await request.json() as ProfileInsert
     const { error, data: profile } =await supabaseServerClient.from('Profiles').insert({
       firstName: body.firstName,
       lastName: body.lastName,
