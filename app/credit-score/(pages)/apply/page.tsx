@@ -100,7 +100,6 @@ export default function Page() {
   } = formReturn
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    console.log(data)
     try {
       if (!product) {
         throw new Error('Product not found') 

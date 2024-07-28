@@ -1,7 +1,9 @@
-export enum RepaymentPeriod {
-  Weekly,
-  Fortnightly,
-  Monthly
+
+export enum Frequency {
+  Weekly = 'weekly',
+  Fortnightly = 'fortnightly',
+  Monthly = 'monthly',
+  Yearly = 'yearly'
 }
 
 export enum SolveFor {
@@ -14,25 +16,35 @@ export interface LoanInputsBase {
   repaymentAmount: number,
   loanTermYears: number,
   interestRatePerAnnum: number
-  repaymentPeriod: RepaymentPeriod
+  repaymentPeriod: Frequency
 }
 
 export type LoanInputsOptional = Partial<LoanInputsBase>
 export type LoanScenarioAmount = Omit<LoanInputsBase, 'repaymentAmount'>
 export type LoanScenarioRepayment = Omit<LoanInputsBase, 'loanAmount'>
 
-export const NumberOfRepaymentPeriodsPerYear = {
-  [RepaymentPeriod.Weekly]: 52,
-  [RepaymentPeriod.Fortnightly]: 26,
-  [RepaymentPeriod.Monthly]: 12,
+export const FrequencyPeriodsPerYear = {
+  [Frequency.Weekly]: 52,
+  [Frequency.Fortnightly]: 26,
+  [Frequency.Monthly]: 12,
+  [Frequency.Yearly]: 1,
 } as const
+
+export const FrequencyPeriodsPerMonth = {
+  [Frequency.Weekly]: 4.3,
+  [Frequency.Fortnightly]: 2.15,
+  [Frequency.Monthly]: 1,
+  [Frequency.Yearly]: 1 / 12,
+} as const
+
+export const convertToMonthly = (value: number, from: Frequency): number => Math.round(value * FrequencyPeriodsPerMonth[from])
 
 export const CalculatorDefaults: LoanInputsBase = {
   loanAmount: 0,
   repaymentAmount: 0,
   loanTermYears: 5,
   interestRatePerAnnum: 0.07,
-  repaymentPeriod: RepaymentPeriod.Monthly
+  repaymentPeriod: Frequency.Monthly
 }
 
 export const calculateInterestRatePerPeriod = ({ 
@@ -40,18 +52,17 @@ export const calculateInterestRatePerPeriod = ({
   periodsPerYear 
 }: { 
   interestRatePerAnnum: number, 
-  periodsPerYear: typeof NumberOfRepaymentPeriodsPerYear[RepaymentPeriod] 
+  periodsPerYear: typeof FrequencyPeriodsPerYear[Frequency] 
 }): number => {
   return interestRatePerAnnum / periodsPerYear
   //return (Math.pow(1 + interestRatePerAnnum, 1 / periodsPerYear) - 1) 
   // this seems more mathematically correct but isn't how calculators do it
 }
 
-
 export const calculateLoanRepayment = (inputs: LoanScenarioAmount): number => {
   const { loanTermYears, loanAmount, interestRatePerAnnum, repaymentPeriod } = inputs
   
-  const periodsPerYear = NumberOfRepaymentPeriodsPerYear[repaymentPeriod]
+  const periodsPerYear = FrequencyPeriodsPerYear[repaymentPeriod]
   const numberOfPayments = loanTermYears * periodsPerYear
 
   const interestRatePerPeriod = calculateInterestRatePerPeriod({ interestRatePerAnnum, periodsPerYear })
@@ -64,13 +75,14 @@ export const calculateLoanRepayment = (inputs: LoanScenarioAmount): number => {
 export const calculateLoanAmount = (inputs: LoanScenarioRepayment): number => {
   const { loanTermYears, repaymentAmount, interestRatePerAnnum, repaymentPeriod } = inputs
   
-  const periodsPerYear = NumberOfRepaymentPeriodsPerYear[repaymentPeriod]
+  const periodsPerYear = FrequencyPeriodsPerYear[repaymentPeriod]
   const numberOfPayments = loanTermYears * periodsPerYear
 
   const interestRatePerPeriod = calculateInterestRatePerPeriod({ interestRatePerAnnum, periodsPerYear })
 
   const discountFactor = (Math.pow(1 + interestRatePerPeriod, numberOfPayments) - 1) / (interestRatePerPeriod * Math.pow(1 + interestRatePerPeriod, numberOfPayments))
   const loanAmount = Math.round(repaymentAmount * discountFactor)
+  
   return loanAmount
 }
 

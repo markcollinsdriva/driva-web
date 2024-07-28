@@ -8,7 +8,7 @@ import { NumericFormat } from 'react-number-format'
 export const CurrencyInput = ({
   value,
   onValueChange,
-  onChange
+  onChange,
 }: {
   value: number|null
   onValueChange?: (value?: number) => unknown
