@@ -9,6 +9,8 @@ import {
 import { IS_PROD } from '@/lib/config'
 import { customTheme } from './theme'
 
+const FULL_STORY_ORG_ID = 'YNW75'
+
 export default function Providers({
   children,
 }: Readonly<{
@@ -17,7 +19,7 @@ export default function Providers({
 
   useEffect(() => {
     if (!IS_PROD) return;
-    initFullStory({ orgId: 'YNW75' })
+    initFullStory({ orgId: FULL_STORY_ORG_ID })
   }, [])
 
   return (

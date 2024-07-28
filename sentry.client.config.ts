@@ -13,8 +13,6 @@ if (isProd) {
     // Adjust this value in production, or use tracesSampler for greater control
     tracesSampleRate: 1,
   
-    
-  
     // Setting this option to true will print useful information to the console while you're setting up Sentry.
     debug: false,
   
@@ -27,11 +25,7 @@ if (isProd) {
     // You can remove this option if you're not planning to use the Sentry Session Replay feature:
     integrations: [
       Sentry.browserTracingIntegration(),
-      // Sentry.replayIntegration({
-      //   // Additional Replay configuration goes in here, for example:
-      //   maskAllText: true,
-      //   blockAllMedia: true,
-      // }),
+      Sentry.captureConsoleIntegration()
     ],
   });
   

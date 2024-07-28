@@ -61,8 +61,6 @@ export default function Page() {
     getScore({ mobileNumber, otp })
   }, [ mobileNumber, otp, getScore ])
 
-  console.log('isChecking', isChecking)
-
   if (isChecking) return null
 
   return (

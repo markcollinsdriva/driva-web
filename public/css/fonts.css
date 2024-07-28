@@ -1,111 +1,16 @@
 @font-face {
-  font-family: 'PPNeueMontreal';
-  font-style: normal;
-  font-weight: 200;
-  font-display: swap;
-  src: url(https://marketing-assets.driva.com.au/fonts/PPNeueMontreal-Thin.woff) format('woff2');
-}
-
-@font-face {
-  font-family: 'PPNeueMontreal';
-  font-style: normal;
-  font-weight: 300;
-  font-display: swap;
-  src: url(https://marketing-assets.driva.com.au/fonts/PPNeueMontreal-Light.woff) format('woff2');
-}
-
-@font-face {
-  font-family: 'PPNeueMontreal';
+  font-family: PPNeueMontreal;
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url(https://marketing-assets.driva.com.au/fonts/PPNeueMontreal-Book.woff) format('woff2');
-}
-
-@font-face {
-  font-family: 'PPNeueMontreal';
-  font-style: normal;
-  font-weight: 450;
-  font-display: swap;
-  src: url(https://marketing-assets.driva.com.au/fonts/PPNeueMontreal-Regular.woff) format('woff2');
-}
-
-@font-face {
-  font-family: 'PPNeueMontreal';
-  font-style: normal;
-  font-weight: 530;
-  font-display: swap;
-  src: url(https://marketing-assets.driva.com.au/fonts/PPNeueMontreal-Medium.woff) format('woff2');
-}
-
-@font-face {
-  font-family: 'PPNeueMontreal';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url(https://marketing-assets.driva.com.au/fonts/PPNeueMontreal-SemiBold.woff) format('woff2');
-}
-
-@font-face {
-  font-family: 'PPNeueMontreal';
-  font-style: normal;
-  font-weight: 900;
-  font-display: swap;
-  src: url(https://marketing-assets.driva.com.au/fonts/PPNeueMontreal-Bold.woff) format('woff2');
-}
-
-@font-face {
-  font-family: 'PPNeueMontreal';
-  font-style: normal;
-  font-weight: 200;
-  font-display: swap;
-  src: url(https://marketing-assets.driva.com.au/fonts/PPNeueMontreal-Thin.woff) format('woff2');
-}
-
-@font-face {
-  font-family: 'PPNeueMontreal';
-  font-style: normal;
-  font-weight: 300;
-  font-display: swap;
-  src: url(https://marketing-assets.driva.com.au/fonts/PPNeueMontreal-Light.woff) format('woff2');
+  src: url('https://marketing-assets.driva.com.au/fonts/PPNeueMontreal-Book.woff2') format('woff2');
 }
 
 @font-face {
   font-family: PPNeueMontreal;
   font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url(https://marketing-assets.driva.com.au/fonts/PPNeueMontreal-Book.woff) format('woff2');
-}
-
-@font-face {
-  font-family: 'PPNeueMontreal';
-  font-style: normal;
-  font-weight: 450;
-  font-display: swap;
-  src: url(https://marketing-assets.driva.com.au/fonts/PPNeueMontreal-Regular.woff) format('woff2');
-}
-
-@font-face {
-  font-family: 'PPNeueMontreal';
-  font-style: normal;
-  font-weight: 530;
-  font-display: swap;
-  src: url(https://marketing-assets.driva.com.au/fonts/PPNeueMontreal-Medium.woff) format('woff2');
-}
-
-@font-face {
-  font-family: 'PPNeueMontreal';
-  font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url(https://marketing-assets.driva.com.au/fonts/PPNeueMontreal-SemiBold.woff) format('woff2');
+  src: url('https://marketing-assets.driva.com.au/fonts/PPNeueMontreal-SemiBold.woff2') format('woff2');
 }
 
-@font-face {
-  font-family: 'PPNeueMontreal';
-  font-style: normal;
-  font-weight: 900;
-  font-display: swap;
-  src: url(https://marketing-assets.driva.com.au/fonts/PPNeueMontreal-Bold.woff) format('woff2');
-}
