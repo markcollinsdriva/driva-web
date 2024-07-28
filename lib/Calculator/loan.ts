@@ -38,6 +38,7 @@ export const FrequencyPeriodsPerMonth = {
 } as const
 
 export const convertToMonthly = (value: number, from: Frequency): number => Math.round(value * FrequencyPeriodsPerMonth[from])
+export const convertToAnnual = (value: number, from: Frequency): number => Math.round(value * FrequencyPeriodsPerYear[from])
 
 export const CalculatorDefaults: LoanInputsBase = {
   loanAmount: 0,

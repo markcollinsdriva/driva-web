@@ -3,7 +3,8 @@ import { produce } from 'immer'
 import { HomeLoan } from '../config'
 import { FinancePurpose, Frequency, IncomeType, InvestmentType, NumberOfApplicants } from '../config'
 import { calculateBorrowingPower } from '@/lib/Calculator/borrowingPower'
-import { calculateLoanRepayment, convertToMonthly } from '@/lib/Calculator/loan'
+import { calculateLoanRepayment, convertToAnnual, convertToMonthly } from '@/lib/Calculator/loan'
+import { calculateSalaryAmounts } from '@/lib/Calculator/salaryCalculator'
 
 export interface HomeLoanCalculatorState {
   homeLoan: HomeLoan
@@ -102,18 +103,22 @@ export const useHomeLoanCalculator = create<HomeLoanCalculatorStore>((set, get) 
   calculate: () => {
     const { homeLoan } = get()
 
-    const applicant1BaseIncome = convertToMonthly(homeLoan.income.applicant1Income.base.number, homeLoan.income.applicant1Income.base.frequency)
-    const applicant1SupplementaryIncome = convertToMonthly(homeLoan.income.applicant1Income.supplementary.number, homeLoan.income.applicant1Income.supplementary.frequency)
-    const applicant1OtherIncome = convertToMonthly(homeLoan.income.applicant1Income.other.number, homeLoan.income.applicant1Income.other.frequency)
-    const applicant1Income = applicant1BaseIncome + applicant1SupplementaryIncome + applicant1OtherIncome
+    const applicant1BaseIncome = convertToAnnual(homeLoan.income.applicant1Income.base.number, homeLoan.income.applicant1Income.base.frequency)
+    const applicant1SupplementaryIncome = convertToAnnual(homeLoan.income.applicant1Income.supplementary.number, homeLoan.income.applicant1Income.supplementary.frequency)
+    const applicant1OtherIncome = convertToAnnual(homeLoan.income.applicant1Income.other.number, homeLoan.income.applicant1Income.other.frequency)
+    const rentalIncome = convertToAnnual(homeLoan.income.rentalIncome.number, homeLoan.income.rentalIncome.frequency)
+    const applicant1IncomeAnnual = applicant1BaseIncome + applicant1SupplementaryIncome + applicant1OtherIncome + rentalIncome
+    const { netPay: applicant1NetIncomeAnnual } = calculateSalaryAmounts({ grossAnnualSalary: applicant1IncomeAnnual })
+    const applicant1NetIncomeMonthly = convertToMonthly(applicant1NetIncomeAnnual, Frequency.Yearly)
 
-    const applicant2BaseIncome = convertToMonthly(homeLoan.income.applicant2Income.base.number, homeLoan.income.applicant2Income.base.frequency)
-    const applicant2SupplementaryIncome = convertToMonthly(homeLoan.income.applicant2Income.supplementary.number, homeLoan.income.applicant2Income.supplementary.frequency)
-    const applicant2OtherIncome = convertToMonthly(homeLoan.income.applicant2Income.other.number, homeLoan.income.applicant2Income.other.frequency)
-    const applicant2Income = applicant2BaseIncome + applicant2SupplementaryIncome + applicant2OtherIncome
-
-    const rentalIncome = convertToMonthly(homeLoan.income.rentalIncome.number, homeLoan.income.rentalIncome.frequency)
-    const monthlyIncome = applicant1Income + applicant2Income + rentalIncome
+    const applicant2BaseIncome = convertToAnnual(homeLoan.income.applicant2Income.base.number, homeLoan.income.applicant2Income.base.frequency)
+    const applicant2SupplementaryIncome = convertToAnnual(homeLoan.income.applicant2Income.supplementary.number, homeLoan.income.applicant2Income.supplementary.frequency)
+    const applicant2OtherIncome = convertToAnnual(homeLoan.income.applicant2Income.other.number, homeLoan.income.applicant2Income.other.frequency)
+    const applicant2IncomeAnnual = applicant2BaseIncome + applicant2SupplementaryIncome + applicant2OtherIncome
+    const { netPay: applicant2NetIncomeAnnual } = calculateSalaryAmounts({ grossAnnualSalary: applicant2IncomeAnnual })
+    const applicant2NetIncomeMonthly = convertToMonthly(applicant2NetIncomeAnnual, Frequency.Yearly)
+  
+    const monthlyIncome = applicant1NetIncomeMonthly + applicant2NetIncomeMonthly
 
     const livingExpenses = convertToMonthly(homeLoan.expenses.livingExpenses.number, homeLoan.expenses.livingExpenses.frequency)
     const rentalExpenses = convertToMonthly(homeLoan.expenses.rentalExpenses.number, homeLoan.expenses.rentalExpenses.frequency)
