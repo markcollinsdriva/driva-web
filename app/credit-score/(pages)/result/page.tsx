@@ -122,12 +122,14 @@ const ScoreComponent = ({ score, scoreStatus }: { score: string|null, scoreStatu
   )
 }
 
+const productsToShow = ProductsList.filter(product => product.showOnScorePage)
+
 const ProductsComponent = ({ onProductSelected }: { onProductSelected: (product: Product) => void }) => {
   return (
     <Box w='full' mt='6'>
       <Heading>Your offers</Heading>
       <SimpleGrid columns={2} spacing={4} w='full' mt='4'>
-        {ProductsList.map((product) => (
+        {productsToShow.map((product) => (
           <Center 
             _hover={{ bg: 'gray.50', cursor: 'pointer' }}
             onClick={() => onProductSelected(product)}

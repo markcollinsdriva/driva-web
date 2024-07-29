@@ -23,6 +23,7 @@ import {
   LoanType, 
   ProductNameEnum,
   productNameZodEnum,
+  ProductsList,
   VehicleConditionEnum, 
   vehicleConditionZodEnum, 
   vehicleYearZod 
@@ -132,6 +133,7 @@ export default function Page() {
   if (!product || isChecking) return null
 
   const isVehicleLoan = product.loanType === LoanType.Vehicle
+  const isPersonalLoan = product.loanType === LoanType.Personal
   const showVehicleYear = isVehicleLoan && watch('vehicleCondition') === 'used'
   const showVehicleCondition = isVehicleLoan
 
@@ -143,6 +145,7 @@ export default function Page() {
           <Heading fontSize='24'>We just need a few details</Heading>
           {showVehicleCondition && <VehicleConditionForm formReturn={formReturn}/>}
           {showVehicleYear && <VehicleYearForm formReturn={formReturn} />}
+          {isPersonalLoan && <ProductNameForm formReturn={formReturn}/>}
           <LoanAmountForm formReturn={formReturn}/>
           <LoanTermForm formReturn={formReturn}/>
           
@@ -156,7 +159,7 @@ export default function Page() {
   )
 }
 
-const VehicleConditionForm = ({ formReturn}: { formReturn: FormReturn }) => {
+const VehicleConditionForm = ({ formReturn }: { formReturn: FormReturn }) => {
   const { control, formState: { errors} } = formReturn
 
   return (
@@ -185,7 +188,7 @@ const VehicleConditionForm = ({ formReturn}: { formReturn: FormReturn }) => {
 }
 
 
-const VehicleYearForm = ({ formReturn}: { formReturn: FormReturn }) => {
+const VehicleYearForm = ({ formReturn }: { formReturn: FormReturn }) => {
   const { control, formState: { errors} } = formReturn
 
   return (
@@ -208,7 +211,35 @@ const VehicleYearForm = ({ formReturn}: { formReturn: FormReturn }) => {
   )
 }
 
-const LoanAmountForm = ({ formReturn}: { formReturn: FormReturn }) => {
+const productsToShow = ProductsList.filter(product => product.showOnApplyPage)
+
+const ProductNameForm = ({ formReturn }: { formReturn: FormReturn }) => {
+  const { control, formState: { errors} } = formReturn
+
+  return (
+    <FormControl isInvalid={!!errors.vehicleYear}>
+      <FormLabel htmlFor='productName'>Purpose</FormLabel>
+      <Controller
+        control={control}
+        name='productName'
+        render={({ field }) => (
+          <Select 
+            {...field } 
+            onChange={e => field.onChange(e.target.value)}>
+            {productsToShow.map(product => (
+              <option key={product.name} value={product.name}>{product.label}</option>
+            ))}
+          </Select> 
+        )}
+      />
+      <FormErrorMessage>
+        {errors.vehicleYear?.message?.toString()}
+      </FormErrorMessage>
+    </FormControl>
+  )
+}
+
+const LoanAmountForm = ({ formReturn }: { formReturn: FormReturn }) => {
   const { control, formState: { errors} } = formReturn
 
   return (
@@ -235,7 +266,7 @@ const loanTermOptions = [
   { value: 7, label: '7 years' }
 ]
 
-const LoanTermForm = ({ formReturn}: { formReturn: FormReturn }) => {
+const LoanTermForm = ({ formReturn }: { formReturn: FormReturn }) => {
   const { control, formState: { errors} } = formReturn
 
  return (
