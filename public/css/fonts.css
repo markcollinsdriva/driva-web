@@ -1,0 +1,16 @@
+@font-face {
+  font-family: PPNeueMontreal;
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('https://marketing-assets.driva.com.au/fonts/PPNeueMontreal-Book.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: PPNeueMontreal;
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('https://marketing-assets.driva.com.au/fonts/PPNeueMontreal-SemiBold.woff2') format('woff2');
+}
+

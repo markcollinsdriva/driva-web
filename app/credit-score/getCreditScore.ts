@@ -5,7 +5,7 @@ import { creditScoreRequest } from '@/lib/Equifax/CreditScoreRequest'
 import { getCreditScore as getCreditScoreEquifax } from '@/lib/Equifax/GetCreditScore'
 import { validateOTP } from '@/app/auth/actions'
 import { supabaseServerClient, Profile } from '@/lib/Supabase/init'
-import { Event, logServerEvent } from '@/lib/Supabase/events'
+import { EventName, logServerEvent } from '@/lib/Supabase/events'
 import { PostgrestError } from '@supabase/supabase-js'
 
 interface CreditScoreResponse {
@@ -75,7 +75,7 @@ export const getCreditScore = async ({ mobileNumber, otp }: { mobileNumber: stri
     error = e as Error
   } finally {
     insertCreditScore({ profile, score, error })
-    logServerEvent(Event.CREDIT_SCORE_REQUESTED, { profile, score, error, errorType })
+    logServerEvent(EventName.CREDIT_SCORE_REQUESTED, { profile, score, error, errorType })
     return { score, error, errorType, profile }
   }
 }

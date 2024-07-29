@@ -6,6 +6,7 @@ export const supabaseServerClient = createClient<Database>(process.env.SUPABASE_
 
 export type CreditScore = Database['public']['Tables']['CreditScores']['Row']
 export type Profile = Database['public']['Tables']['Profiles']['Row']
+export type ProfileInsert = Database['public']['Tables']['Profiles']['Insert']
 
 type MakeNonNullable<T> = T extends null | undefined ? never : T
 export type RemoveNulls<T> = {

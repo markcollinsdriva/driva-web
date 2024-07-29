@@ -8,7 +8,7 @@ const productsListConfig = [
   {
     name: 'CarPurchase',
     purpose: 'purchase',
-    label: 'Car Purchase',
+    label: 'Car Loans',
     imgSrc: '/images/car.svg',
   },
   {
@@ -122,7 +122,7 @@ const productsListConfig = [
   {
     name: 'Other',
     purpose: 'other',
-    label: 'Personal',
+    label: 'Personal Loans',
     imgSrc: '/images/dollar.svg',
   }
 ] as const

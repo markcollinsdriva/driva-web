@@ -3,6 +3,7 @@ import { NextRequest,  NextResponse } from "next/server"
 import { creditScoreRequest } from '@/lib/Equifax/CreditScoreRequest'
 import { getCreditScore } from '@/lib/Equifax/GetCreditScore'
 import { validateApiKey } from '@/app/api/validateApiKey'
+import * as Sentry from "@sentry/nextjs"
 
 enum ENV {
   PROD = 'prod',
@@ -26,13 +27,24 @@ export async function POST(request: NextRequest) {
     } 
     const searchParams = request.nextUrl.searchParams
     const isProd = searchParams.get('env') === ENV.PROD
-    const requestData = parseResult.data;
+    const requestData = parseResult.data;    
     ({ score, error } = await getCreditScore(requestData, { isProd }))
     if(error) throw error
   } catch (e) {
     status = 500
-    console.log(e)
-    errorMessage = e instanceof Error ? e.message : 'An unknown error occured'
+    error = e instanceof Error ? e : new Error('An unknown error occured')
+    errorMessage = error.message
+    
+    Sentry?.captureException(e, {
+      level: 'error',
+      tags: {
+        type: 'CreditScore'
+      },
+      extra: {
+        requestBody: request.body,
+        error: e,
+      }
+    })
   } finally {
     return NextResponse.json(
       { score, error: errorMessage }, 

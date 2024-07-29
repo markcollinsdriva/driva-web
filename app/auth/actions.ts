@@ -1,5 +1,5 @@
 'use server'
-import { Event, logServerEvent } from '@/lib/Supabase/events'
+import { EventName, logServerEvent } from '@/lib/Supabase/events'
 import { kv } from '@vercel/kv'
 import { twilioClient, } from '@/lib/Twilio/client'
 import { MOBILE_NUMBER_FOR_OTP, FAKE_MOBILE_NUMBERS  } from '@/lib/Twilio/config'
@@ -37,14 +37,14 @@ export const sendOTP = async ({
     });
     return await kv.set(getMobileKey(mobileNumber), otpToSend, { ex: expirySeconds })
   } finally {
-    logServerEvent(Event.OTP_SENT, { mobileNumber, otp: otpToSend, message })
+    logServerEvent(EventName.OTP_SENT, { mobileNumber, otp: otpToSend, message })
   }
 }
 
 export const validateOTP = async ({ mobileNumber, otp }: { mobileNumber: string, otp: string }) => {
   const otpStored = await kv.get(getMobileKey(mobileNumber),)
   const isValid = otpStored?.toString() === otp.toString()
-  logServerEvent(Event.OTP_VALIDATED, { mobileNumber, otp, isValid })
+  logServerEvent(EventName.OTP_VALIDATED, { mobileNumber, otp, isValid })
   return isValid
 }
 

@@ -1,11 +1,12 @@
 import { supabaseServerClient } from './init'
 import { CURRENT_ENV } from '@/app/config'
 
-export enum Event {
+export enum EventName {
   OTP_SENT = 'otp-sent',
   OTP_VALIDATED = 'otp-validated',
   CREDIT_SCORE_REQUESTED = 'credit-score-requested',
   CONTINUED_TO_QUOTE = 'continued-to-quote',
+  MAB_HOME_LOAN_DEAL_CREATED = 'mab-home-loan-deal-created',
 }
 
 export const logServerEvent = async (name: string, data: any) => {

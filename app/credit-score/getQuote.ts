@@ -2,7 +2,7 @@
 
 import { QuoteRequest, QuoteRequestInput } from './QuoteRequest'
 import { DrivaApiConfig } from './DrivaApiConfig'
-import { logServerEvent, Event } from '@/lib/Supabase/events'
+import { logServerEvent, EventName } from '@/lib/Supabase/events'
 
 export const getQuote = async (inputs: QuoteRequestInput) => {
   let productURL: string|null = null
@@ -17,7 +17,7 @@ export const getQuote = async (inputs: QuoteRequestInput) => {
   } catch {
     status = 'error'
   } finally  {
-    logServerEvent(Event.CONTINUED_TO_QUOTE, { ...inputs, error, response, status })
+    logServerEvent(EventName.CONTINUED_TO_QUOTE, { ...inputs, error, response, status })
     return { productURL }
   }
 }
