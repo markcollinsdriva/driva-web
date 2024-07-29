@@ -6,10 +6,8 @@ import {
   ChakraProvider, 
   ColorModeScript,
 } from '@chakra-ui/react'
-import { IS_PROD } from '@/lib/config'
+import { IS_PROD, FULLSTORY_ORG_ID } from '@/lib/config'
 import { customTheme } from './theme'
-
-const FULL_STORY_ORG_ID = 'YNW75'
 
 export default function Providers({
   children,
@@ -19,7 +17,7 @@ export default function Providers({
 
   useEffect(() => {
     if (!IS_PROD) return;
-    initFullStory({ orgId: FULL_STORY_ORG_ID })
+    initFullStory({ orgId: FULLSTORY_ORG_ID })
   }, [])
 
   return (
@@ -30,5 +28,5 @@ export default function Providers({
         {children}
       </ChakraProvider>
     </>
-  );
+  )
 }
