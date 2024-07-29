@@ -1,20 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server'
 import * as z from 'zod'
 import * as Sentry from "@sentry/nextjs"
-import { MabActiveCampaignApi } from './MabActiveCampaignApi'
-import { logServerEvent, EventName } from '@/lib/Supabase/events'
+import { MabActiveCampaignApi } from '@/lib/ActiveCampaign'
 import { supabaseServerClient } from '@/lib/Supabase/init'
+import { EventName, logServerEvent } from '@/lib/Supabase/events'
+import { PostgrestError } from '@supabase/supabase-js'  
 
 const requestBody = z.object({
-  contact: z.object({
-    firstName: z.string(),
-    lastName: z.string(),
-    email: z.string(),
-    phone: z.string(),
-  }),
-  deal: z.object({
-    description: z.string().optional()
-  })
+  firstName: z.string(),
+  lastName: z.string(),
+  email: z.string(),
+  mobilePhone: z.string(),
+  description: z.string().optional()
 })
 
 export async function POST(request: NextRequest) {
@@ -27,26 +24,34 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json()
-    const { contact, deal } = requestBody.parse(body)
+    const { firstName, lastName, email, mobilePhone, description } = requestBody.parse(body)
 
     const mabActiveCampaignApi = new MabActiveCampaignApi()
+
+    const contact = MabActiveCampaignApi.createContact({  firstName, lastName, email, mobilePhone })
     const contactResponse = await mabActiveCampaignApi.contact.post(contact)
     contactId = contactResponse?.data?.contact?.id ?? null as string|null|undefined
     if (!contactId) {
       throw new Error('Contact id not found')
     }
 
-    const dealData = {
-      contact: contactId,
-      account: '23', // update with Driva
-      title: `${contact.firstName} ${contact.lastName}`,
-      description: deal.description,
-      owner: '3', // Rebecca Read // https://mabsydney.api-us1.com/api/3/users
-    }
-
-    const dealResponse = await mabActiveCampaignApi.deal.post(dealData)
+    const deal = MabActiveCampaignApi.createDeal({ 
+      activeCampaignContactId: contactId, 
+      title: `${firstName} ${lastName}`, 
+      description: description || ''
+    })
+    const dealResponse = await mabActiveCampaignApi.deal.post(deal)
     dealId = dealResponse?.data?.deal?.id ?? null as string|null|undefined
-  } catch (e) {
+
+    const { error }  =await supabaseServerClient.from('Referrals').insert({ 
+      email,
+      partnerName: 'MAB',
+      meta: { contactId, dealId, firstName, lastName, email, mobilePhone, description }
+    })
+    if (error) {
+      throw new Error(error.details)
+    }
+  } catch (e: unknown) {
     status = 'error'
     statusCode = 500
     error = e instanceof Error ? e : new Error('An unknown error occured')
@@ -63,20 +68,15 @@ export async function POST(request: NextRequest) {
       }
     })
   } finally {
-    // await supabaseServerClient.from('f').insert({
-    //   event_name: EventName.MAB_HOME_LOAN_DEAL_CREATED,
-    //   status,
-    //   error: errorMessage,
-    //   dealId,
-    //   contactId,
-    // })  
-    // @TODO create in supabase
-    // logServerEvent(EventName.MAB_HOME_LOAN_DEAL_CREATED, {
-    //   status,
-    //   error: errorMessage,
-    //   requestBody: request.body,
-    //   contactId,
-    // })
+    logServerEvent(EventName.MAB_HOME_LOAN_DEAL_CREATED, {
+      requestBody: request.body,
+      status,
+      statusCode,
+      errorMessage,
+      error,
+      contactId,
+      dealId
+    })
     return NextResponse.json({ status, error: errorMessage }, { status: statusCode })
   }
 }

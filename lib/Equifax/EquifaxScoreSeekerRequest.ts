@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import { EquifaxConfig } from './EquifaxConfig'
 import * as Sentry from "@sentry/nextjs";
+import { dateOfBirthAsString } from '../DateOfBirth';
  
 const equifaxCreditScoreInputs = z.object({
   firstName: z.string(),
@@ -119,8 +120,7 @@ export class EquifaxScoreSeekerRequest {
 
   get dateOfBirthDate() {
     const { day, month, year } = this.inputs.dateOfBirth
-    const date = `${year}-${month.toString().padStart(2,'0')}-${day.toString().padStart(2,'0')}`
-    return date
+    return dateOfBirthAsString({ day, month, year })
   }
 
   get requestBody() {

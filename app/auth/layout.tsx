@@ -1,7 +1,7 @@
 
 import { Container,  Box } from '@chakra-ui/react'
 import { HeaderLogo } from '@/app/credit-score/components/HeaderLogo'
-import { TrustBox } from './TrustPilot'
+import { TrustBox } from '@/components/TrustPilot'
 import { Suspense } from 'react'
 
 export default function Layout({

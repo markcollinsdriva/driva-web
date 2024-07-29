@@ -2,8 +2,8 @@
 
 import { create } from 'zustand'
 import { Profile } from '@/lib/Supabase/init'
-import { getProfile } from '../auth'
-import { useAuth } from './useAuth'
+import { getProfile } from '@/app/auth/actions'
+import { useAuth } from '@/app/auth/hooks/useAuth'
 import { useEffect } from 'react'
 
 export interface ProfileState {

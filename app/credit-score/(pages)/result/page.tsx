@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { 
@@ -21,10 +21,15 @@ import { useRedirectIfNoAuth } from '@/app/auth/hooks/useRedirectIfNoAuth'
 import { useCreditScore} from '@/app/credit-score/hooks/useCreditScore'
 import { useLoanApplication } from '@/app/credit-score/hooks/useLoanApplication'
 import { HeaderLogo } from '@/app/credit-score/components/HeaderLogo'
+import { TrustBox } from "@/components/TrustPilot"
+import Link from 'next/link'
+
+const LENDI_REFER_LINK = 'https://www.lendi.com.au/lp/refinance-cashback-offer-generic/?utm_source=driva&utm_medium=cpc&utm_campaign=lendi_driva'
 
 export default function Page() {
   const { isChecking } =  useRedirectIfNoAuth()
   const router = useRouter()
+  router.prefetch('apply')
 
   const [ 
     mobileNumber,
@@ -54,6 +59,11 @@ export default function Page() {
 
   const handleProductSelection = (product: Product) => {
     updateValues({ product })
+    if (product.name === 'HomeLoan') {
+      window.location.href = LENDI_REFER_LINK
+      return
+    }
+    
     router.push('apply')
   }
 
@@ -64,7 +74,7 @@ export default function Page() {
   if (isChecking) return null
 
   return (
-    <Box minH='100vh' bg='gray.100'>
+    <Box minH='100vh' bg='gray.100' pb='10'>
       <Box 
         height='64'
         pt='5'
@@ -73,7 +83,7 @@ export default function Page() {
         backgroundColor='#97edcc'>
         <HeaderLogo />
       </Box>
-      <Container pb='32'>
+      <Container pb='16'>
         <VStack spacing='4' alignItems='start' mt='-44'> 
           {profile?.firstName ? <Heading>Welcome back {profile.firstName}</Heading> : null}
           <Center w='full' rounded='md' boxShadow='base' bg='white' p='8' borderWidth='1px' borderColor='gray.100' h='64'>
@@ -87,6 +97,23 @@ export default function Page() {
             ? <CreditRepairRefer />
             : <ProductsComponent onProductSelected={handleProductSelection} /> }
         </VStack>
+      </Container>
+      {scoreStatus === 'success' ? <TrustBox /> : null}
+      <Container pt='16'>
+        <Box>
+          <Text>1300 755 494</Text>
+          <Text>contact@driva.com.au</Text>
+        </Box>
+        <Box>
+          <Box>
+            <Text>ABN 37 636 659 160</Text>
+            <Text>Australian Credit Licence No. 531492</Text>
+          </Box>
+          <Box>
+            <Link href='https://www.driva.com.au/legal/'>Terms of Use</Link>
+            <Link href='https://www.driva.com.au/legal/'>Privacy Policy</Link>
+          </Box>
+        </Box>
       </Container>
     </Box>
   )
@@ -130,27 +157,42 @@ const ProductsComponent = ({ onProductSelected }: { onProductSelected: (product:
       <Heading>Your offers</Heading>
       <SimpleGrid columns={2} spacing={4} w='full' mt='4'>
         {productsToShow.map((product) => (
-          <Center 
-            _hover={{ bg: 'gray.50', cursor: 'pointer' }}
-            onClick={() => onProductSelected(product)}
-            rounded='md' boxShadow='base' bg='white' p='2' pt='4' border='1px' borderColor='gray.100'
-            textAlign='center'
-            key={product.name}>
-            <VStack spacing={0}>
-              <Text fontWeight='bold'>{product.label}</Text>
-              <Image
-                src={product.imgSrc}
-                width={100}
-                height={100}
-                alt='Product'
-              />
-            </VStack>
-          </Center>
+          <ProductComponent key={product.name} product={product} onProductSelected={onProductSelected} />
         ))}
       </SimpleGrid>
     </Box>
   )
 }
+
+const ProductComponent = ({ product, onProductSelected }: { product: Product, onProductSelected: (product: Product) => void }) => {
+  const [ isLoading, setIsLoading ] = useState(false)
+
+  const handleOnProductSelected = () => {
+    setIsLoading(true)
+    onProductSelected(product)
+  }
+
+  return (
+    <Center 
+      _hover={{ bg: 'gray.50', cursor: 'pointer' }}
+      onClick={handleOnProductSelected}
+      rounded='md' boxShadow='base' bg='white' p='2' pt='4' border='1px' borderColor='gray.100'
+      textAlign='center'>
+      {isLoading 
+        ? <Spinner/>
+        : <VStack spacing={0}>
+            <Text fontWeight='bold'>{product.label}</Text>
+            <Image
+              src={product.imgSrc}
+              width={100}
+              height={100}
+              alt='Product'
+            />
+          </VStack>}
+    </Center>
+  )
+}
+
 
 const CreditRepairRefer = () => {
   return (

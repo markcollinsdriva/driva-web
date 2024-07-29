@@ -22,12 +22,12 @@ const productsListConfig = [
     showOnApplyPage: true
   },
   {
-    name: 'RentalBond',
-    purpose: 'rental_bond',
-    label: 'Rental Bond',
+    name: 'HomeLoan',
+    purpose: 'home_loan',
+    label: 'Home Loan',
     imgSrc: '/images/home.svg',
     showOnScorePage: true,
-    showOnApplyPage: true
+    showOnApplyPage: false
   },
   {
     name: 'Other',
@@ -35,6 +35,14 @@ const productsListConfig = [
     label: 'Other',
     imgSrc: '/images/dollar.svg',
     showOnScorePage: true,
+    showOnApplyPage: true
+  },
+  {
+    name: 'RentalBond',
+    purpose: 'rental_bond',
+    label: 'Rental Bond',
+    imgSrc: '/images/home.svg',
+    showOnScorePage: false,
     showOnApplyPage: true
   },
   {

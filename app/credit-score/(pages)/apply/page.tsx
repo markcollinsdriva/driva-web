@@ -11,7 +11,9 @@ import {
   Heading, 
   VStack, 
   Input, 
-  Select 
+  Box,
+  Select, 
+  Text
 } from '@chakra-ui/react'
 import * as z from 'zod'
 import { 
@@ -35,6 +37,7 @@ import { getQuote } from '@/app/credit-score/getQuote'
 import { HeaderLogo } from '@/app/credit-score/components/HeaderLogo'
 import { CurrencyInput } from '@/components/CurrencyInput'
 import { ToggleButtons } from '@/components/ToggleButtons'
+import { TrustBox } from '@/components/TrustPilot'
 
 const loanApplicationFormZod = z.object({
   productName: productNameZodEnum,
@@ -138,24 +141,28 @@ export default function Page() {
   const showVehicleCondition = isVehicleLoan
 
   return (
-    <Container maxW='sm' mt='4'>
-      <HeaderLogo />
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <VStack spacing={4} alignItems="start">
-          <Heading fontSize='24'>We just need a few details</Heading>
-          {showVehicleCondition && <VehicleConditionForm formReturn={formReturn}/>}
-          {showVehicleYear && <VehicleYearForm formReturn={formReturn} />}
-          {isPersonalLoan && <ProductNameForm formReturn={formReturn}/>}
-          <LoanAmountForm formReturn={formReturn}/>
-          <LoanTermForm formReturn={formReturn}/>
-          
-          <Button w='full' isLoading={isSubmitting} type='submit'>
-            Get Quote
-          </Button>
-          {errors?.root && <div>{errors.root.message}</div>}
-        </VStack>
-      </form>
-    </Container>
+    <Box minH='100vh'>
+      <Container maxW='sm' mt='4' mb='16'>
+        <HeaderLogo />
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <VStack spacing={4} alignItems="start">
+            <Heading fontSize='24'>We just need a few details</Heading>
+            {showVehicleCondition && <VehicleConditionForm formReturn={formReturn}/>}
+            {showVehicleYear && <VehicleYearForm formReturn={formReturn} />}
+            {isPersonalLoan && <ProductNameForm formReturn={formReturn}/>}
+            <LoanAmountForm formReturn={formReturn}/>
+            <LoanTermForm formReturn={formReturn}/>
+            
+            <Button w='full' isLoading={isSubmitting} type='submit'>
+              Get Quote
+            </Button>
+            {errors?.root && <div>{errors.root.message}</div>}
+          </VStack>
+        </form>
+      </Container>
+      <TrustBox />
+      
+    </Box>
   )
 }
 
@@ -218,7 +225,7 @@ const ProductNameForm = ({ formReturn }: { formReturn: FormReturn }) => {
 
   return (
     <FormControl isInvalid={!!errors.vehicleYear}>
-      <FormLabel htmlFor='productName'>Purpose</FormLabel>
+      <FormLabel htmlFor='productName'>Loan Purpose</FormLabel>
       <Controller
         control={control}
         name='productName'

@@ -135,6 +135,27 @@ export type Database = {
         }
         Relationships: []
       }
+      Referrals: {
+        Row: {
+          email: string
+          id: string
+          insertedAt: string
+          partnerName: string
+        }
+        Insert: {
+          email: string
+          id?: string
+          insertedAt?: string
+          partnerName: string
+        }
+        Update: {
+          email?: string
+          id?: string
+          insertedAt?: string
+          partnerName?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
