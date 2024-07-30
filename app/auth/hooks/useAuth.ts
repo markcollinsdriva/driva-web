@@ -35,10 +35,18 @@ export const useAuth = create<AuthStore>((set, get) => ({
   },
   sendOTP: async () => {
     const { mobileNumber, countryOfMobileNumber } = get()
+    if (!mobileNumber) return
     const isValid = checkIfValidMobileNumber(mobileNumber, countryOfMobileNumber)
-    set({ status: isValid ? 'sending-otp' : 'invalid-phone' })
-    if (!mobileNumber || !isValid) return
-    await sendOTP({  mobileNumber })
+    if (!isValid) {
+      set({ status:'invalid-phone' })
+      return
+    }
+    set({ status: 'sending-otp' })
+    const { status } = await sendOTP({  mobileNumber })
+    if (status === 'no-profile') {
+      set({ status })
+      return
+    }
     set({ status: 'enter-otp' })
   },
   setOTP: async (_otp) => {

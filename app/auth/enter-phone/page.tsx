@@ -2,7 +2,7 @@
 import { useEffect } from 'react'
 import Script from 'next/script'
 import { useRouter } from 'next/navigation'
-import { FormControl, FormErrorMessage, Button, Input, Heading, VStack, Text } from '@chakra-ui/react'
+import { FormControl, FormErrorMessage, Button, Input, Heading, VStack, Text, Box } from '@chakra-ui/react'
 import { useAuth } from '@/app/auth/hooks/useAuth'
 import { useUTMs } from '@/app/auth/hooks/useUTMs'
 
@@ -23,7 +23,7 @@ export default function Page() {
   ])
   
   useEffect(() => {
-    if (status === 'sending-otp') {
+    if (status === 'enter-otp') {
       router.push('/auth/enter-otp')
     }
   }, [ status, router ])
@@ -44,22 +44,30 @@ export default function Page() {
         <FormErrorMessage mt='0'>Invalid mobile number</FormErrorMessage>
         <Button 
           mt='1' w='full' 
-          onClick={sendOTP} isLoading={status === 'sending-otp'}>
+          isDisabled={!mobileNumber || status === 'no-profile'}
+          isLoading={status === 'sending-otp'}
+          onClick={sendOTP} >
           Send code
         </Button>
       </VStack>
+      {status === 'no-profile' ? <NoProfile /> : null}
     </FormControl>
   )
 }
 
 
-const TrustPilot = () => (
-  <>
-  <Script  src="//widget.trustpilot.com/bootstrap/v5/tp.widget.sync.bootstrap.min.js" />
-  <div 
-    className="trustpilot-widget" data-locale="en-US" data-template-id="54ad5defc6454f065c28af8b"
-    data-businessunit-id="5e4b32c580da5a0001aed9a1" data-style-height="200px" data-style-width="100%" data-theme="light" data-stars="2,3,4,5">
-    <a href="https://www.trustpilot.com/review/bluevine.com" target="_blank">Trustpilot</a>
-  </div>
-</>
-)
+const NoProfile = () => {
+  const handleClick = () => {
+    if (typeof window === 'undefined') return
+    window.location.href = 'https://apply.driva.com.au/credit-score'
+  }
+
+  return (
+    <Box>
+      <Text mt='4' fontSize='14' color='gray.600'>
+        We couldn't find a profile with that mobile number. Please check the number or create a new profile.
+      </Text>
+      <Button mt='4' w='full' onClick={handleClick}>Create a new profile</Button>
+    </Box>
+  )
+}
