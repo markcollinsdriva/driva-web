@@ -1,7 +1,7 @@
 'use server'
 
 import { logServerEvent, EventName } from '@/services/Supabase/events'
-import { Profile, supabaseServerClient } from '@/services/Supabase/init'
+import { Profile } from '@/services/Supabase/init'
 import { CraActiveCampaignApi } from "@/services/ActiveCampaign"
 
 export const referToCreditRepairAustralia = async ({ profile }: { profile: Profile }) => {
@@ -13,14 +13,6 @@ export const referToCreditRepairAustralia = async ({ profile }: { profile: Profi
     const contact = CraActiveCampaignApi.createContact({ profile })
     const craActiveCampaignApi = new CraActiveCampaignApi()
     activeCampaignResponse = await craActiveCampaignApi.contact.post(contact)
-    const { error } = await supabaseServerClient.from('Referrals').insert({ 
-      email: profile.email,
-      partnerName: 'cra',
-      meta: { profile }
-    })
-    if (error) {
-      throw new Error(error.details)
-    }
   } catch (e) { 
     error = e
     status = 'error'

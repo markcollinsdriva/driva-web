@@ -20,11 +20,12 @@ import { Product, ProductsList } from '@/app/credit-score/config'
 import { referToCreditRepairAustralia } from '@/app/credit-score/referCreditRepairAustralia'
 import { useRedirectIfNoAuth } from '@/app/auth/hooks/useRedirectIfNoAuth'
 import { useCreditScore} from '@/app/credit-score/hooks/useCreditScore'
-import { useLoanApplication } from '@/app/credit-score/hooks/useLoanApplication'
+import { useApplication } from '@/app/credit-score/hooks/useApplication'
 import { HeaderLogo } from '@/app/credit-score/components/HeaderLogo'
-import { Footer } from '@/app/credit-score/components/Footer'
+import { Footer } from '@/components/Footer'
 import { TrustBox } from "@/components/TrustPilot"
 import { Profile } from '@/services/Supabase/init'
+import { createApplication } from '@/app/credit-score/actions/createApplication'
 
 const LENDI_REFER_LINK = 'https://www.lendi.com.au/lp/refinance-cashback-offer-generic/?utm_source=driva&utm_medium=cpc&utm_campaign=lendi_driva'
 
@@ -57,14 +58,31 @@ export default function Page() {
   ])
 
   const [ 
-    updateValues
-  ] = useLoanApplication(store => [ 
+    utmCampaign,
+    utmMedium,
+    utmSource,
+    updateApplicationValue
+  ] = useApplication(store => [ 
+    store.utmCampaign,
+    store.utmMedium,
+    store.utmSource,
     store.updateValues
   ])
 
-  const handleProductSelection = (product: Product) => {
+  const handleProductSelection = async (product: Product) => {
     if (typeof window === 'undefined') return
-    updateValues({ product })
+    updateApplicationValue({ product })
+    if (!profile) return
+
+    await createApplication ({ 
+      profileId: profile.id, 
+      product: product.name, 
+      orgName: product.name === 'HomeLoan' ? 'mab' : 'driva',
+      utmSource,
+      utmMedium,
+      utmCampaign
+    })
+
     if (product.name === 'HomeLoan') {
       window.location.href = LENDI_REFER_LINK
       return
@@ -149,7 +167,7 @@ const productsToShow = ProductsList.filter(product => product.showOnScorePage)
 const ProductsComponent = ({ onProductSelected }: { onProductSelected: (product: Product) => void }) => {
   return (
     <Box w='full' mt='6'>
-      <Heading>Your offers</Heading>
+      <Heading>Your loan offers</Heading>
       <SimpleGrid columns={2} spacing={4} w='full' mt='4'>
         {productsToShow.map((product) => (
           <ProductComponent key={product.name} product={product} onProductSelected={onProductSelected} />
@@ -191,10 +209,27 @@ const ProductComponent = ({ product, onProductSelected }: { product: Product, on
 const CreditRepairRefer = ({ profile }: { profile: Profile|null }) => {
   const [ isLoading, setIsLoading ] = useState(false)
   const [ isSubmitted, setIsSubmitted ] = useState(false)
+  const [ 
+    utmCampaign,
+    utmMedium,
+    utmSource,
+  ] = useApplication(store => [ 
+    store.utmCampaign,
+    store.utmMedium,
+    store.utmSource,
+  ])
 
   const handleClick = async () => {
     if (!profile) return
     setIsLoading(true)
+    await createApplication({ 
+      profileId: profile.id, 
+      product: 'credit-repair', 
+      orgName: 'cra',
+      utmSource,
+      utmMedium,
+      utmCampaign
+    })
     await referToCreditRepairAustralia({ profile })
     setIsLoading(false)
     setIsSubmitted(true)

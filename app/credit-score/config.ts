@@ -32,7 +32,7 @@ const productsListConfig = [
   {
     name: 'Other',
     purpose: 'other',
-    label: 'Other',
+    label: 'Personal loan',
     imgSrc: '/images/dollar.svg',
     showOnScorePage: true,
     showOnApplyPage: true

@@ -1,7 +1,7 @@
 'use client'
 
 import { create } from 'zustand'
-import { getCreditScore } from '@/app/credit-score/getCreditScore'
+import { getCreditScore } from '@/app/credit-score/actions/getCreditScore'
 import { Profile } from '@/services/Supabase/init'
 
 export interface CreditScoreState {

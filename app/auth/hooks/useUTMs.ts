@@ -1,12 +1,12 @@
 'use client'
 
 import { useSearchParams } from "next/navigation"
-import { useLoanApplication } from "@/app/credit-score/hooks/useLoanApplication"
+import { useApplication } from "@/app/credit-score/hooks/useApplication"
 import { useEffect } from "react"
 
 export const useUTMs = () => {
   const searchParams = useSearchParams()
-  const updateLoanApplicationValues = useLoanApplication(store => store.updateValues)
+  const updateLoanApplicationValues = useApplication(store => store.updateValues)
  
   const utmSource = searchParams.get('utm_source')
   const utmMedium = searchParams.get('utm_medium')

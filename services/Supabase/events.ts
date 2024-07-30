@@ -8,6 +8,7 @@ export enum EventName {
   CONTINUED_TO_QUOTE = 'continued-to-quote',
   MAB_HOME_LOAN_DEAL_CREATED = 'mab-home-loan-deal-created',
   CRA_LEAD_CREATED = 'cra-lead-created',
+  CREATED_APPLICATION = 'created-application',
 }
 
 export const logServerEvent = async (name: string, data: any) => {

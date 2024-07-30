@@ -46,10 +46,10 @@ export async function POST(request: NextRequest) {
     const dealResponse = await mabActiveCampaignApi.deal.post(deal)
     dealId = dealResponse?.data?.deal?.id ?? null as string|null|undefined
 
-    const { error } = await supabaseServerClient.from('Referrals').insert({ 
-      email,
-      partnerName,
-      meta: { firstName, lastName, email, mobilePhone, description, partnerName }
+    const { error } = await supabaseServerClient.from('Applications').insert({ 
+      profileId: contactId,
+      product: 'home-loan',
+      orgName: partnerName,
     })
     if (error) {
       throw new Error(error.details)

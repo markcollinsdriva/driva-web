@@ -1,6 +1,5 @@
 'use client'
-import { useEffect } from 'react'
-import Script from 'next/script'
+import { use, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { FormControl, FormErrorMessage, Button, Input, Heading, VStack, Text, Box } from '@chakra-ui/react'
 import { useAuth } from '@/app/auth/hooks/useAuth'
@@ -9,6 +8,10 @@ import { useUTMs } from '@/app/auth/hooks/useUTMs'
 export default function Page() {
   const router = useRouter()
   useUTMs()
+
+  useEffect(() => {
+    router.prefetch('/auth/enter-otp')
+  }, [router])
 
   const [ 
     mobileNumber, 

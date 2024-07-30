@@ -3,25 +3,25 @@
 import { create } from 'zustand'
 import { Product } from '../config'
 
-export interface LoanApplicationState {
+export interface ApplicationState {
   product: Product|null,
   utmSource: string|null,
   utmMedium: string|null,
   utmCampaign: string|null,
 }
 
-interface LoanApplicationStore extends LoanApplicationState {
-  updateValues: (newState: Partial<LoanApplicationState>) => void
+interface ApplicationStore extends ApplicationState {
+  updateValues: (newState: Partial<ApplicationState>) => void
 }
 
-const defaultState: LoanApplicationState = {
+const defaultState: ApplicationState = {
   product: null,
   utmSource: null,
   utmMedium: null,
   utmCampaign: null,
 }
 
-export const useLoanApplication = create<LoanApplicationStore>((set, get) => ({
+export const useApplication = create<ApplicationStore>((set, get) => ({
   ...defaultState,
   updateValues: (newState) => set(oldState => ({ ...oldState, ...newState }))
 }))

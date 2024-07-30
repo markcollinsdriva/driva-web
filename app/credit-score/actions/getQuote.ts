@@ -11,6 +11,7 @@ export const getQuote = async (inputs: QuoteRequestInput) => {
   let status = 'ok'
   let error: Error|null = null
   let response: any = null
+
   try {
     const config = new DrivaApiConfig({ isProd: IS_PROD })
     const quoteRequest = new QuoteRequest(inputs, config)

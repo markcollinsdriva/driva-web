@@ -33,16 +33,15 @@ import {
   vehicleConditionZodEnum, 
   vehicleYearZod 
 } from '@/app/credit-score/config'
-import { useLoanApplication } from '@/app/credit-score/hooks/useLoanApplication'
+import { useApplication } from '@/app/credit-score/hooks/useApplication'
 import { useCreditScore } from '@/app/credit-score/hooks/useCreditScore'
 import { useRedirectIfNoAuth } from '@/app/auth/hooks/useRedirectIfNoAuth'
-import { getQuote } from '@/app/credit-score/getQuote'
+import { getQuote } from '@/app/credit-score/actions/getQuote'
 import { HeaderLogo } from '@/app/credit-score/components/HeaderLogo'
-import { Footer } from '@/app/credit-score/components/Footer'
 import { CurrencyInput } from '@/components/CurrencyInput'
 import { ToggleButtons } from '@/components/ToggleButtons'
 import { TrustBox } from '@/components/TrustPilot'
-import { ArrowBackIcon, ChevronLeftIcon } from '@chakra-ui/icons'
+import { ArrowBackIcon } from '@chakra-ui/icons'
 
 const loanApplicationFormZod = z.object({
   productName: productNameZodEnum,
@@ -71,7 +70,6 @@ export default function Page() {
   const router = useRouter()
   const { isChecking } = useRedirectIfNoAuth()
   
-
   const [
     profile,
     creditScore
@@ -85,7 +83,7 @@ export default function Page() {
     utmCampaign,
     utmMedium,
     utmSource
-  ] = useLoanApplication(store => [ 
+  ] = useApplication(store => [ 
     store.product,
     store.utmCampaign,
     store.utmMedium,

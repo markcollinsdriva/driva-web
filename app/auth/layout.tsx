@@ -3,6 +3,7 @@ import { Container,  Box, Center } from '@chakra-ui/react'
 import { HeaderLogo } from '@/app/credit-score/components/HeaderLogo'
 import { TrustBox } from '@/components/TrustPilot'
 import { Suspense } from 'react'
+import { Footer } from '@/components/Footer'
 
 export default function Layout({
   children,
@@ -36,6 +37,9 @@ export default function Layout({
         <TrustBox />
       </Center>
     </Box>
+    <Container  maxW='sm' >
+      <Footer />
+    </Container>
   </Box>
   )
 }

@@ -9,6 +9,50 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      Applications: {
+        Row: {
+          id: string
+          insertedAt: string
+          meta: Json | null
+          orgName: Database["public"]["Enums"]["applicationOrg"]
+          product: string
+          profileId: string
+          utmCampaign: string | null
+          utmMedium: string | null
+          utmSource: string | null
+        }
+        Insert: {
+          id?: string
+          insertedAt?: string
+          meta?: Json | null
+          orgName: Database["public"]["Enums"]["applicationOrg"]
+          product: string
+          profileId: string
+          utmCampaign?: string | null
+          utmMedium?: string | null
+          utmSource?: string | null
+        }
+        Update: {
+          id?: string
+          insertedAt?: string
+          meta?: Json | null
+          orgName?: Database["public"]["Enums"]["applicationOrg"]
+          product?: string
+          profileId?: string
+          utmCampaign?: string | null
+          utmMedium?: string | null
+          utmSource?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "Applications_profileId_fkey"
+            columns: ["profileId"]
+            isOneToOne: false
+            referencedRelation: "Profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       CreditScores: {
         Row: {
           error: string | null
@@ -135,30 +179,6 @@ export type Database = {
         }
         Relationships: []
       }
-      Referrals: {
-        Row: {
-          email: string
-          id: string
-          insertedAt: string
-          meta: Json | null
-          partnerName: Database["public"]["Enums"]["referralPartnerName"]
-        }
-        Insert: {
-          email: string
-          id?: string
-          insertedAt?: string
-          meta?: Json | null
-          partnerName: Database["public"]["Enums"]["referralPartnerName"]
-        }
-        Update: {
-          email?: string
-          id?: string
-          insertedAt?: string
-          meta?: Json | null
-          partnerName?: Database["public"]["Enums"]["referralPartnerName"]
-        }
-        Relationships: []
-      }
     }
     Views: {
       [_ in never]: never
@@ -170,6 +190,7 @@ export type Database = {
       }
     }
     Enums: {
+      applicationOrg: "cra" | "mab" | "driva" | "lendii"
       employmentType:
         | "fullTime"
         | "partTime"
@@ -184,7 +205,6 @@ export type Database = {
         | "ownerWithoutMortgage"
         | "livingWithParents"
         | "board"
-      referralPartnerName: "cra" | "mab"
       residency: "citizen" | "pr" | "visa"
     }
     CompositeTypes: {
