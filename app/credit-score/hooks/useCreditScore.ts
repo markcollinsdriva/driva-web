@@ -25,19 +25,15 @@ export const useCreditScore= create<CreditScoreStore>((set, get) => ({
   getScore: async ({ mobileNumber, otp }) => {
     if (!mobileNumber || !otp) return
     set({ status: 'loading' })
-    let score: string|null = null
-    let profile: Profile|null = null
-    let errorType: 'invalid-otp'|'supabase'|'parsing'|'equifax'|null = null
-
     try {
-      ({ score, profile, errorType } = await getCreditScore({ mobileNumber, otp }))
+      const { score, profile, errorType } = await getCreditScore({ mobileNumber, otp })
+      set({ 
+        score, 
+        status: errorType ? 'error' : 'success',
+        profile
+       })
     } catch (e) {
       console.error(e)
     }
-    set({ 
-      score, 
-      status: errorType ? 'error' : 'success',
-      profile
-     })
   }
 }))

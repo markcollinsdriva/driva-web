@@ -23,14 +23,17 @@ const defaultState: ProfileState = {
 const useProfileStore = create<ProfileStore>((set, get) => ({
   ...defaultState,
   get: async ({ mobileNumber, otp }) => {
-    set({ status: 'fetching' })
-    // const { mobileNumber, otp } = useAuth.getState()
-    if (!mobileNumber || !otp) return
-    const { data, error } = await getProfile({ mobileNumber, otp })
-    set({ 
-      profile: data, 
-      status: error ? 'error' : 'success' 
-    })
+    try {
+      set({ status: 'fetching' })
+      if (!mobileNumber || !otp) return
+      const { data, error } = await getProfile({ mobileNumber, otp })
+      set({ 
+        profile: data, 
+        status: error ? 'error' : 'success' 
+      })
+    } catch (e) {
+      console.error(e)
+    }
   }
 }))
 

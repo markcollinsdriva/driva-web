@@ -8,7 +8,7 @@ export interface AuthState {
   mobileNumber: string|null
   countryOfMobileNumber: keyof typeof MobilePhoneNumberRegexPerCountry
   otp: string|null
-  status: 'enter-phone'|'invalid-phone'|'sending-otp'|'enter-otp'|'validating-otp'|'invalid-otp'|'auth-ok'
+  status: 'enter-phone'|'invalid-phone'|'no-profile'|'sending-otp'|'enter-otp'|'validating-otp'|'invalid-otp'|'auth-ok'
 }
 
 interface AuthStore extends AuthState {

@@ -4,6 +4,7 @@ import { kv } from '@vercel/kv'
 import { twilioClient, } from '@/services/Twilio/client'
 import { MOBILE_NUMBER_FOR_OTP, FAKE_MOBILE_NUMBERS  } from '@/services/Twilio/config'
 import { Profile, supabaseServerClient } from '@/services/Supabase/init'
+import * as Sentry from "@sentry/nextjs"
 
 const generateRandomFourDigitNumber = () => {
   let randomNumber = Math.floor(Math.random() * 10000)
@@ -26,18 +27,37 @@ export const sendOTP = async ({
   expirySeconds?: number
 })  => {
   let message: unknown = null
+  let status: 'ok'|'no-profile'|'error' = 'ok'
   try {
-    if (FAKE_MOBILE_NUMBERS.includes(mobileNumber))  {
+    const { data: profile } = await getProfileByMobile(mobileNumber)
+    if (!profile) {
+      status = 'no-profile'
+      throw new Error('Profile not found')
+    }
+    if (FAKE_MOBILE_NUMBERS.includes(mobileNumber)) {
       otpToSend = mobileNumber.slice(-4)
     }
     message = await twilioClient.messages.create({
       body: `Your Driva verfication code is: ${otpToSend}`,
       from: MOBILE_NUMBER_FOR_OTP,
       to: mobileNumber,
-    });
-    return await kv.set(getMobileKey(mobileNumber), otpToSend, { ex: expirySeconds })
+    })
+    await kv.set(getMobileKey(mobileNumber), otpToSend, { ex: expirySeconds })
+  } catch (e) {
+    Sentry?.captureException(e, {
+      level: 'info',
+      tags: {
+        type: 'Send OTP'
+      },
+      extra: {
+        mobileNumber,
+        status,
+        otpToSend
+      }
+    })
   } finally {
     logServerEvent(EventName.OTP_SENT, { mobileNumber, otp: otpToSend, message })
+    return { status }
   }
 }
 
@@ -55,7 +75,7 @@ export const getProfile =  async ({ mobileNumber, otp }: { mobileNumber: string,
   try {
     const isValid = await validateOTP({ mobileNumber, otp })
     if (!isValid) throw new Error('Invalid OTP') 
-    const { data: profile, error: apiError } = await supabaseServerClient.from('Profiles').select('*').eq('mobilePhone', mobileNumber).single()
+    const { data: profile, error: apiError } = await getProfileByMobile(mobileNumber)
     data = profile
     error = apiError?.message ?? null
   } catch (e) {
@@ -63,4 +83,8 @@ export const getProfile =  async ({ mobileNumber, otp }: { mobileNumber: string,
   } finally {
     return { data, error }
   }
+}
+
+const getProfileByMobile = async (mobileNumber: string) => {
+  return await supabaseServerClient.from('Profiles').select('*').eq('mobilePhone', mobileNumber).single()
 }
