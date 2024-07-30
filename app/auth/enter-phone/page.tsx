@@ -65,7 +65,7 @@ const NoProfile = () => {
   return (
     <Box>
       <Text mt='4' fontSize='14' color='gray.600'>
-        We couldn't find a profile with that mobile number. Please check the number or create a new profile.
+        We couldn&apos;t find a profile with that mobile number. Please check the number or create a new profile.
       </Text>
       <Button mt='4' w='full' onClick={handleClick}>Create a new profile</Button>
     </Box>
