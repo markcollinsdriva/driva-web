@@ -6,9 +6,10 @@ import {
   ProductNameEnum, 
   LOAN_AMOUNT_DEFAULT, VEHICLE_CONDITION_DEFAULT, BUYING_THROUGH_DEFAULT, LOAN_PURPOSE_DEFALUT, 
   VEHICLE_YEAR_DEFAULT
-} from './config'
+} from '../../app/credit-score/config'
 import { createAddressFromAddressLine1 } from '@/services/Address'
 import { DrivaApiConfig } from './DrivaApiConfig'
+import { dateOfBirthAsString } from '@/services/DateOfBirth'
 
 export interface QuoteRequestInputBase {
   profile?: Profile|null
@@ -100,7 +101,7 @@ export class QuoteRequest {
         lastName: profile.lastName,
         mobile: profile.mobilePhone,
         email: profile.email,
-        dateOfBirth: `${profile.dateOfBirthYear}-${profile.dateOfBirthMonth.toString().padStart(2,'0')}-${profile.dateOfBirthDay.toString().padStart(2,'0')}`,
+        dateOfBirth: dateOfBirthAsString({ year: profile.dateOfBirthYear, month: profile.dateOfBirthMonth, day: profile.dateOfBirthDay }),
         residency: profile.residency,
         employment: [
           {

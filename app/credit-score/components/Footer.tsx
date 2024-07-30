@@ -1,6 +1,6 @@
 'use client'
 
-// import NextLink from 'next/link'
+import NextLink from 'next/link'
 import { Container, VStack, Text } from "@chakra-ui/react"
 
 
@@ -17,8 +17,8 @@ export const Footer = () => {
           <Text fontSize='sm'>Australian Credit Licence No. 531492</Text>
         </VStack>
         <VStack alignItems='start' spacing={0}>
-          {/* <NextLink href='https://www.driva.com.au/legal/'><Text fontSize='sm'>Terms of Use</Text></NextLink>
-          <NextLink href='https://www.driva.com.au/legal/'><Text fontSize='sm'>Privacy Policy</Text></NextLink> */}
+          <NextLink href='https://www.driva.com.au/legal/'><Text fontSize='sm'>Terms of Use</Text></NextLink>
+          <NextLink href='https://www.driva.com.au/legal/'><Text fontSize='sm'>Privacy Policy</Text></NextLink>
         </VStack>
       </VStack>
     </Container>

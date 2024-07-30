@@ -1,7 +1,7 @@
 'use server'
 
-import { QuoteRequest, QuoteRequestInput } from './QuoteRequest'
-import { DrivaApiConfig } from './DrivaApiConfig'
+import { QuoteRequest, QuoteRequestInput } from '@/services/DrivaQuotes/QuoteRequest'
+import { DrivaApiConfig } from '@/services/DrivaQuotes/DrivaApiConfig'
 import { logServerEvent, EventName } from '@/services/Supabase/events'
 
 export const getQuote = async (inputs: QuoteRequestInput) => {

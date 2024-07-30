@@ -2,6 +2,7 @@
 
 import { useForm, Controller, UseFormReturn, SubmitHandler } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useRouter } from 'next/navigation'
 import { 
   Container, 
   FormLabel, 
@@ -14,7 +15,8 @@ import {
   Box,
   Select, 
 
-  Center
+  Center,
+  Text
 } from '@chakra-ui/react'
 import * as z from 'zod'
 import { 
@@ -40,6 +42,7 @@ import { Footer } from '@/app/credit-score/components/Footer'
 import { CurrencyInput } from '@/components/CurrencyInput'
 import { ToggleButtons } from '@/components/ToggleButtons'
 import { TrustBox } from '@/components/TrustPilot'
+import { ArrowBackIcon, ChevronLeftIcon } from '@chakra-ui/icons'
 
 const loanApplicationFormZod = z.object({
   productName: productNameZodEnum,
@@ -65,7 +68,9 @@ type FormValues = {
 type FormReturn = UseFormReturn<FormValues, undefined>
 
 export default function Page() {
+  const router = useRouter()
   const { isChecking } = useRedirectIfNoAuth()
+  
 
   const [
     profile,
@@ -124,8 +129,8 @@ export default function Page() {
         creditScore: creditScore ? Number(creditScore) : null
       })
 
-      if (productURL) {
-        // window.location.href = productURL
+      if (productURL && typeof window !== 'undefined') {
+        window.location.href = productURL
       }
     } catch (e) {
       const error = e instanceof Error ? e : new Error('Unknown error')
@@ -144,8 +149,9 @@ export default function Page() {
 
   return (
     <Box minH='100vh'>
-      <Container maxW='sm' mt='4' mb='16'>
+      <Container maxW='sm' mt='4' mb='16'>        
         <HeaderLogo />
+        <Button padding={0} leftIcon={<ArrowBackIcon/>} onClick={() => router.back()} variant='ghost' mb='6'><Text ml='-1' fontWeight='400'>Back</Text></Button>
         <form onSubmit={handleSubmit(onSubmit)}>
           <VStack spacing={4} alignItems='start'>
             <Heading fontSize='24'>We just need a few details</Heading>
@@ -162,12 +168,11 @@ export default function Page() {
           </VStack>
         </form>
       </Container>
-      <Box pt='16'>
+      <Box pt='12'>
         <Center w='full'>
           <TrustBox />
         </Center>
       </Box>
-      <Footer />
     </Box>
   )
 }
