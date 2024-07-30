@@ -1,11 +1,11 @@
 'use server'
 
 import { kv } from '@vercel/kv'
-import { creditScoreRequest } from '@/lib/Equifax/CreditScoreRequest'
-import { getCreditScore as getCreditScoreEquifax } from '@/lib/Equifax/GetCreditScore'
+import { creditScoreRequest } from '@/services/Equifax/CreditScoreRequest'
+import { getCreditScore as getCreditScoreEquifax } from '@/services/Equifax/GetCreditScore'
 import { validateOTP } from '@/app/auth/actions'
-import { supabaseServerClient, Profile } from '@/lib/Supabase/init'
-import { EventName, logServerEvent } from '@/lib/Supabase/events'
+import { supabaseServerClient, Profile } from '@/services/Supabase/init'
+import { EventName, logServerEvent } from '@/services/Supabase/events'
 import { PostgrestError } from '@supabase/supabase-js'
 
 interface CreditScoreResponse {

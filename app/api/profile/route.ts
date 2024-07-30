@@ -1,5 +1,5 @@
 import { NextRequest,  NextResponse } from "next/server"
-import { Profile, ProfileInsert, supabaseServerClient } from '@/lib/Supabase/init'
+import { Profile, ProfileInsert, supabaseServerClient } from '@/services/Supabase/init'
 import { PostgrestError } from '@supabase/postgrest-js'
 import { validateApiKey } from '@/app/api/validateApiKey'
 

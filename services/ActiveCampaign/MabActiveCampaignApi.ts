@@ -1,4 +1,4 @@
-import { ActiveCampaignApi } from "@/lib/ActiveCampaign/ActiveCampaignApi"
+import { ActiveCampaignApi } from "@/services/ActiveCampaign/ActiveCampaignApi"
 
 export class MabActiveCampaignApi extends ActiveCampaignApi {
   private static apiKey = process.env.MAB_ACTIVE_CAMPAIGN_API_KEY!

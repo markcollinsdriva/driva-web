@@ -1,17 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server'
 import * as z from 'zod'
 import * as Sentry from "@sentry/nextjs"
-import { MabActiveCampaignApi } from '@/lib/ActiveCampaign'
-import { supabaseServerClient } from '@/lib/Supabase/init'
-import { EventName, logServerEvent } from '@/lib/Supabase/events'
-import { PostgrestError } from '@supabase/supabase-js'  
+import { MabActiveCampaignApi } from '@/services/ActiveCampaign'
+import { supabaseServerClient } from '@/services/Supabase/init'
+import { EventName, logServerEvent } from '@/services/Supabase/events'
+import { validateApiKey } from '@/app/api/validateApiKey'
 
 const requestBody = z.object({
   firstName: z.string(),
   lastName: z.string(),
   email: z.string(),
   mobilePhone: z.string(),
-  description: z.string().optional()
+  description: z.string().optional(),
+  partnerName: z.literal('mab') // must match  Database['public']['Enums']['referralPartnerName']
 })
 
 export async function POST(request: NextRequest) {
@@ -23,14 +24,16 @@ export async function POST(request: NextRequest) {
   let dealId: string|null = null
 
   try {
+    validateApiKey(request.headers)
     const body = await request.json()
-    const { firstName, lastName, email, mobilePhone, description } = requestBody.parse(body)
+    const { firstName, lastName, email, mobilePhone, description, partnerName } = requestBody.parse(body)
 
     const mabActiveCampaignApi = new MabActiveCampaignApi()
 
     const contact = MabActiveCampaignApi.createContact({  firstName, lastName, email, mobilePhone })
     const contactResponse = await mabActiveCampaignApi.contact.post(contact)
     contactId = contactResponse?.data?.contact?.id ?? null as string|null|undefined
+
     if (!contactId) {
       throw new Error('Contact id not found')
     }
@@ -43,10 +46,10 @@ export async function POST(request: NextRequest) {
     const dealResponse = await mabActiveCampaignApi.deal.post(deal)
     dealId = dealResponse?.data?.deal?.id ?? null as string|null|undefined
 
-    const { error }  =await supabaseServerClient.from('Referrals').insert({ 
+    const { error } = await supabaseServerClient.from('Referrals').insert({ 
       email,
-      partnerName: 'MAB',
-      meta: { contactId, dealId, firstName, lastName, email, mobilePhone, description }
+      partnerName,
+      meta: { firstName, lastName, email, mobilePhone, description, partnerName }
     })
     if (error) {
       throw new Error(error.details)

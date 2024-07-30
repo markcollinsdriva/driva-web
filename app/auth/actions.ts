@@ -1,9 +1,9 @@
 'use server'
-import { EventName, logServerEvent } from '@/lib/Supabase/events'
+import { EventName, logServerEvent } from '@/services/Supabase/events'
 import { kv } from '@vercel/kv'
-import { twilioClient, } from '@/lib/Twilio/client'
-import { MOBILE_NUMBER_FOR_OTP, FAKE_MOBILE_NUMBERS  } from '@/lib/Twilio/config'
-import { Profile, supabaseServerClient } from '@/lib/Supabase/init'
+import { twilioClient, } from '@/services/Twilio/client'
+import { MOBILE_NUMBER_FOR_OTP, FAKE_MOBILE_NUMBERS  } from '@/services/Twilio/config'
+import { Profile, supabaseServerClient } from '@/services/Supabase/init'
 
 const generateRandomFourDigitNumber = () => {
   let randomNumber = Math.floor(Math.random() * 10000)

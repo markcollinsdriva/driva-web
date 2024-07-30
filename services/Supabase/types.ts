@@ -140,19 +140,22 @@ export type Database = {
           email: string
           id: string
           insertedAt: string
-          partnerName: string
+          meta: Json | null
+          partnerName: Database["public"]["Enums"]["referralPartnerName"]
         }
         Insert: {
           email: string
           id?: string
           insertedAt?: string
-          partnerName: string
+          meta?: Json | null
+          partnerName: Database["public"]["Enums"]["referralPartnerName"]
         }
         Update: {
           email?: string
           id?: string
           insertedAt?: string
-          partnerName?: string
+          meta?: Json | null
+          partnerName?: Database["public"]["Enums"]["referralPartnerName"]
         }
         Relationships: []
       }
@@ -181,6 +184,7 @@ export type Database = {
         | "ownerWithoutMortgage"
         | "livingWithParents"
         | "board"
+      referralPartnerName: "cra" | "mab"
       residency: "citizen" | "pr" | "visa"
     }
     CompositeTypes: {

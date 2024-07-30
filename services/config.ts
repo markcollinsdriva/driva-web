@@ -4,5 +4,5 @@ export enum ENV {
 }
 
 export const IS_PROD = process.env.NODE_ENV === 'production'
-
 export const CURRENT_ENV = IS_PROD ? ENV.PROD : ENV.DEV
+export const FULLSTORY_ORG_ID = 'YNW75'

@@ -1,5 +1,5 @@
 
-import { Container,  Box } from '@chakra-ui/react'
+import { Container,  Box, Center } from '@chakra-ui/react'
 import { HeaderLogo } from '@/app/credit-score/components/HeaderLogo'
 import { TrustBox } from '@/components/TrustPilot'
 import { Suspense } from 'react'
@@ -19,19 +19,23 @@ export default function Layout({
       backgroundColor='#97edcc'>
       <HeaderLogo />
     </Box>
-      <Box p='4'>
-        <Container 
-          maxW='sm' 
-          bg='white' 
-          border="1px solid #e5e7eb"
-          borderRadius='10'
-          mt='-24' p='6' mb='16' >
-          <Suspense fallback={<div>Loading...</div>}>
-            {children}
-          </Suspense>
-        </Container>
-      </Box>
-    <TrustBox />
+    <Box p='4'>
+      <Container 
+        maxW='sm' 
+        bg='white' 
+        border="1px solid #e5e7eb"
+        borderRadius='10'
+        mt='-24' p='6' mb='16' >
+        <Suspense fallback={<div>Loading...</div>}>
+          {children}
+        </Suspense>
+      </Container>
+    </Box>
+    <Box pt='4'>
+      <Center w='full'>
+        <TrustBox />
+      </Center>
+    </Box>
   </Box>
   )
 }

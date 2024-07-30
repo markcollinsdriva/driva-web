@@ -2,7 +2,7 @@
 
 import { QuoteRequest, QuoteRequestInput } from './QuoteRequest'
 import { DrivaApiConfig } from './DrivaApiConfig'
-import { logServerEvent, EventName } from '@/lib/Supabase/events'
+import { logServerEvent, EventName } from '@/services/Supabase/events'
 
 export const getQuote = async (inputs: QuoteRequestInput) => {
   let productURL: string|null = null

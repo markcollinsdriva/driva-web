@@ -1,7 +1,7 @@
 'use client'
 
 import { create } from 'zustand'
-import { Profile } from '@/lib/Supabase/init'
+import { Profile } from '@/services/Supabase/init'
 import { getProfile } from '@/app/auth/actions'
 import { useAuth } from '@/app/auth/hooks/useAuth'
 import { useEffect } from 'react'
@@ -42,7 +42,7 @@ export const useProfile = () => {
   useEffect(() => {
     if (!mobileNumber || !otp) return
     get({ mobileNumber, otp })
-  }, [ mobileNumber, otp ])
+  }, [ mobileNumber, otp, get ])
 
   return {
     profile

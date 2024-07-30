@@ -13,23 +13,28 @@ import {
   Text, 
   VStack, 
   Button,
-  Spinner
+  Spinner,
 } from '@chakra-ui/react'
-import { Product, ProductsList } from '@/app/credit-score/config'
 import { useAuth } from '@/app/auth/hooks/useAuth'
+import { Product, ProductsList } from '@/app/credit-score/config'
+import { referToCreditRepairAustralia } from '@/app/credit-score/referCreditRepairAustralia'
 import { useRedirectIfNoAuth } from '@/app/auth/hooks/useRedirectIfNoAuth'
 import { useCreditScore} from '@/app/credit-score/hooks/useCreditScore'
 import { useLoanApplication } from '@/app/credit-score/hooks/useLoanApplication'
 import { HeaderLogo } from '@/app/credit-score/components/HeaderLogo'
+import { Footer } from '@/app/credit-score/components/Footer'
 import { TrustBox } from "@/components/TrustPilot"
-import Link from 'next/link'
+import { Profile } from '@/services/Supabase/init'
 
 const LENDI_REFER_LINK = 'https://www.lendi.com.au/lp/refinance-cashback-offer-generic/?utm_source=driva&utm_medium=cpc&utm_campaign=lendi_driva'
 
 export default function Page() {
   const { isChecking } =  useRedirectIfNoAuth()
   const router = useRouter()
-  router.prefetch('apply')
+
+  useEffect(() => {
+    router.prefetch('apply')
+  }, [ router])
 
   const [ 
     mobileNumber,
@@ -58,6 +63,7 @@ export default function Page() {
   ])
 
   const handleProductSelection = (product: Product) => {
+    if (typeof window === 'undefined') return
     updateValues({ product })
     if (product.name === 'HomeLoan') {
       window.location.href = LENDI_REFER_LINK
@@ -83,7 +89,7 @@ export default function Page() {
         backgroundColor='#97edcc'>
         <HeaderLogo />
       </Box>
-      <Container pb='16'>
+      <Container>
         <VStack spacing='4' alignItems='start' mt='-44'> 
           {profile?.firstName ? <Heading>Welcome back {profile.firstName}</Heading> : null}
           <Center w='full' rounded='md' boxShadow='base' bg='white' p='8' borderWidth='1px' borderColor='gray.100' h='64'>
@@ -94,27 +100,16 @@ export default function Page() {
           {scoreStatus !== 'success' 
             ? null
             : showCreditRepair(score)
-            ? <CreditRepairRefer />
+            ? <CreditRepairRefer profile={profile}/>
             : <ProductsComponent onProductSelected={handleProductSelection} /> }
         </VStack>
       </Container>
-      {scoreStatus === 'success' ? <TrustBox /> : null}
-      <Container pt='16'>
-        <Box>
-          <Text>1300 755 494</Text>
-          <Text>contact@driva.com.au</Text>
-        </Box>
-        <Box>
-          <Box>
-            <Text>ABN 37 636 659 160</Text>
-            <Text>Australian Credit Licence No. 531492</Text>
-          </Box>
-          <Box>
-            <Link href='https://www.driva.com.au/legal/'>Terms of Use</Link>
-            <Link href='https://www.driva.com.au/legal/'>Privacy Policy</Link>
-          </Box>
-        </Box>
-      </Container>
+      <Box pt='16'>
+        <Center w='full'>
+          {scoreStatus === 'success' ? <TrustBox /> : null}
+        </Center>
+      </Box>
+      {scoreStatus === 'loading' ? null : <Footer />}
     </Box>
   )
 }
@@ -193,18 +188,30 @@ const ProductComponent = ({ product, onProductSelected }: { product: Product, on
   )
 }
 
+const CreditRepairRefer = ({ profile }: { profile: Profile|null }) => {
+  const [ isLoading, setIsLoading ] = useState(false)
+  const [ isSubmitted, setIsSubmitted ] = useState(false)
 
-const CreditRepairRefer = () => {
+  const handleClick = async () => {
+    if (!profile) return
+    setIsLoading(true)
+    await referToCreditRepairAustralia({ profile })
+    setIsLoading(false)
+    setIsSubmitted(true)
+  }
+
   return (
     <Box w='full' mt='6'>
       <Box rounded='md' boxShadow='base' bg='white' p='6' border='1px' borderColor='gray.100'>
         <VStack spacing={4} alignItems='start'>
           <Image src='/images/credit-repair-logo.png' width={200} height={200} alt='Credit Repair Australia' />
           <Heading fontSize='22'>You might need Credit Repair</Heading>
-          <Text >Your credit score is a bit low to apply for any products</Text>
+          <Text >Your credit score is a bit low to apply for any loans.</Text>
           <Text>Credit Repair Australia has been helping Aussies fix their credit reports for 20 years. They will assess your credit report and provide options that help improve your credit rating, get you out of debt, or get your loan approved.</Text>
           <Text>To get started, click &quot;Refer me&quot; and we will send them your details, and Credit Repair Australia will reach out for a FREE consultation.</Text>
-          <Button w='full'>Refer me</Button>
+          { isSubmitted
+            ? <Text fontWeight='bold'>Thank you for your interest. Credit Repair Australia will be in touch soon.</Text>
+            : <Button w='full' isLoading={isLoading} onClick={handleClick}>Refer me</Button> }
           <Text fontSize='12'>By clicking the continue button, I give Driva persmission to share my information with the above partner. </Text>
         </VStack>
       </Box>

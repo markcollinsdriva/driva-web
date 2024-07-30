@@ -1,4 +1,4 @@
-import { isProfileNoNulls, Profile, ProfileNoNulls } from '@/lib/Supabase/init'
+import { isProfileNoNulls, Profile, ProfileNoNulls } from '@/services/Supabase/init'
 import { 
   Product, 
   Products, 
@@ -7,7 +7,7 @@ import {
   LOAN_AMOUNT_DEFAULT, VEHICLE_CONDITION_DEFAULT, BUYING_THROUGH_DEFAULT, LOAN_PURPOSE_DEFALUT, 
   VEHICLE_YEAR_DEFAULT
 } from './config'
-import { createAddressFromAddressLine1 } from '@/lib/Address'
+import { createAddressFromAddressLine1 } from '@/services/Address'
 import { DrivaApiConfig } from './DrivaApiConfig'
 
 export interface QuoteRequestInputBase {

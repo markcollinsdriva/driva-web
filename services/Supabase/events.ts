@@ -1,5 +1,5 @@
 import { supabaseServerClient } from './init'
-import { CURRENT_ENV } from '@/app/config'
+import { CURRENT_ENV } from '@/services/config'
 
 export enum EventName {
   OTP_SENT = 'otp-sent',

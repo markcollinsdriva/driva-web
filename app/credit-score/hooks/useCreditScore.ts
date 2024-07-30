@@ -2,7 +2,7 @@
 
 import { create } from 'zustand'
 import { getCreditScore } from '@/app/credit-score/getCreditScore'
-import { Profile } from '@/lib/Supabase/init'
+import { Profile } from '@/services/Supabase/init'
 
 export interface CreditScoreState {
   score: string|null

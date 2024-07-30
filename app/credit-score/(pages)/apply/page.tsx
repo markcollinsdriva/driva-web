@@ -13,7 +13,8 @@ import {
   Input, 
   Box,
   Select, 
-  Text
+
+  Center
 } from '@chakra-ui/react'
 import * as z from 'zod'
 import { 
@@ -35,6 +36,7 @@ import { useCreditScore } from '@/app/credit-score/hooks/useCreditScore'
 import { useRedirectIfNoAuth } from '@/app/auth/hooks/useRedirectIfNoAuth'
 import { getQuote } from '@/app/credit-score/getQuote'
 import { HeaderLogo } from '@/app/credit-score/components/HeaderLogo'
+import { Footer } from '@/app/credit-score/components/Footer'
 import { CurrencyInput } from '@/components/CurrencyInput'
 import { ToggleButtons } from '@/components/ToggleButtons'
 import { TrustBox } from '@/components/TrustPilot'
@@ -123,7 +125,7 @@ export default function Page() {
       })
 
       if (productURL) {
-        window.location.href = productURL
+        // window.location.href = productURL
       }
     } catch (e) {
       const error = e instanceof Error ? e : new Error('Unknown error')
@@ -145,7 +147,7 @@ export default function Page() {
       <Container maxW='sm' mt='4' mb='16'>
         <HeaderLogo />
         <form onSubmit={handleSubmit(onSubmit)}>
-          <VStack spacing={4} alignItems="start">
+          <VStack spacing={4} alignItems='start'>
             <Heading fontSize='24'>We just need a few details</Heading>
             {showVehicleCondition && <VehicleConditionForm formReturn={formReturn}/>}
             {showVehicleYear && <VehicleYearForm formReturn={formReturn} />}
@@ -160,8 +162,12 @@ export default function Page() {
           </VStack>
         </form>
       </Container>
-      <TrustBox />
-      
+      <Box pt='16'>
+        <Center w='full'>
+          <TrustBox />
+        </Center>
+      </Box>
+      <Footer />
     </Box>
   )
 }

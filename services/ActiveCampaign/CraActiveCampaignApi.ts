@@ -1,9 +1,7 @@
-'use server'
-
-import { Profile } from '@/lib/Supabase/init'
-import { dateOfBirthAsString } from '@/lib/DateOfBirth'
+import { Profile } from '@/services/Supabase/init'
+import { dateOfBirthAsString } from '@/services/DateOfBirth'
 import { IS_PROD } from '../config'
-import { ActiveCampaignApi } from "@/lib/ActiveCampaign/ActiveCampaignApi"
+import { ActiveCampaignApi } from '@/services/ActiveCampaign/ActiveCampaignApi'
 
 export class CraActiveCampaignApi extends ActiveCampaignApi {
   private static apiKey = process.env.CREDIT_REPAIR_AUSTRALIA_ACTIVE_CAMPAIGN_API_KEY!
