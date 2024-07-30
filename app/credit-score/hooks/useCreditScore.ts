@@ -27,16 +27,16 @@ export const useCreditScore= create<CreditScoreStore>((set, get) => ({
     set({ status: 'loading' })
     let score: string|null = null
     let profile: Profile|null = null
-    let error: Error|null = null
+    let errorType: 'invalid-otp'|'supabase'|'parsing'|'equifax'|null = null
 
     try {
-      ({ score, error, profile } = await getCreditScore({ mobileNumber, otp }))
+      ({ score, profile, errorType } = await getCreditScore({ mobileNumber, otp }))
     } catch (e) {
       console.error(e)
     }
     set({ 
       score, 
-      status: error ? 'error' : 'success',
+      status: errorType ? 'error' : 'success',
       profile
      })
   }

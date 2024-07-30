@@ -7,10 +7,10 @@ import { validateOTP } from '@/app/auth/actions'
 import { supabaseServerClient, Profile } from '@/services/Supabase/init'
 import { EventName, logServerEvent } from '@/services/Supabase/events'
 import { PostgrestError } from '@supabase/supabase-js'
+import * as Sentry from "@sentry/nextjs"
 
 interface CreditScoreResponse {
   score: string|null
-  error: Error|null
   profile: Profile|null
   errorType: 'invalid-otp'|'supabase'|'parsing'|'equifax'|null
 }
@@ -62,7 +62,7 @@ export const getCreditScore = async ({ mobileNumber, otp }: { mobileNumber: stri
       throw parseResult.error
     }
 
-    const { score: creditScore, error: creditScoreError } = await getCreditScoreEquifax(parseResult.data, { isProd: profile?.isTest ?? true })
+    const { score: creditScore, error: creditScoreError } = await getCreditScoreEquifax(parseResult.data, { isProd: profile?.isTest === true  })
     if (creditScoreError) {
       errorType = 'equifax'
       throw creditScoreError
@@ -73,10 +73,21 @@ export const getCreditScore = async ({ mobileNumber, otp }: { mobileNumber: stri
     }
   } catch (e) {
     error = e as Error
+    Sentry?.captureException(e, {
+      level: 'error',
+      tags: {
+        type: 'Get Credit Score UI'
+      },
+      extra: {
+        errorType,
+        profile,
+        score
+      }
+    })
   } finally {
     insertCreditScore({ profile, score, error })
     logServerEvent(EventName.CREDIT_SCORE_REQUESTED, { profile, score, error, errorType })
-    return { score, error, errorType, profile }
+    return { score, errorType, profile }
   }
 }
 

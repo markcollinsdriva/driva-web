@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
     Sentry?.captureException(e, {
       level: 'error',
       tags: {
-        type: 'CreditScore'
+        type: 'Get Credit Score API'
       },
       extra: {
         requestBody: request.body,

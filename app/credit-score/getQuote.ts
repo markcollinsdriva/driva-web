@@ -3,6 +3,7 @@
 import { QuoteRequest, QuoteRequestInput } from '@/services/DrivaQuotes/QuoteRequest'
 import { DrivaApiConfig } from '@/services/DrivaQuotes/DrivaApiConfig'
 import { logServerEvent, EventName } from '@/services/Supabase/events'
+import * as Sentry from "@sentry/nextjs"
 
 export const getQuote = async (inputs: QuoteRequestInput) => {
   let productURL: string|null = null
@@ -14,8 +15,18 @@ export const getQuote = async (inputs: QuoteRequestInput) => {
     const quoteRequest = new QuoteRequest(inputs, config)
     response = await quoteRequest.getQuote()
     productURL = response.data?.productURL ?? null
-  } catch {
+  } catch (e) {
     status = 'error'
+    Sentry?.captureException(e, {
+      level: 'error',
+      tags: {
+        type: 'Get Driva Quote UI'
+      },
+      extra: {
+        inputs,
+        response
+      }
+    })
   } finally  {
     logServerEvent(EventName.CONTINUED_TO_QUOTE, { ...inputs, error, response, status })
     return { productURL }
