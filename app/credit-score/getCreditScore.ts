@@ -1,10 +1,11 @@
 'use server'
- 
-import { creditScoreRequest } from '@/lib/Equifax/CreditScoreRequest'
-import { getCreditScore } from '@/lib/Equifax/GetCreditScore'
-import { validateOTP } from '../auth/actions'
-import { supabaseServerClient, Profile } from '@/lib/Supabase/init'
-import { EventName, logServerEvent } from '@/lib/Supabase/events'
+
+import { kv } from '@vercel/kv'
+import { creditScoreRequest } from '@/services/Equifax/CreditScoreRequest'
+import { getCreditScore as getCreditScoreEquifax } from '@/services/Equifax/GetCreditScore'
+import { validateOTP } from '@/app/auth/actions'
+import { supabaseServerClient, Profile } from '@/services/Supabase/init'
+import { EventName, logServerEvent } from '@/services/Supabase/events'
 import { PostgrestError } from '@supabase/supabase-js'
 
 interface CreditScoreResponse {
@@ -14,7 +15,10 @@ interface CreditScoreResponse {
   errorType: 'invalid-otp'|'supabase'|'parsing'|'equifax'|null
 }
 
-export const getCreditScoreWithAuth = async ({ mobileNumber, otp }: { mobileNumber: string, otp: string }): Promise<CreditScoreResponse> => {
+const getCreditScoreKey = (mobileNumber: string) => `${mobileNumber}-credit-score`
+const CREDIT_SCORE_CACHE_EXPIRY_SECONDS = 3600 // 1 hour
+
+export const getCreditScore = async ({ mobileNumber, otp }: { mobileNumber: string, otp: string }): Promise<CreditScoreResponse> => {
   let score: string|null = null
   let error: Error|PostgrestError|null = null
   let errorType: CreditScoreResponse['errorType'] = null
@@ -26,6 +30,8 @@ export const getCreditScoreWithAuth = async ({ mobileNumber, otp }: { mobileNumb
       errorType = 'invalid-otp'
       throw new Error('Invalid OTP')
     }
+
+    score = await kv.get(getCreditScoreKey(mobileNumber))
     
     const { data, error: supabaseError } = await supabaseServerClient.from('Profiles').select('*').eq('mobilePhone', mobileNumber).single()
     profile = data
@@ -33,6 +39,9 @@ export const getCreditScoreWithAuth = async ({ mobileNumber, otp }: { mobileNumb
       errorType = 'supabase'
       throw supabaseError
     }
+
+    // @ts-ignore if there is a score we can use the return in finally
+    if (score) return
         
     const parseResult = creditScoreRequest.safeParse({
       firstName: data?.firstName,
@@ -53,12 +62,14 @@ export const getCreditScoreWithAuth = async ({ mobileNumber, otp }: { mobileNumb
       throw parseResult.error
     }
 
-    const { score: creditScore, error: creditScoreError } = await getCreditScore(parseResult.data, { isProd: profile?.isTest ?? true })
-    score = creditScore
-
+    const { score: creditScore, error: creditScoreError } = await getCreditScoreEquifax(parseResult.data, { isProd: profile?.isTest ?? true })
     if (creditScoreError) {
       errorType = 'equifax'
       throw creditScoreError
+    }
+    score = creditScore
+    if (score) {
+      await kv.set(getCreditScoreKey(mobileNumber), score, { ex: CREDIT_SCORE_CACHE_EXPIRY_SECONDS })
     }
   } catch (e) {
     error = e as Error

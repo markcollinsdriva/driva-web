@@ -1,8 +1,9 @@
 'use server'
-import { EventName, logServerEvent } from '@/lib/Supabase/events'
+import { EventName, logServerEvent } from '@/services/Supabase/events'
 import { kv } from '@vercel/kv'
-import { twilioClient, } from '@/lib/Twilio/client'
-import { MOBILE_NUMBER_FOR_OTP, FAKE_MOBILE_NUMBERS  } from '@/lib/Twilio/config'
+import { twilioClient, } from '@/services/Twilio/client'
+import { MOBILE_NUMBER_FOR_OTP, FAKE_MOBILE_NUMBERS  } from '@/services/Twilio/config'
+import { Profile, supabaseServerClient } from '@/services/Supabase/init'
 
 const generateRandomFourDigitNumber = () => {
   let randomNumber = Math.floor(Math.random() * 10000)
@@ -13,10 +14,12 @@ const generateRandomFourDigitNumber = () => {
   return randomNumber.toString()
 }
 
+const getMobileKey = (mobileNumber: string) => `${mobileNumber}-otp`
+
 export const sendOTP = async ({ 
   mobileNumber,
   otpToSend = generateRandomFourDigitNumber(),
-  expirySeconds = 60
+  expirySeconds = 3600 // 1 hour
 }: { 
   mobileNumber: string,
   otpToSend?: string,
@@ -32,15 +35,32 @@ export const sendOTP = async ({
       from: MOBILE_NUMBER_FOR_OTP,
       to: mobileNumber,
     });
-    return await kv.set(mobileNumber, otpToSend, { ex: expirySeconds })
+    return await kv.set(getMobileKey(mobileNumber), otpToSend, { ex: expirySeconds })
   } finally {
     logServerEvent(EventName.OTP_SENT, { mobileNumber, otp: otpToSend, message })
   }
 }
 
 export const validateOTP = async ({ mobileNumber, otp }: { mobileNumber: string, otp: string }) => {
-  const otpStored = await kv.get(mobileNumber)
+  const otpStored = await kv.get(getMobileKey(mobileNumber),)
   const isValid = otpStored?.toString() === otp.toString()
   logServerEvent(EventName.OTP_VALIDATED, { mobileNumber, otp, isValid })
   return isValid
+}
+
+
+export const getProfile =  async ({ mobileNumber, otp }: { mobileNumber: string, otp: string }) => {
+  let data: Profile | null = null
+  let error: string | null = null
+  try {
+    const isValid = await validateOTP({ mobileNumber, otp })
+    if (!isValid) throw new Error('Invalid OTP') 
+    const { data: profile, error: apiError } = await supabaseServerClient.from('Profiles').select('*').eq('mobilePhone', mobileNumber).single()
+    data = profile
+    error = apiError?.message ?? null
+  } catch (e) {
+    error = e instanceof Error ? e.message : 'An error occurred'
+  } finally {
+    return { data, error }
+  }
 }

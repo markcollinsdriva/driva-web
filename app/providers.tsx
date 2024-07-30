@@ -6,7 +6,7 @@ import {
   ChakraProvider, 
   ColorModeScript,
 } from '@chakra-ui/react'
-import { IS_PROD, FULLSTORY_ORG_ID } from '@/lib/config'
+import { IS_PROD, FULLSTORY_ORG_ID } from '@/services/config'
 import { customTheme } from './theme'
 
 export default function Providers({

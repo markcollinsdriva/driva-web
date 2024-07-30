@@ -8,123 +8,171 @@ const productsListConfig = [
   {
     name: 'CarPurchase',
     purpose: 'purchase',
-    label: 'Car Loans',
+    label: 'Car Loan',
     imgSrc: '/images/car.svg',
+    showOnScorePage: true,
+    showOnApplyPage: false
   },
   {
     name: 'DebtConsolidation',
     purpose: 'debt_consolidation',
     label: 'Debt Consolidation',
     imgSrc: '/images/contract.svg',
+    showOnScorePage: true,
+    showOnApplyPage: true
   },
-  // {
-  //   name: 'Holiday',
-  //   purpose: 'holiday',
-  //   label: 'Holiday',
-  //   imgSrc: '/images/car.svg',
-  // },
-  // {
-  //   name: 'Wedding',
-  //   purpose: 'wedding',
-  //   label: 'Wedding',
-  //   imgSrc: '/images/car.svg',
-  // },
-  // {
-  //   name: 'Repairs',
-  //   purpose: 'repairs',
-  //   label: 'HomeRepairs',
-  //   imgSrc: '/images/home.svg',
-  // },
-  // {
-  //   name: 'MovingCost',
-  //   purpose: 'moving_cost',
-  //   label: 'Moving Cost',
-  //   imgSrc: '/images/home.svg',
-  // },
-  // {
-  //   name: 'RentalBond',
-  //   purpose: 'rental_bond',
-  //   label: 'Rental Bond',
-  //   imgSrc: '/images/home.svg',
-  // },
-  // {
-  //   name: 'PayBills',
-  //   purpose: 'pay_bills',
-  //   label: 'Pay Bills',
-  //   imgSrc: '/images/home.svg',
-  // },
-  // {
-  //   name: 'SolarBattery',
-  //   purpose: 'solar_battery',
-  //   label: 'Solar Battery',
-  //   imgSrc: '/images/home.svg',
-  // },
-  // {
-  //   name: 'Medical',
-  //   purpose: 'medical',
-  //   label: 'Medical',
-  //   imgSrc: '/images/home.svg',
-  // },
-  // {
-  //   name: 'LegalProfessionalServices',
-  //   purpose: 'legal_professional_services',
-  //   label: 'Legal Professional Services',
-  //   imgSrc: '/images/home.svg',
-  // },
-  // {
-  //   name: 'Boat',
-  //   purpose: 'boat',
-  //   label: 'Boat',
-  //   imgSrc: '/images/home.svg',
-  // },
-  // {
-  //   name: 'Motorbike',
-  //   purpose: 'motorbike',
-  //   label: 'Motorbike',
-  //   imgSrc: '/images/car.svg',
-  // },
-  // {
-  //   name: 'Business',
-  //   purpose: 'business',
-  //   label: 'Business',
-  //   imgSrc: '/images/dollar.svg',
-  // },
-  // {
-  //   name: 'Investment',
-  //   purpose: 'investment',
-  //   label: 'Investment',
-  //   imgSrc: '/images/dollar.svg',
-  // },
-  // {
-  //   name: 'PersonalIncomeTax',
-  //   purpose: 'personal_income_tax',
-  //   label: 'Personal Income Tax',
-  //   imgSrc: '/images/dollar.svg',
-  // },
-  // {
-  //   name: 'PayFees',
-  //   purpose: 'pay_fees',
-  //   label: 'Pay Fees',
-  //   imgSrc: '/images/contract.svg',
-  // },
+  {
+    name: 'HomeLoan',
+    purpose: 'home_loan',
+    label: 'Home Loan',
+    imgSrc: '/images/home.svg',
+    showOnScorePage: true,
+    showOnApplyPage: false
+  },
+  {
+    name: 'Other',
+    purpose: 'other',
+    label: 'Other',
+    imgSrc: '/images/dollar.svg',
+    showOnScorePage: true,
+    showOnApplyPage: true
+  },
+  {
+    name: 'RentalBond',
+    purpose: 'rental_bond',
+    label: 'Rental Bond',
+    imgSrc: '/images/home.svg',
+    showOnScorePage: false,
+    showOnApplyPage: true
+  },
+  {
+    name: 'Holiday',
+    purpose: 'holiday',
+    label: 'Holiday',
+    imgSrc: '/images/car.svg',
+    showOnScorePage: false,
+    showOnApplyPage: true
+  },
+  {
+    name: 'Wedding',
+    purpose: 'wedding',
+    label: 'Wedding',
+    imgSrc: '/images/car.svg',
+    showOnScorePage: false,
+    showOnApplyPage: true
+  },
+  {
+    name: 'Repairs',
+    purpose: 'repairs',
+    label: 'HomeRepairs',
+    imgSrc: '/images/home.svg',
+    showOnScorePage: false,
+    showOnApplyPage: true
+  },
+  {
+    name: 'MovingCost',
+    purpose: 'moving_cost',
+    label: 'Moving Cost',
+    imgSrc: '/images/home.svg',
+    showOnScorePage: false,
+    showOnApplyPage: true
+  },
+  {
+    name: 'PayBills',
+    purpose: 'pay_bills',
+    label: 'Pay Bills',
+    imgSrc: '/images/home.svg',
+    showOnScorePage: false,
+    showOnApplyPage: true
+  },
+  {
+    name: 'SolarBattery',
+    purpose: 'solar_battery',
+    label: 'Solar Battery',
+    imgSrc: '/images/home.svg',
+    showOnScorePage: false,
+    showOnApplyPage: true
+  },
+  {
+    name: 'Medical',
+    purpose: 'medical',
+    label: 'Medical',
+    imgSrc: '/images/home.svg',
+    showOnScorePage: false,
+    showOnApplyPage: true
+  },
+  {
+    name: 'LegalProfessionalServices',
+    purpose: 'legal_professional_services',
+    label: 'Legal Professional Services',
+    imgSrc: '/images/home.svg',
+    showOnScorePage: false,
+    showOnApplyPage: true
+  },
+  {
+    name: 'Boat',
+    purpose: 'boat',
+    label: 'Boat',
+    imgSrc: '/images/home.svg',
+    showOnScorePage: false,
+    showOnApplyPage: true
+  },
+  {
+    name: 'Motorbike',
+    purpose: 'motorbike',
+    label: 'Motorbike',
+    imgSrc: '/images/car.svg',
+    showOnScorePage: false,
+    showOnApplyPage: true
+  },
+  {
+    name: 'Business',
+    purpose: 'business',
+    label: 'Business',
+    imgSrc: '/images/dollar.svg',
+    showOnScorePage: false,
+    showOnApplyPage: true
+  },
+  {
+    name: 'Investment',
+    purpose: 'investment',
+    label: 'Investment',
+    imgSrc: '/images/dollar.svg',
+    showOnScorePage: false,
+    showOnApplyPage: true
+  },
+  {
+    name: 'PersonalIncomeTax',
+    purpose: 'personal_income_tax',
+    label: 'Personal Income Tax',
+    imgSrc: '/images/dollar.svg',
+    showOnScorePage: false,
+    showOnApplyPage: true
+  },
+  {
+    name: 'PayFees',
+    purpose: 'pay_fees',
+    label: 'Pay Fees',
+    imgSrc: '/images/contract.svg',
+    showOnScorePage: false,
+    showOnApplyPage: true
+  },
   {
     name: 'HomeImprovements',
     purpose: 'home_improvements',
     label: 'Home Improvements',
     imgSrc: '/images/home.svg',
+    showOnScorePage: false,
+    showOnApplyPage: true
   },
-  // {
-  //   name: 'FuneralServices',
-  //   purpose: 'funeral_services',
-  //   label: 'Funeral Services',
-  //   imgSrc: '/images/dollar.svg',
-  // },
   {
-    name: 'Other',
-    purpose: 'other',
-    label: 'Personal Loans',
+    name: 'FuneralServices',
+    purpose: 'funeral_services',
+    label: 'Funeral Services',
     imgSrc: '/images/dollar.svg',
-  }
+    showOnScorePage: false,
+    showOnApplyPage: true
+  },
 ] as const
 
 export const allProductPurposes = productsListConfig.map(product => product.purpose)
@@ -159,6 +207,8 @@ export const productConfigZod = z.object({
   purpose: productPurposeZodEnum,
   label: z.string(),
   imgSrc: z.string(),
+  showOnScorePage: z.boolean(),
+  showOnApplyPage: z.boolean()
 })
 export type ProductConfig = z.infer<typeof productConfigZod>
 
@@ -187,6 +237,8 @@ export class Product {
   label: string
   imgSrc: string
   loanType: LoanType
+  showOnScorePage: boolean
+  showOnApplyPage: boolean
 
   constructor(data: ProductConfig) {
     this.name = data.name
@@ -194,6 +246,8 @@ export class Product {
     this.label = data.label
     this.imgSrc = data.imgSrc
     this.loanType = this._loanType()
+    this.showOnScorePage = data.showOnScorePage ?? false
+    this.showOnApplyPage = data.showOnApplyPage ?? false
   }
 
   _loanType() {

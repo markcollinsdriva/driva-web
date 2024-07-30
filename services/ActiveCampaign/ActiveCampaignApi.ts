@@ -20,6 +20,19 @@ class ActiveCampaignApiConfig {
   }
 }
 
+interface ActiveCampaignContact {
+  contact: { 
+    email: string
+    firstName: string
+    lastName: string
+    phone: string
+    fieldValues?: Array<{
+      field: string
+      value: string
+    }> 
+  }
+}
+
 class ActiveCampaignApiContact {
   constructor(private config: ActiveCampaignApiConfig) {}
 
@@ -27,13 +40,34 @@ class ActiveCampaignApiContact {
     return `${this.config.baseUrl}/api/3/contact/sync`
   }
 
-  async post(body: any) {
+  async post(contact: ActiveCampaignContact) {
     const response = await fetch(this.url, {
       method: 'POST',
       headers: this.config.headers,
-      body: JSON.stringify(body)
+      body: JSON.stringify(contact)
     })
     return await response.json()
+  }
+}
+
+
+interface ActiveCampaignDeal {
+  deal: { 
+    contact: string // contactId
+    account: string // accountId
+    description?: string
+    currency?: string
+    group?: string // groupId
+    owner: string // ownerId
+    percent?: any
+    stage?: string
+    status?: number
+    title?: string
+    value?: number
+    fieldValues?: Array<{
+      field: string
+      value: string
+    }> 
   }
 }
 
@@ -44,11 +78,11 @@ class ActiveCampaignApiDeal {
     return `${this.config.baseUrl}/api/3/contact/sync`
   }
 
-  async post(body: any) {
+  async post(deal: ActiveCampaignDeal) {
     const response = await fetch(this.url, {
       method: 'POST',
       headers: this.config.headers,
-      body: JSON.stringify(body)
+      body: JSON.stringify(deal)
     })
     return await response.json()
   }

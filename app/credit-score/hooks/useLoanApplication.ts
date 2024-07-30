@@ -11,7 +11,6 @@ export interface LoanApplicationState {
 }
 
 interface LoanApplicationStore extends LoanApplicationState {
-  // updateValue: <K extends keyof LoanApplicationState>(key: K, value: LoanApplicationState[K]) => void
   updateValues: (newState: Partial<LoanApplicationState>) => void
 }
 
@@ -20,12 +19,10 @@ const defaultState: LoanApplicationState = {
   utmSource: null,
   utmMedium: null,
   utmCampaign: null,
-  
 }
 
 export const useLoanApplication = create<LoanApplicationStore>((set, get) => ({
   ...defaultState,
-  // updateValue: (key, value) => set({ [key]: value })
   updateValues: (newState) => set(oldState => ({ ...oldState, ...newState }))
 }))
 

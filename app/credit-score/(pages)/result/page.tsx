@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { 
@@ -13,18 +13,28 @@ import {
   Text, 
   VStack, 
   Button,
-  Spinner
+  Spinner,
 } from '@chakra-ui/react'
-import { Product, ProductsList } from '@/app/credit-score/config'
 import { useAuth } from '@/app/auth/hooks/useAuth'
+import { Product, ProductsList } from '@/app/credit-score/config'
+import { referToCreditRepairAustralia } from '@/app/credit-score/referCreditRepairAustralia'
 import { useRedirectIfNoAuth } from '@/app/auth/hooks/useRedirectIfNoAuth'
 import { useCreditScore} from '@/app/credit-score/hooks/useCreditScore'
 import { useLoanApplication } from '@/app/credit-score/hooks/useLoanApplication'
 import { HeaderLogo } from '@/app/credit-score/components/HeaderLogo'
+import { Footer } from '@/app/credit-score/components/Footer'
+import { TrustBox } from "@/components/TrustPilot"
+import { Profile } from '@/services/Supabase/init'
+
+const LENDI_REFER_LINK = 'https://www.lendi.com.au/lp/refinance-cashback-offer-generic/?utm_source=driva&utm_medium=cpc&utm_campaign=lendi_driva'
 
 export default function Page() {
   const { isChecking } =  useRedirectIfNoAuth()
   const router = useRouter()
+
+  useEffect(() => {
+    router.prefetch('apply')
+  }, [ router])
 
   const [ 
     mobileNumber,
@@ -53,7 +63,13 @@ export default function Page() {
   ])
 
   const handleProductSelection = (product: Product) => {
+    if (typeof window === 'undefined') return
     updateValues({ product })
+    if (product.name === 'HomeLoan') {
+      window.location.href = LENDI_REFER_LINK
+      return
+    }
+    
     router.push('apply')
   }
 
@@ -64,7 +80,7 @@ export default function Page() {
   if (isChecking) return null
 
   return (
-    <Box minH='100vh' bg='gray.100'>
+    <Box minH='100vh' bg='gray.100' pb='10'>
       <Box 
         height='64'
         pt='5'
@@ -73,7 +89,7 @@ export default function Page() {
         backgroundColor='#97edcc'>
         <HeaderLogo />
       </Box>
-      <Container pb='32'>
+      <Container>
         <VStack spacing='4' alignItems='start' mt='-44'> 
           {profile?.firstName ? <Heading>Welcome back {profile.firstName}</Heading> : null}
           <Center w='full' rounded='md' boxShadow='base' bg='white' p='8' borderWidth='1px' borderColor='gray.100' h='64'>
@@ -84,10 +100,16 @@ export default function Page() {
           {scoreStatus !== 'success' 
             ? null
             : showCreditRepair(score)
-            ? <CreditRepairRefer />
+            ? <CreditRepairRefer profile={profile}/>
             : <ProductsComponent onProductSelected={handleProductSelection} /> }
         </VStack>
       </Container>
+      <Box pt='16'>
+        <Center w='full'>
+          {scoreStatus === 'success' ? <TrustBox /> : null}
+        </Center>
+      </Box>
+      {scoreStatus === 'loading' ? null : <Footer />}
     </Box>
   )
 }
@@ -122,45 +144,74 @@ const ScoreComponent = ({ score, scoreStatus }: { score: string|null, scoreStatu
   )
 }
 
+const productsToShow = ProductsList.filter(product => product.showOnScorePage)
+
 const ProductsComponent = ({ onProductSelected }: { onProductSelected: (product: Product) => void }) => {
   return (
     <Box w='full' mt='6'>
       <Heading>Your offers</Heading>
       <SimpleGrid columns={2} spacing={4} w='full' mt='4'>
-        {ProductsList.map((product) => (
-          <Center 
-            _hover={{ bg: 'gray.50', cursor: 'pointer' }}
-            onClick={() => onProductSelected(product)}
-            rounded='md' boxShadow='base' bg='white' p='2' pt='4' border='1px' borderColor='gray.100'
-            textAlign='center'
-            key={product.name}>
-            <VStack spacing={0}>
-              <Text fontWeight='bold'>{product.label}</Text>
-              <Image
-                src={product.imgSrc}
-                width={100}
-                height={100}
-                alt='Product'
-              />
-            </VStack>
-          </Center>
+        {productsToShow.map((product) => (
+          <ProductComponent key={product.name} product={product} onProductSelected={onProductSelected} />
         ))}
       </SimpleGrid>
     </Box>
   )
 }
 
-const CreditRepairRefer = () => {
+const ProductComponent = ({ product, onProductSelected }: { product: Product, onProductSelected: (product: Product) => void }) => {
+  const [ isLoading, setIsLoading ] = useState(false)
+
+  const handleOnProductSelected = () => {
+    setIsLoading(true)
+    onProductSelected(product)
+  }
+
+  return (
+    <Center 
+      _hover={{ bg: 'gray.50', cursor: 'pointer' }}
+      onClick={handleOnProductSelected}
+      rounded='md' boxShadow='base' bg='white' p='2' pt='4' border='1px' borderColor='gray.100'
+      textAlign='center'>
+      {isLoading 
+        ? <Spinner/>
+        : <VStack spacing={0}>
+            <Text fontWeight='bold'>{product.label}</Text>
+            <Image
+              src={product.imgSrc}
+              width={100}
+              height={100}
+              alt='Product'
+            />
+          </VStack>}
+    </Center>
+  )
+}
+
+const CreditRepairRefer = ({ profile }: { profile: Profile|null }) => {
+  const [ isLoading, setIsLoading ] = useState(false)
+  const [ isSubmitted, setIsSubmitted ] = useState(false)
+
+  const handleClick = async () => {
+    if (!profile) return
+    setIsLoading(true)
+    await referToCreditRepairAustralia({ profile })
+    setIsLoading(false)
+    setIsSubmitted(true)
+  }
+
   return (
     <Box w='full' mt='6'>
       <Box rounded='md' boxShadow='base' bg='white' p='6' border='1px' borderColor='gray.100'>
         <VStack spacing={4} alignItems='start'>
           <Image src='/images/credit-repair-logo.png' width={200} height={200} alt='Credit Repair Australia' />
           <Heading fontSize='22'>You might need Credit Repair</Heading>
-          <Text >Your credit score is a bit low to apply for any products</Text>
+          <Text >Your credit score is a bit low to apply for any loans.</Text>
           <Text>Credit Repair Australia has been helping Aussies fix their credit reports for 20 years. They will assess your credit report and provide options that help improve your credit rating, get you out of debt, or get your loan approved.</Text>
           <Text>To get started, click &quot;Refer me&quot; and we will send them your details, and Credit Repair Australia will reach out for a FREE consultation.</Text>
-          <Button w='full'>Refer me</Button>
+          { isSubmitted
+            ? <Text fontWeight='bold'>Thank you for your interest. Credit Repair Australia will be in touch soon.</Text>
+            : <Button w='full' isLoading={isLoading} onClick={handleClick}>Refer me</Button> }
           <Text fontSize='12'>By clicking the continue button, I give Driva persmission to share my information with the above partner. </Text>
         </VStack>
       </Box>

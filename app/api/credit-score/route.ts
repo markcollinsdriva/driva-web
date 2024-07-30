@@ -1,7 +1,7 @@
 import { headers } from 'next/headers'
 import { NextRequest,  NextResponse } from "next/server"
-import { creditScoreRequest } from '@/lib/Equifax/CreditScoreRequest'
-import { getCreditScore } from '@/lib/Equifax/GetCreditScore'
+import { creditScoreRequest } from '@/services/Equifax/CreditScoreRequest'
+import { getCreditScore } from '@/services/Equifax/GetCreditScore'
 import { validateApiKey } from '@/app/api/validateApiKey'
 import * as Sentry from "@sentry/nextjs"
 
