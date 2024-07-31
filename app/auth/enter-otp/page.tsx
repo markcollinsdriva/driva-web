@@ -34,6 +34,12 @@ export default function Page() {
   const isInvalid = authStatus === 'invalid-otp'
   const showValidatingOTP = authStatus === 'validating-otp' || authStatus === 'auth-ok'
 
+  const otpRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    setTimeout(() => otpRef?.current?.focus(), 250);
+  }, [])
+
   const handleBackToPhone = () => {
     reset()
     router.push('/auth/enter-phone')
@@ -49,9 +55,10 @@ export default function Page() {
           numInputs={otpLength}
           inputType='number'
           renderSeparator={<span>-</span>}
-          renderInput={(props, index) => <input autoFocus={index === 0}  {...props} />}
+          renderInput={(props, index) => <input {...props} ref={index === 0 ? otpRef : props.ref} />}
           inputStyle="otp-input"
           containerStyle="otp-container"
+          shouldAutoFocus={false}
         />
         {showValidatingOTP ? <ValidatingOTP /> : null}
         <FormErrorMessage mt='0'>Incorrect code</FormErrorMessage>
