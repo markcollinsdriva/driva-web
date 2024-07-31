@@ -15,13 +15,15 @@ export default function Page() {
     otpLength,
     setOTP,
     sendOTP,
-    authStatus
+    authStatus,
+    reset
   ] = useAuth(store => [ 
     store.otp,
     store.otpLength,
     store.setOTP,
     store.sendOTP,
-    store.status
+    store.status,
+    store.reset
   ])
 
   useEffect(() => {
@@ -39,6 +41,10 @@ export default function Page() {
     setTimeout(() => otpRef?.current?.focusField(0), 250);
   }, [])
 
+  const handleBackToPhone = () => {
+    reset()
+    router.push('/auth/enter-phone')
+  }
 
   return (
     <FormControl isInvalid={isInvalid}>
@@ -55,15 +61,14 @@ export default function Page() {
           renderInput={(props) => <input {...props} />}
           inputStyle="otp-input"
           containerStyle="otp-container"
+          autoFocusOnLoad={false}
         />
         {showValidatingOTP ? <ValidatingOTP /> : null}
         <FormErrorMessage mt='0'>Incorrect code</FormErrorMessage>
         <FormHelperText>
           Didn&apos;t receive the code? <Box as="span" textDecoration='underline' onClick={sendOTP}>Try again</Box>
         </FormHelperText>
-        <Link href='enter-phone'>
-          <FormHelperText textDecoration='underline'>Change mobile number</FormHelperText>
-        </Link>
+        <FormHelperText onClick={handleBackToPhone} textDecoration='underline'>Change mobile number</FormHelperText>
       </VStack>
     </FormControl>
   )

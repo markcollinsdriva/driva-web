@@ -12,6 +12,7 @@ export interface AuthState {
 }
 
 interface AuthStore extends AuthState {
+  reset: () => void
   setMobileNumber: (mobileNumber: string) => void
   sendOTP: () => Promise<void>
   setOTP: (otp: string) => Promise<void>
@@ -27,6 +28,7 @@ const defaultState: AuthState = {
 
 export const useAuth = create<AuthStore>((set, get) => ({
   ...defaultState,
+  reset: () => set(defaultState),
   setMobileNumber: (mobileNumber) => {
     set({ 
       mobileNumber,
