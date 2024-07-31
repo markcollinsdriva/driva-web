@@ -37,7 +37,10 @@ export default function Page() {
   const otpRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    setTimeout(() => otpRef?.current?.focus(), 250);
+    setTimeout(() => {
+      otpRef?.current?.focus()
+      otpRef?.current?.select()
+    }, 250);
   }, [])
 
   const handleBackToPhone = () => {
