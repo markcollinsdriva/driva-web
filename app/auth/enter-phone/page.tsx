@@ -1,9 +1,11 @@
 'use client'
-import { use, useEffect } from 'react'
+
+import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { FormControl, FormErrorMessage, Button, Input, Heading, VStack, Text, Box } from '@chakra-ui/react'
 import { useAuth } from '@/app/auth/hooks/useAuth'
 import { useUTMs } from '@/app/auth/hooks/useUTMs'
+import { openURLInNewTab } from '@/components/openURLInNewTab'
 
 export default function Page() {
   const router = useRouter()
@@ -61,8 +63,7 @@ export default function Page() {
 
 const NoProfile = () => {
   const handleClick = () => {
-    if (typeof window === 'undefined') return
-    window.location.href = 'https://apply.driva.com.au/credit-score'
+    openURLInNewTab('https://apply.driva.com.au/credit-score')
   }
 
   return (
@@ -74,3 +75,4 @@ const NoProfile = () => {
     </Box>
   )
 }
+

@@ -23,6 +23,7 @@ import { useCreditScore} from '@/app/credit-score/hooks/useCreditScore'
 import { useApplication } from '@/app/credit-score/hooks/useApplication'
 import { HeaderLogo } from '@/app/credit-score/components/HeaderLogo'
 import { Footer } from '@/components/Footer'
+import { openURLInNewTab } from '@/components/openURLInNewTab'
 import { TrustBox } from "@/components/TrustPilot"
 import { Profile } from '@/services/Supabase/init'
 import { createApplication } from '@/app/credit-score/actions/createApplication'
@@ -84,7 +85,7 @@ export default function Page() {
     })
 
     if (product.name === 'HomeLoan') {
-      window.location.href = LENDI_REFER_LINK
+      openURLInNewTab(LENDI_REFER_LINK)
       return
     }
     

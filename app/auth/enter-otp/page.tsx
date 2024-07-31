@@ -1,8 +1,7 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
 import { FormControl, FormErrorMessage, FormHelperText, Box, Heading, VStack } from '@chakra-ui/react'
 import OtpInput from 'react-otp-input'
 import { useAuth } from '@/app/auth/hooks/useAuth'

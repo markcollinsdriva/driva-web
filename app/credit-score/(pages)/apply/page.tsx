@@ -40,6 +40,7 @@ import { getQuote } from '@/app/credit-score/actions/getQuote'
 import { HeaderLogo } from '@/app/credit-score/components/HeaderLogo'
 import { CurrencyInput } from '@/components/CurrencyInput'
 import { ToggleButtons } from '@/components/ToggleButtons'
+import { openURLInNewTab } from '@/components/openURLInNewTab'
 import { TrustBox } from '@/components/TrustPilot'
 import { ArrowBackIcon } from '@chakra-ui/icons'
 
@@ -127,9 +128,8 @@ export default function Page() {
         creditScore: creditScore ? Number(creditScore) : null
       })
 
-      if (productURL && typeof window !== 'undefined') {
-        window.location.href = productURL
-      }
+      openURLInNewTab(productURL)
+      
     } catch (e) {
       const error = e instanceof Error ? e : new Error('Unknown error')
       setError('root', {
