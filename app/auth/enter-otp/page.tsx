@@ -39,6 +39,7 @@ export default function Page() {
   useEffect(() => {
     if (inputRefs.current[0]) {
       inputRefs.current[0]?.focus()
+      inputRefs.current[0]?.select()
     }
   }, [])
 
@@ -53,7 +54,7 @@ export default function Page() {
         <Heading fontSize='24'>Enter the 4 digit code</Heading>
         <OtpInput
           
-          value={otp ?? undefined}
+          value={otp ?? ''}
           onChange={setOTP}
           numInputs={otpLength}
           inputType='number'
