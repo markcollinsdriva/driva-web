@@ -62,7 +62,7 @@ export const getCreditScore = async ({ mobileNumber, otp }: { mobileNumber: stri
       throw parseResult.error
     }
 
-    const { score: creditScore, error: creditScoreError } = await getCreditScoreEquifax(parseResult.data, { isProd: profile?.isTest === true  })
+    const { score: creditScore, error: creditScoreError } = await getCreditScoreEquifax(parseResult.data, { isProd: !profile?.isTest  })
     if (creditScoreError) {
       errorType = 'equifax'
       throw creditScoreError
