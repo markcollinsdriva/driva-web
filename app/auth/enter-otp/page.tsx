@@ -38,8 +38,8 @@ export default function Page() {
 
   useEffect(() => {
     if (inputRefs.current[0]) {
-      inputRefs.current[0]?.focus()
       inputRefs.current[0]?.select()
+      inputRefs.current[0]?.focus()
     }
   }, [])
 
@@ -53,15 +53,15 @@ export default function Page() {
       <VStack spacing={4} alignItems="start">
         <Heading fontSize='24'>Enter the 4 digit code</Heading>
         <OtpInput
-          
-          value={otp ?? ''}
+          value={otp ?? undefined}
           onChange={setOTP}
           numInputs={otpLength}
-          inputType='number'
           renderSeparator={<span>-</span>}
           renderInput={(props, index) => (
             <input
-            {...props}
+              {...props}
+              type='text'
+              inputMode="numeric"
               ref={(el) => (inputRefs.current[index] = el)}
               key={index} />
           )}
