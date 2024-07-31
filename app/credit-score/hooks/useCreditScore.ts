@@ -34,6 +34,7 @@ export const useCreditScore= create<CreditScoreStore>((set, get) => ({
        })
     } catch (e) {
       console.error(e)
+      set({ status: 'error' })
     }
   }
 }))

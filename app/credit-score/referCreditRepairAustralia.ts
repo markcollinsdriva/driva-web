@@ -16,7 +16,7 @@ export const referToCreditRepairAustralia = async ({ profile }: { profile: Profi
   } catch (e) { 
     error = e
     status = 'error'
-    console.error('Error creating CRA lead', error)
+    console.error(error)
   } finally  {
     logServerEvent(EventName.CRA_LEAD_CREATED, { profile, error, activeCampaignResponse, status })
     return { status }

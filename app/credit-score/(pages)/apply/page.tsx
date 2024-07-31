@@ -131,6 +131,7 @@ export default function Page() {
       openURLInNewTab(productURL)
       
     } catch (e) {
+      console.error(e)
       const error = e instanceof Error ? e : new Error('Unknown error')
       setError('root', {
         message: error.message,
