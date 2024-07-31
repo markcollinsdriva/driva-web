@@ -78,7 +78,7 @@ export default function Page() {
     await createApplication ({ 
       profileId: profile.id, 
       product: product.name, 
-      orgName: product.name === 'HomeLoan' ? 'mab' : 'driva',
+      orgName: product.name === 'HomeLoan' ? 'lendii' : 'driva',
       utmSource,
       utmMedium,
       utmCampaign
