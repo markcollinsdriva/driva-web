@@ -1,6 +1,6 @@
 import { Profile } from '@/services/Supabase/init'
-import { dateOfBirthAsString } from '../dateOfBirth'
-import { IS_PROD } from '../config'
+import { dateOfBirthAsString } from '@/services/dateOfBirth'
+import { IS_PROD } from '@/services/config'
 import { ActiveCampaignApi } from '@/services/ActiveCampaign/ActiveCampaignApi'
 
 export class CraActiveCampaignApi extends ActiveCampaignApi {
