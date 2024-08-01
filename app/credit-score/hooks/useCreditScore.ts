@@ -1,8 +1,8 @@
 'use client'
 
 import { create } from 'zustand'
-import { getCreditScoreWithAuth } from '@/app/credit-score/getCreditScoreWithAuth'
-import { Profile } from '@/lib/Supabase/init'
+import { getCreditScore } from '@/app/credit-score/actions/getCreditScore'
+import { Profile } from '@/services/Supabase/init'
 
 export interface CreditScoreState {
   score: string|null
@@ -25,19 +25,16 @@ export const useCreditScore= create<CreditScoreStore>((set, get) => ({
   getScore: async ({ mobileNumber, otp }) => {
     if (!mobileNumber || !otp) return
     set({ status: 'loading' })
-    let score: string|null = null
-    let profile: Profile|null = null
-    let error: Error|null = null
-
     try {
-      ({ score, error, profile } = await getCreditScoreWithAuth({ mobileNumber, otp }))
+      const { score, profile, errorType } = await getCreditScore({ mobileNumber, otp })
+      set({ 
+        score, 
+        status: errorType ? 'error' : 'success',
+        profile
+       })
     } catch (e) {
       console.error(e)
+      set({ status: 'error' })
     }
-    set({ 
-      score, 
-      status: error ? 'error' : 'success',
-      profile
-     })
   }
 }))

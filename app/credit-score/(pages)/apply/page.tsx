@@ -2,6 +2,7 @@
 
 import { useForm, Controller, UseFormReturn, SubmitHandler } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useRouter } from 'next/navigation'
 import { 
   Container, 
   FormLabel, 
@@ -11,7 +12,11 @@ import {
   Heading, 
   VStack, 
   Input, 
-  Select 
+  Box,
+  Select, 
+
+  Center,
+  Text
 } from '@chakra-ui/react'
 import * as z from 'zod'
 import { 
@@ -23,17 +28,21 @@ import {
   LoanType, 
   ProductNameEnum,
   productNameZodEnum,
+  ProductsList,
   VehicleConditionEnum, 
   vehicleConditionZodEnum, 
   vehicleYearZod 
 } from '@/app/credit-score/config'
-import { useLoanApplication } from '@/app/credit-score/hooks/useLoanApplication'
+import { useApplication } from '@/app/credit-score/hooks/useApplication'
 import { useCreditScore } from '@/app/credit-score/hooks/useCreditScore'
-import { useRedirectIfNoAuth } from '@/app/credit-score/hooks/useRedirectIfNoAuth'
-import { getQuote } from '@/app/credit-score/getQuote'
+import { useRedirectIfNoAuth } from '@/app/auth/hooks/useRedirectIfNoAuth'
+import { getQuote } from '@/app/credit-score/actions/getQuote'
 import { HeaderLogo } from '@/app/credit-score/components/HeaderLogo'
 import { CurrencyInput } from '@/components/CurrencyInput'
 import { ToggleButtons } from '@/components/ToggleButtons'
+import { openURLInNewTab } from '@/components/openURLInNewTab'
+import { TrustBox } from '@/components/TrustPilot'
+import { ArrowBackIcon } from '@chakra-ui/icons'
 
 const loanApplicationFormZod = z.object({
   productName: productNameZodEnum,
@@ -59,8 +68,9 @@ type FormValues = {
 type FormReturn = UseFormReturn<FormValues, undefined>
 
 export default function Page() {
+  const router = useRouter()
   const { isChecking } = useRedirectIfNoAuth()
-
+  
   const [
     profile,
     creditScore
@@ -74,7 +84,7 @@ export default function Page() {
     utmCampaign,
     utmMedium,
     utmSource
-  ] = useLoanApplication(store => [ 
+  ] = useApplication(store => [ 
     store.product,
     store.utmCampaign,
     store.utmMedium,
@@ -118,10 +128,10 @@ export default function Page() {
         creditScore: creditScore ? Number(creditScore) : null
       })
 
-      if (productURL) {
-        window.location.href = productURL
-      }
+      openURLInNewTab(productURL)
+      
     } catch (e) {
+      console.error(e)
       const error = e instanceof Error ? e : new Error('Unknown error')
       setError('root', {
         message: error.message,
@@ -132,31 +142,41 @@ export default function Page() {
   if (!product || isChecking) return null
 
   const isVehicleLoan = product.loanType === LoanType.Vehicle
+  const isPersonalLoan = product.loanType === LoanType.Personal
   const showVehicleYear = isVehicleLoan && watch('vehicleCondition') === 'used'
   const showVehicleCondition = isVehicleLoan
 
   return (
-    <Container maxW='sm' mt='4'>
-      <HeaderLogo />
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <VStack spacing={4} alignItems="start">
-          <Heading fontSize='24'>We just need a few details</Heading>
-          {showVehicleCondition && <VehicleConditionForm formReturn={formReturn}/>}
-          {showVehicleYear && <VehicleYearForm formReturn={formReturn} />}
-          <LoanAmountForm formReturn={formReturn}/>
-          <LoanTermForm formReturn={formReturn}/>
-          
-          <Button w='full' isLoading={isSubmitting} type='submit'>
-            Get Quote
-          </Button>
-          {errors?.root && <div>{errors.root.message}</div>}
-        </VStack>
-      </form>
-    </Container>
+    <Box minH='100vh'>
+      <Container maxW='sm' mt='4' mb='16'>        
+        <HeaderLogo />
+        <Button padding={0} leftIcon={<ArrowBackIcon/>} onClick={() => router.back()} variant='ghost' mb='6'><Text ml='-1' fontWeight='400'>Back</Text></Button>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <VStack spacing={4} alignItems='start'>
+            <Heading fontSize='24'>We just need a few details</Heading>
+            {showVehicleCondition && <VehicleConditionForm formReturn={formReturn}/>}
+            {showVehicleYear && <VehicleYearForm formReturn={formReturn} />}
+            {isPersonalLoan && <ProductNameForm formReturn={formReturn}/>}
+            <LoanAmountForm formReturn={formReturn}/>
+            <LoanTermForm formReturn={formReturn}/>
+            
+            <Button w='full' isLoading={isSubmitting} type='submit'>
+              Get Quote
+            </Button>
+            {errors?.root && <div>{errors.root.message}</div>}
+          </VStack>
+        </form>
+      </Container>
+      <Box pt='12'>
+        <Center w='full'>
+          <TrustBox />
+        </Center>
+      </Box>
+    </Box>
   )
 }
 
-const VehicleConditionForm = ({ formReturn}: { formReturn: FormReturn }) => {
+const VehicleConditionForm = ({ formReturn }: { formReturn: FormReturn }) => {
   const { control, formState: { errors} } = formReturn
 
   return (
@@ -185,7 +205,7 @@ const VehicleConditionForm = ({ formReturn}: { formReturn: FormReturn }) => {
 }
 
 
-const VehicleYearForm = ({ formReturn}: { formReturn: FormReturn }) => {
+const VehicleYearForm = ({ formReturn }: { formReturn: FormReturn }) => {
   const { control, formState: { errors} } = formReturn
 
   return (
@@ -208,7 +228,35 @@ const VehicleYearForm = ({ formReturn}: { formReturn: FormReturn }) => {
   )
 }
 
-const LoanAmountForm = ({ formReturn}: { formReturn: FormReturn }) => {
+const productsToShow = ProductsList.filter(product => product.showOnApplyPage)
+
+const ProductNameForm = ({ formReturn }: { formReturn: FormReturn }) => {
+  const { control, formState: { errors} } = formReturn
+
+  return (
+    <FormControl isInvalid={!!errors.vehicleYear}>
+      <FormLabel htmlFor='productName'>Loan Purpose</FormLabel>
+      <Controller
+        control={control}
+        name='productName'
+        render={({ field }) => (
+          <Select 
+            {...field } 
+            onChange={e => field.onChange(e.target.value)}>
+            {productsToShow.map(product => (
+              <option key={product.name} value={product.name}>{product.label}</option>
+            ))}
+          </Select> 
+        )}
+      />
+      <FormErrorMessage>
+        {errors.vehicleYear?.message?.toString()}
+      </FormErrorMessage>
+    </FormControl>
+  )
+}
+
+const LoanAmountForm = ({ formReturn }: { formReturn: FormReturn }) => {
   const { control, formState: { errors} } = formReturn
 
   return (
@@ -235,7 +283,7 @@ const loanTermOptions = [
   { value: 7, label: '7 years' }
 ]
 
-const LoanTermForm = ({ formReturn}: { formReturn: FormReturn }) => {
+const LoanTermForm = ({ formReturn }: { formReturn: FormReturn }) => {
   const { control, formState: { errors} } = formReturn
 
  return (
