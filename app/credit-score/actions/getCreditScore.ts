@@ -39,9 +39,7 @@ export const getCreditScore = async ({ mobileNumber, otp }: { mobileNumber: stri
       errorType = 'supabase'
       throw supabaseError
     }
-
-    // @ts-ignore if there is a score we can use the return in finally
-    if (score) return
+    if (score) return { score, errorType, profile }
         
     const parseResult = creditScoreRequest.safeParse({
       firstName: data?.firstName,
