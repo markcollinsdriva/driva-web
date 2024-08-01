@@ -7,7 +7,7 @@ import {
   LOAN_AMOUNT_DEFAULT, VEHICLE_CONDITION_DEFAULT, BUYING_THROUGH_DEFAULT, LOAN_PURPOSE_DEFALUT, 
   VEHICLE_YEAR_DEFAULT
 } from '@/app/credit-score/config'
-import { createAddressFromAddressLine1 } from '@/services/address'
+import { createAddressFromAddressLine1 } from '@/services/profile/address'
 import { DrivaApiConfig } from '@/services/DrivaQuotes/DrivaApiConfig'
 import { dateOfBirthAsString } from '@/services/profile'
 

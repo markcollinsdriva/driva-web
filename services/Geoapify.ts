@@ -1,4 +1,4 @@
-import { Address } from '@/services/address'
+import { Address } from '@/services/profile/address'
 
 export class GeoapifySearch {
   static baseUrl= 'https://api.geoapify.com/v1/geocode/search'
