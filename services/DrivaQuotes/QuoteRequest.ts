@@ -9,7 +9,7 @@ import {
 } from '@/app/credit-score/config'
 import { createAddressFromAddressLine1 } from '@/services/address'
 import { DrivaApiConfig } from '@/services/DrivaQuotes/DrivaApiConfig'
-import { dateOfBirthAsString } from '@/services/dateOfBirth'
+import { dateOfBirthAsString } from '@/services/profile'
 
 export interface QuoteRequestInputBase {
   profile?: Profile|null

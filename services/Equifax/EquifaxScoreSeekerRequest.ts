@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { EquifaxConfig } from '@/services/Equifax/EquifaxConfig'
 import * as Sentry from "@sentry/nextjs"
-import { dateOfBirthAsString } from '@/services/dateOfBirth'
+import { dateOfBirthAsString } from '@/services/profile'
  
 const equifaxCreditScoreInputs = z.object({
   firstName: z.string(),
