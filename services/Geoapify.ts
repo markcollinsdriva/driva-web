@@ -1,5 +1,3 @@
-// const GEOAPIFY_URL = 'https://api.geoapify.com/v1/geocode/search?text=38%20Upper%20Montagu%20Street%2C%20Westminster%20W1H%201LJ%2C%20United%20Kingdom&apiKey=f5789a5f881446f7a643918441b8a236'
-
 import { Address } from '@/services/address'
 
 export class GeoapifySearch {
