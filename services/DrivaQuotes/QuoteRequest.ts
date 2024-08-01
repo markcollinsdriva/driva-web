@@ -6,7 +6,7 @@ import {
   ProductNameEnum, 
   LOAN_AMOUNT_DEFAULT, VEHICLE_CONDITION_DEFAULT, BUYING_THROUGH_DEFAULT, LOAN_PURPOSE_DEFALUT, 
   VEHICLE_YEAR_DEFAULT
-} from '../../app/credit-score/config'
+} from '@/app/credit-score/config'
 import { createAddressFromAddressLine1 } from '@/services/address'
 import { DrivaApiConfig } from './DrivaApiConfig'
 import { dateOfBirthAsString } from '@/services/dateOfBirth'
