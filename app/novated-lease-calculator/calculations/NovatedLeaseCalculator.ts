@@ -1,5 +1,5 @@
 import { LeaseTerm } from '@/app/novated-lease-calculator/types'
-import { calculateSalaryAmounts } from '@/app/novated-lease-calculator/calculations/SalaryCalculator'
+import { calculateSalaryAmounts } from '@/services/calculators/salaryCalculator'
 
 interface NovatedLeaseCalculatorInputs {
   monthlyRepayment: number

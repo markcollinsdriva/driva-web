@@ -7,7 +7,7 @@ import {
   LoanInputsBase, 
   CalculatorDefaults,
   SolveFor
-} from '@/lib/Calculator/loan'
+} from '@/services/calculators/loan'
 import { useEffect, useState } from 'react'
 import { useDebounce } from 'use-debounce'
 

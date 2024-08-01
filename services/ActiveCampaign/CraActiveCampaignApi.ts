@@ -1,5 +1,5 @@
 import { Profile } from '@/services/Supabase/init'
-import { dateOfBirthAsString } from '@/services/DateOfBirth'
+import { dateOfBirthAsString } from '@/services/dateOfBirth'
 import { IS_PROD } from '../config'
 import { ActiveCampaignApi } from '@/services/ActiveCampaign/ActiveCampaignApi'
 

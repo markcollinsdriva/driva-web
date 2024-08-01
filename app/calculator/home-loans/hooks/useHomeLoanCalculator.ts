@@ -2,9 +2,9 @@ import { create } from 'zustand'
 import { produce } from 'immer'
 import { HomeLoan } from '../config'
 import { FinancePurpose, Frequency, IncomeType, InvestmentType, NumberOfApplicants } from '../config'
-import { calculateBorrowingPower } from '@/lib/Calculator/borrowingPower'
-import { calculateLoanRepayment, convertToAnnual, convertToMonthly } from '@/lib/Calculator/loan'
-import { calculateSalaryAmounts } from '@/lib/Calculator/salaryCalculator'
+import { calculateBorrowingPower } from '@/services/calculators/borrowingPower'
+import { calculateLoanRepayment, convertToAnnual, convertToMonthly } from '@/services/calculators/loan'
+import { calculateSalaryAmounts } from '@/services/calculators/salaryCalculator'
 
 export interface HomeLoanCalculatorState {
   homeLoan: HomeLoan

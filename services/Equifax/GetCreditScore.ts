@@ -3,7 +3,7 @@
 import { EquifaxConfig } from './EquifaxConfig'
 import { creditScoreRequest, CreditScoreRequest } from './CreditScoreRequest'
 import { EquifaxScoreSeekerRequest } from './EquifaxScoreSeekerRequest'
-import { createAddressFromAddressLine1 } from '@/services/Address'
+import { createAddressFromAddressLine1 } from '@/services/address'
 import { GeoapifySearch } from '@/services/Geoapify'
 
 export async function getCreditScore(data: CreditScoreRequest, options : { isProd: boolean }): Promise<{ score: string|null, error: Error|null }> {
