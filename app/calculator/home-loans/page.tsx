@@ -16,6 +16,7 @@ import {
   LoanAmountInput,
   LoanDepositInput 
 } from './components/Scenarios'
+import { SectionDivider } from './components/SectionDivider'
 
 export default function Page() {
   const { homeLoan, calculate } = useHomeLoanCalculator()
@@ -25,16 +26,16 @@ export default function Page() {
       <VStack spacing={4}>
         <NumberOfApplicantsForm />
         <InvestmentTypeForm />
+        <SectionDivider />
         <DependentsForm />
         <IncomeForm />
         <ExpensesForm />
-        <Divider />
+        <SectionDivider />
         {!homeLoan.maxLoanAmount 
           ? <Button w='full' onClick={() => calculate()}>Calculate</Button>
           : <>
               <Heading w='full'>Your results</Heading>
               <BorrowingPowerResults />
-              <Divider />
               <ScenarioPlanner />
               <LoanAmountInput />
               <LoanDepositInput />

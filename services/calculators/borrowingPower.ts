@@ -21,16 +21,16 @@ export const calculateBorrowingPower = ({
   creditCardLimit,
   creditCardRepaymentsPercOfLimit = 0.03
 }: BorrowingPowerInputs) => {
-  console.log({
-    monthlyIncome,
-    monthlyExpenses,
-    deposit,
-    interestRatePerAnnum,
-    loanTermYears,
-    safetyBufferPerc,
-    creditCardLimit,
-    creditCardRepaymentsPercOfLimit
-  })
+  // console.log({
+  //   monthlyIncome,
+  //   monthlyExpenses,
+  //   deposit,
+  //   interestRatePerAnnum,
+  //   loanTermYears,
+  //   safetyBufferPerc,
+  //   creditCardLimit,
+  //   creditCardRepaymentsPercOfLimit
+  // })
   const creditCardRepayments = creditCardLimit * creditCardRepaymentsPercOfLimit
   const safetyBufferAmount = (monthlyIncome - monthlyExpenses - creditCardRepayments) * (safetyBufferPerc)
   const netMonthlyIncome = monthlyIncome - monthlyExpenses - creditCardRepayments - safetyBufferAmount

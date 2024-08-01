@@ -19,12 +19,28 @@ export const BorrowingPowerResults = () => {
   const { homeLoan } = useHomeLoanCalculator()
 
   return (
-    <Box w='full'>
-      <Heading fontSize='xl'>Maximum you can borrow</Heading>
-      <Text fontSize='2xl'>
-        {homeLoan.maxLoanAmount ? currencyFormatter.format(homeLoan.maxLoanAmount): null}
-      </Text>
-    </Box>
+    <SimpleGrid columns={2} spacing={4} w='full'>
+      <Box w='full'>
+        <Heading fontSize='xl'>Maximum you can borrow</Heading>
+        <Text fontSize='sm'>Based on what you can afford</Text>
+        <Text fontSize='2xl'>
+          {homeLoan.maxLoanAmount ? currencyFormatter.format(homeLoan.maxLoanAmount): null}
+        </Text>
+      </Box>
+      <Box w='full'>
+        <Heading fontSize='xl'>Interest rate</Heading>
+        <Text fontSize='sm'>Interest rate / Comparison rate</Text>
+        <HStack>
+          <Text fontSize='2xl'>
+            {homeLoan.interestRatePerAnnum ? <Text fontSize='2xl'>{percentageFormatter(homeLoan.interestRatePerAnnum, 2)}</Text> : null}
+          </Text>
+          <Text>/</Text>
+          <Text fontSize='2xl'>
+            {homeLoan.interestRatePerAnnum ? <Text fontSize='2xl'>{percentageFormatter(homeLoan.interestRatePerAnnum, 2)}</Text> : null}
+          </Text>
+        </HStack>
+      </Box>
+    </SimpleGrid>
   )
 }
 
@@ -35,16 +51,17 @@ export const ScenarioPlanner = () => {
     <>
       <SimpleGrid columns={2} spacing={4} w='full'>
         <Box>
-          <Heading fontSize='xl'>Property value</Heading>
-          <Text fontSize='sm'>What you could buy</Text>
+          <Heading fontSize='xl'>Property you could buy</Heading>
+          <Text fontSize='sm'>Loan + Deposit</Text>
           <Text fontSize='2xl'> {currencyFormatter.format((homeLoan.loanAmount ?? 0) + (homeLoan.loanDeposit ?? 0))}</Text>
           <Text fontSize='sm'>Excludes stamp duty and LMI premium</Text>
         </Box>
         <Box>
           <Heading fontSize='xl'>Repayments</Heading>
-          {homeLoan.interestRatePerAnnum ? <Text fontSize='sm'>Interest rate of {percentageFormatter(homeLoan.interestRatePerAnnum, 2)}</Text> : null}
-          {homeLoan.repaymentAmount ? <Text fontSize='2xl'>{currencyFormatter.format(homeLoan.repaymentAmount)}</Text> : null}
+          {/* {homeLoan.interestRatePerAnnum ? <Text fontSize='sm'>Interest rate of {percentageFormatter(homeLoan.interestRatePerAnnum, 2)}</Text> : null} */}
           <Text fontSize='sm'>Per month</Text>
+          {homeLoan.repaymentAmount ? <Text fontSize='2xl'>{currencyFormatter.format(homeLoan.repaymentAmount)}</Text> : null}
+          {/* <Text fontSize='sm'>Per month</Text> */}
         </Box>
         
       </SimpleGrid>
@@ -57,8 +74,8 @@ export const LoanAmountInput = () => {
 
   return (
     <Box w='full'>
-      <Heading fontSize='xl'>Loan</Heading>
-      <Text fontSize='sm'>Update to change property value</Text>
+      <Heading fontSize='xl'>Your Loan</Heading>
+      <Text fontSize='sm'>Change to how much you want to borrow</Text>
       <HStack>
         <Text fontSize='2xl'>{currencyFormatter.format(homeLoan.loanAmount ?? 0)}</Text>
         <Box ml='-2'>
@@ -100,8 +117,8 @@ export const LoanDepositInput = () => {
 
   return (
     <Box w='full'>
-      <Heading fontSize='xl'>Your deposit</Heading>
-      <Text fontSize='sm'>Update to reflect what you have</Text>
+      <Heading fontSize='xl'>Your Deposit</Heading>
+      <Text fontSize='sm'>Change to what you have</Text>
       <HStack>
         <Text fontSize='2xl'>{currencyFormatter.format(homeLoan.loanDeposit ?? 0)}</Text>
         <Text mt='2' fontSize='md'>{percentageFormatter(homeLoan.loanDepositPerc ?? 0)} of loan</Text>
