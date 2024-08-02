@@ -36,6 +36,8 @@ export default function Page() {
           : <>
               <Heading w='full'>Your results</Heading>
               <BorrowingPowerResults />
+              <SectionDivider />
+              <Heading w='full'>Loan scenarios</Heading>
               <ScenarioPlanner />
               <LoanAmountInput />
               <LoanDepositInput />

@@ -18,8 +18,7 @@ import { currencyFormatter, percentageFormatter } from './formatter'
 export const BorrowingPowerResults = () => {
   const { homeLoan } = useHomeLoanCalculator()
 
-  return (
-    <SimpleGrid columns={2} spacing={4} w='full'>
+  return (<>
       <Box w='full'>
         <Heading fontSize='xl'>Maximum you can borrow</Heading>
         <Text fontSize='sm'>Based on what you can afford</Text>
@@ -27,20 +26,21 @@ export const BorrowingPowerResults = () => {
           {homeLoan.maxLoanAmount ? currencyFormatter.format(homeLoan.maxLoanAmount): null}
         </Text>
       </Box>
-      <Box w='full'>
+    <HStack alignSelf='flex-start' spacing={4}>
+      <Box>
         <Heading fontSize='xl'>Interest rate</Heading>
-        <Text fontSize='sm'>Interest rate / Comparison rate</Text>
-        <HStack>
-          <Text fontSize='2xl'>
+        <Text fontSize='2xl'>
             {homeLoan.interestRatePerAnnum ? <Text fontSize='2xl'>{percentageFormatter(homeLoan.interestRatePerAnnum, 2)}</Text> : null}
-          </Text>
-          <Text>/</Text>
-          <Text fontSize='2xl'>
-            {homeLoan.interestRatePerAnnum ? <Text fontSize='2xl'>{percentageFormatter(homeLoan.interestRatePerAnnum, 2)}</Text> : null}
-          </Text>
-        </HStack>
+        </Text>
       </Box>
-    </SimpleGrid>
+      <Box>
+        <Heading fontSize='xl'>Comparison rate **</Heading>
+        <Text fontSize='2xl'>
+            {homeLoan.interestRatePerAnnum ? <Text fontSize='2xl'>{percentageFormatter(homeLoan.interestRatePerAnnum, 2)}</Text> : null}
+        </Text>
+      </Box>
+    </HStack>
+    </>
   )
 }
 
@@ -51,7 +51,7 @@ export const ScenarioPlanner = () => {
     <>
       <SimpleGrid columns={2} spacing={4} w='full'>
         <Box>
-          <Heading fontSize='xl'>Property you could buy</Heading>
+          <Heading fontSize='xl'>Property value</Heading>
           <Text fontSize='sm'>Loan + Deposit</Text>
           <Text fontSize='2xl'> {currencyFormatter.format((homeLoan.loanAmount ?? 0) + (homeLoan.loanDeposit ?? 0))}</Text>
           <Text fontSize='sm'>Excludes stamp duty and LMI premium</Text>
@@ -75,7 +75,7 @@ export const LoanAmountInput = () => {
   return (
     <Box w='full'>
       <Heading fontSize='xl'>Your Loan</Heading>
-      <Text fontSize='sm'>Change to how much you want to borrow</Text>
+      <Text fontSize='sm'>Change to what you want</Text>
       <HStack>
         <Text fontSize='2xl'>{currencyFormatter.format(homeLoan.loanAmount ?? 0)}</Text>
         <Box ml='-2'>
