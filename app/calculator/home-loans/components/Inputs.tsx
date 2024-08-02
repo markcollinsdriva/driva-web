@@ -6,13 +6,14 @@ import { FormControl, FormHelperText, FormLabel, Select, Text, Heading } from '@
 import { useHomeLoanCalculator } from '@/app/calculator/home-loans/hooks/useHomeLoanCalculator'
 import { NumberOfApplicants, InvestmentType } from '@/app/calculator/home-loans/config'
 import { NumberFrequencyInputSimple } from './NumberInputs'
+import { SectionDivider } from './SectionDivider'
 
 export const NumberOfApplicantsForm = () => {
   const { homeLoan, updateValue } = useHomeLoanCalculator()
 
   return (
     <>
-      <Heading w='full' fontSize='xl'>Who is this loan for?</Heading>
+      <Heading w='full' fontSize='xl'>Who is applying</Heading>
       <FormControl>
         <ToggleButtons 
           options={[
@@ -34,12 +35,12 @@ export const InvestmentTypeForm = () => {
 
   return (
     <>
-      <Heading w='full' fontSize='xl'>About the place</Heading>
+      <Heading w='full' fontSize='xl'>Property purpose</Heading>
       <FormControl>
         <ToggleButtons 
           options={[
-            { label: 'Live in', value: InvestmentType.LiveIn },
-            { label: 'Invest', value: InvestmentType.Investment }
+            { label: 'I will live there', value: InvestmentType.LiveIn },
+            { label: 'Investment', value: InvestmentType.Investment }
           ]}
           onChange={(option) => updateValue(draft => {
             draft.homeLoan.investmentType = option.value
@@ -84,6 +85,7 @@ export const IncomeForm = () => {
 
   return (
     <>
+      <SectionDivider />
       <Heading w='full' fontSize='xl'>Your income</Heading>
       <NumberFrequencyInputSimple
         label='Salary'
@@ -100,6 +102,7 @@ export const IncomeForm = () => {
 
       {homeLoan.numberOfApplicants === NumberOfApplicants.Two ? 
         <>
+          <SectionDivider />
           <Heading w='full' fontSize='xl'>Co borrower income</Heading>
           <NumberFrequencyInputSimple
             label='Salary'
@@ -113,9 +116,11 @@ export const IncomeForm = () => {
             label='Other income'
             helperText='Include income such as allowances and government benefits.'
             objectGetter={homeLoan => homeLoan.income.applicant2Income.other}/>
-          <Text fontSize='xl'>Other income</Text>
+          
         </> : null}
-
+      
+      <SectionDivider />
+      <Heading w='full' fontSize='xl'>Other income</Heading>
       <NumberFrequencyInputSimple
         label='Rental Income'
         helperText='Income from an investment property you want to buy or already own.'
@@ -129,6 +134,7 @@ export const ExpensesForm = () => {
 
   return (
     <>
+      <SectionDivider />
       <Heading w='full' fontSize='xl'>Expenses</Heading>
       <NumberFrequencyInputSimple
         label='Total living expenses'
