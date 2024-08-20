@@ -75,7 +75,7 @@ class ActiveCampaignApiDeal {
   constructor(private config: ActiveCampaignApiConfig) {}
 
   get url() {
-    return `${this.config.baseUrl}/api/3/contact/sync`
+    return `${this.config.baseUrl}/api/3/deals`
   }
 
   async post(deal: ActiveCampaignDeal) {

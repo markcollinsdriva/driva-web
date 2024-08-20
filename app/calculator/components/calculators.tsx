@@ -44,7 +44,7 @@ export const calculateInterestRatePerPeriod = ({
 }): number => {
   return interestRatePerAnnum / periodsPerYear
   //return (Math.pow(1 + interestRatePerAnnum, 1 / periodsPerYear) - 1) 
-  // this seems more mathematically correct but isn't how calculators do it
+  // this seems more mathematically correct but it isn't how calculators do it
 }
 
 

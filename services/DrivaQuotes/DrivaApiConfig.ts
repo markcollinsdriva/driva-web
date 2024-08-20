@@ -9,6 +9,7 @@ export class DrivaApiConfig {
     this.baseUrl = this.data.isProd ? 'https://api.driva.com.au/v1' : 'https://api-staging.driva.com.au/v1',
     this.vehiclePostQuoteApi = `${this.baseUrl}/quote/price`,
     this.personalLoanPostQuoteApi =`${this.baseUrl}/quote/personal-loan`
+    
     this.partnerId = this.data.isProd 
       ? process.env.DRIVA_QUOTE_PARTNER_ID_PROD! 
       : process.env.DRIVA_QUOTE_PARTNER_ID_STAGING!
