@@ -1,15 +1,4 @@
-import { calculateMonthlyLoanRepayment } from "./loanRepayments"
-import { calculatePresentValue } from "./presentValue"
-import { calculateSalaryAmounts, MedicareLevyPercentage } from "./salaryAmounts"
-
-export const BallonPercentagePaymentsForLeaseTerm = new Map([
-  [ 1, 0.6563],
-  [ 2, 0.5625],
-  [ 3, 0.4688],
-  [ 4, 0.375],
-  [ 5, 0.2813], 
-])
-
+// import { calculateMonthlyLoanRepayment } from "./loanRepayments"
 export const calculateNovatedLease = ({
   vehiclePriceIncludingGst,
   leaseTermYears,
@@ -102,7 +91,6 @@ export const calculateNovatedLease = ({
   }
 }
 
-
 const { netSavings, totalCostOfVehicle, actualCostPerMonth } = calculateNovatedLease({
   vehiclePriceIncludingGst: 54900,
   leaseTermYears: 5,
@@ -118,3 +106,85 @@ console.log('netSavings', netSavings)
 console.log('totalCostOfLease', totalCostOfVehicle)
 console.log('actualCostPerMonth', actualCostPerMonth)
 
+const BallonPercentagePaymentsForLeaseTerm = new Map([
+  [ 1, 0.6563],
+  [ 2, 0.5625],
+  [ 3, 0.4688],
+  [ 4, 0.375],
+  [ 5, 0.2813], 
+])
+
+const calculateMonthlyLoanRepayment = ({ 
+  loanTermYears, 
+  loanAmount, 
+  interestRatePerAnnum 
+}: {
+  loanTermYears: number,
+  loanAmount: number,
+  interestRatePerAnnum: number
+}): number => {
+  
+  const periodsPerYear = 12
+  const numberOfPayments = loanTermYears * periodsPerYear - 1 // we subtract one because the last payment is the residual payment
+
+  const interestRatePerPeriod = interestRatePerAnnum / periodsPerYear
+
+  const paymentPerPeriod = (loanAmount * interestRatePerPeriod) / (1 - Math.pow(1 + interestRatePerPeriod, - numberOfPayments))
+  return paymentPerPeriod
+}
+
+const calculatePresentValue = (inputs: {
+  futureValue: number,
+  interestRatePerPeriod: number,
+  numberOfPeriods: number
+}): number => {
+  const { futureValue, interestRatePerPeriod, numberOfPeriods } = inputs
+  return futureValue / Math.pow(1 + interestRatePerPeriod, numberOfPeriods -1) // // we subtract one because the last payment is the residual payment
+}
+
+interface TaxBracket {
+  upperBound: number
+  rate: number
+}
+
+const TaxBrackets: TaxBracket[] = [
+  { upperBound: 18200, rate: 0 },
+  { upperBound: 45000, rate: 0.16 },
+  { upperBound: 135000, rate: 0.3 },
+  { upperBound: 190000, rate: 0.37 },
+  { upperBound: Infinity, rate: 0.45 },
+] as const
+
+const MedicareLevyPercentage = 0.02
+
+const calculateSalaryAmounts = ({ 
+  grossAnnualSalary, 
+  output = 'annual' 
+}: { 
+  grossAnnualSalary: number, 
+  includeMedicareLevy?: boolean,
+  medicareLevyPercentage?: number,
+  output?: 'annual' | 'monthly'
+}) => {
+  let tax = 0
+  let lowerBound = 0
+  const periodAdjustment = output === 'monthly' ? 12 : 1
+  
+  TaxBrackets.every(({ upperBound, rate }) => {
+    const isGrossSalaryAboveUpperBound = grossAnnualSalary > upperBound
+    const upperBoundForTax = isGrossSalaryAboveUpperBound ? upperBound : grossAnnualSalary
+    const _tax = (upperBoundForTax - lowerBound) * rate
+    tax += _tax
+    lowerBound = upperBound
+    // continue if salary above upperBound, stop if below upperBound
+    return isGrossSalaryAboveUpperBound 
+  })
+
+  const netPay = grossAnnualSalary - tax
+
+  return {
+    grossPay: grossAnnualSalary / periodAdjustment,
+    netPay: netPay / periodAdjustment,
+    tax: tax / periodAdjustment,
+  }
+}
