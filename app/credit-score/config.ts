@@ -175,6 +175,8 @@ const productsListConfig = [
   },
 ] as const
 
+
+
 export const allProductPurposes = productsListConfig.map(product => product.purpose)
 export const allProductNames = productsListConfig.map(product => product.name)
 
