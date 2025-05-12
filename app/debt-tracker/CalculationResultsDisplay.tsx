@@ -4,8 +4,8 @@ import {
   CreditScoreBandValues,
   type CreditScoreBand,
   type LoanTermOptions
-} from "./definitions";
-import type { DebtConsolidationResult } from "./calculation";
+} from "./logic/definitions";
+import type { DebtConsolidationResult } from "./logic/calculation";
 
 interface CalculationResultsDisplayProps {
   calculationResult: DebtConsolidationResult;

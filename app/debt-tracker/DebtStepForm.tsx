@@ -9,7 +9,7 @@ import {
   RepaymentFrequency,
   RepaymentFrequencyValues,
   type DebtType,
-} from "./definitions";
+} from "./logic/definitions";
 
 interface UIDebt {
   type: DebtType | "";

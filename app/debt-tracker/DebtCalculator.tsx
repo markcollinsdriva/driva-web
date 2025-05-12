@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { ChevronLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -10,14 +10,14 @@ import {
   type CreditScoreBand,
   type LoanTermOptions,
   type UIDebt,
-} from "./definitions"
+} from "./logic/definitions"
 import {
   calcDebtConsolidation,
   type DebtConsolidationResult,
-} from "./calculation"
+} from "./logic/calculation"
 import { DebtStepForm } from "./DebtStepForm"
 import { CalculationResultsDisplay } from "./CalculationResultsDisplay"
-import { validateDebts } from "./validator"
+import { validateDebts } from "./logic/validator"
 
 
 
@@ -75,20 +75,19 @@ export default function DebtCalculator() {
     return index === 0 ? "First debt" : index === 1 ? "Second debt" : `Debt ${index + 1}`
   }
 
-  const handleCalculate = () => {
+  const handleCalculate = useCallback(() => {
     const debtValidationResult = validateDebts(debts)
-    
-    const calcDebtConsolidationResult = debtValidationResult.andThen(
-      (currentDebtsInput) => {
-        return calcDebtConsolidation({
-          creditScoreBand: selectedCreditScoreBand,
-          currentDebts: currentDebtsInput,
-          newLoanTermYears: selectedTerm,
-        })
-      }
-    )
 
-    calcDebtConsolidationResult.match(
+    if (debtValidationResult.isErr()) {
+      handleError(debtValidationResult.error)
+      return
+    }
+
+    calcDebtConsolidation({
+      creditScoreBand: selectedCreditScoreBand,
+      currentDebts: debtValidationResult.value,
+      newLoanTermYears: selectedTerm,
+    }).match(
       (calculationResult) => {
         setCalculationResult(calculationResult)
         setShowCalculationResults(true)
@@ -97,15 +96,13 @@ export default function DebtCalculator() {
         handleError(errorMessage)
       }
     )
-  }
+  }, [debts, selectedCreditScoreBand, selectedTerm])
 
   useEffect(() => {
     if (showCalculationResults) {
       handleCalculate()
     }
-  }, [selectedTerm, selectedCreditScoreBand]);
-
-  console.log("calculationResult", calculationResult)
+  }, [selectedTerm, selectedCreditScoreBand, showCalculationResults, handleCalculate]);
 
   return (
     <div className="max-w-md mx-auto bg-[#f8f7f7] min-h-screen p-6">
